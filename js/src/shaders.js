@@ -20,8 +20,9 @@ var normalShaderPair = {
          "}"
 }
 
-function ShaderProgram(gl, shaderPair) {
+var ShaderProgram = function(gl, shaderPair) {
 	var program = this.generateProgram(gl, shaderPair);
+   
    gl.useProgram(program);
    this.setupHandles(gl, program);
 

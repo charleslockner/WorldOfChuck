@@ -1,4 +1,14 @@
-var cubeModel = {
+var ModelLibrary = function(gl) {
+	var models = {
+		cube : null
+	};
+
+	models.cube = this.initCube(gl);  	// models.cube = this.loadModel(gl, "assets/models/cube.3ds");
+
+	return models;
+}
+
+ModelLibrary.prototype.cubeModel = {
 	vertices : [
 		// Front face
 		-1.0, -1.0,  1.0,
@@ -80,10 +90,32 @@ var cubeModel = {
 		12, 13, 14,   12, 14, 15,   // Bottom face
 		16, 17, 18,   16, 18, 19,   // Right face
 		20, 21, 22,   20, 22, 23 ], // Left face
+}
 
-	numVertices : 24,
-	numTriangles : 12,
-	vbo : null,
-	nbo : null,
-	ibo : null
+ModelLibrary.prototype.initCube = function(gl) {
+   // vertex positions
+   var cube = {
+   	  numVertices : 24,
+   	  numTriangles : 12,
+   	  vbo : null,
+   	  nbo : null,
+   	  ibo : null
+   };
+
+   // vertex positions
+   cube.vbo = gl.createBuffer();
+   gl.bindBuffer(gl.ARRAY_BUFFER, cube.vbo);
+   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.cubeModel.vertices), gl.STATIC_DRAW);
+
+   // vertex normals
+   cube.nbo = gl.createBuffer();
+   gl.bindBuffer(gl.ARRAY_BUFFER, cube.nbo);
+   gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.cubeModel.normals), gl.STATIC_DRAW);
+
+   // indices to vertices
+   cube.ibo = gl.createBuffer();
+   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cube.ibo);
+   gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(this.cubeModel.indices), gl.STATIC_DRAW);
+
+   return cube;
 }

@@ -1,10 +1,14 @@
-var rCube = 0.0;
+
+var PI = 3.14159;
+var PITCH_LIMIT = 1.484; // 85 degrees
 
 /*********************************** PUBLIC ***********************************/
-function Portal(canvas) {
+var Portal = function(canvas) {
    this.canvas = canvas;
    this.gl = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl");
    this.shaderProgram = null;
+   this.models = null;
+   this.system = null;
 
    this.gl ? this.setup() : alert("Unable to initialize WebGL. Your browser may not support it.");
 }
@@ -13,9 +17,10 @@ function Portal(canvas) {
 
 Portal.prototype.setup = function() {
    this.initGLProperties();
-   this.initControls();
    this.initShaders();
-   this.initGeometry();
+   this.initModels();
+   this.initSystem();
+   this.initControls();
 
    this.begin();
 }
@@ -30,39 +35,54 @@ Portal.prototype.initGLProperties = function() {
    this.gl.viewportHeight = this.canvas.height;
 }
 
-Portal.prototype.initControls = function() {
-   // $(window).resize(this, this.onPortalResize);
-}
-
-// Portal.prototype.onPortalResize = function(e) {
-//    fitPortalToWindow(e.data.gl, e.data.canvas);
-// }
-
-// function fitPortalToWindow(gl, canvas) {
-//    canvas.width = window.innerWidth;
-//    canvas.height = window.innerHeight;
-//    gl.viewportWidth = canvas.width;
-//    gl.viewportHeight = canvas.height;
-// }
-
 Portal.prototype.initShaders = function() {
    this.shaderProgram = new ShaderProgram(this.gl, normalShaderPair);
 }
 
-Portal.prototype.initGeometry = function() {
-   // vertex positions
-   cubeModel.vbo = this.gl.createBuffer();
-   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, cubeModel.vbo);
-   this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(cubeModel.vertices), this.gl.STATIC_DRAW);
+Portal.prototype.initModels = function() {
+   this.models = new ModelLibrary(this.gl);
+}
 
-   // vertex normals
-   cubeModel.nbo = this.gl.createBuffer();
-   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, cubeModel.nbo);
-   this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(cubeModel.normals), this.gl.STATIC_DRAW);
+Portal.prototype.initSystem = function() {
+//    this.canvas.requestPointerLock = this.canvas.requestPointerLock ||
+//                             this.canvas.mozRequestPointerLock ||
+//                             this.canvas.webkitRequestPointerLock;
 
-   // indices to vertices
-   cubeModel.ibo = this.gl.createBuffer();
-   this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, cubeModel.ibo);
-   this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeModel.indices), this.gl.STATIC_DRAW);
+//    this.canvas.requestPointerLock();
+
+//    if(document.pointerLockElement === this.canvas ||
+//   document.mozPointerLockElement === this.canvas ||
+//   document.webkitPointerLockElement === this.canvas) {
+//     console.log('The pointer lock status is now locked');
+// } else {
+//     console.log('The pointer lock status is now unlocked');  
+// }
+
+
+   this.system = {
+      rCube : 0.0,
+      camera : {
+         position : vec3.fromValues(0.0, 1.0, 10.0),
+         direction : vec3.fromValues(0.0, 0.0, -1.0),
+         up : vec3.fromValues(0.0, 1.0, 0.0),
+         pitch : 0.0,
+         yaw : -PI / 2
+      },
+      controls : {
+         forwardPressed : false,
+         backwardPressed : false,
+         leftPressed : false,
+         rightPressed : false,
+
+         lastX : null,
+         lastY : null,
+         cursorXDelta : 0,
+         cursorYDelta : 0
+      }
+   }
+}
+
+Portal.prototype.initControls = function() {
+   this.attachControls();
 }
 
