@@ -10,3 +10,12 @@ if (!window.requestAnimationFrame) {
 		};
 	})();
 }
+
+var POINTER_LOCK_CHANGE = null;
+if ("onpointerlockchange" in document) {
+	POINTER_LOCK_CHANGE = 'pointerlockchange';
+} else if ("onmozpointerlockchange" in document) {
+	POINTER_LOCK_CHANGE = 'mozpointerlockchange';
+} else if ("onwebkitpointerlockchange" in document) {
+	POINTER_LOCK_CHANGE = 'webkitpointerlockchange';
+}

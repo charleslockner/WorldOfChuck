@@ -73,9 +73,7 @@ Portal.prototype.initSystem = function() {
          backwardPressed : false,
          leftPressed : false,
          rightPressed : false,
-
-         lastX : null,
-         lastY : null,
+         
          cursorXDelta : 0,
          cursorYDelta : 0
       }
