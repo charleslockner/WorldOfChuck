@@ -1,17 +1,21 @@
 
 var normalShaderPair = {
-	vs : "attribute vec3 aVertexPosition;\n" +
-	         "uniform mat4 uMVMatrix;\n" +
-	         "uniform mat4 uPMatrix;\n" +
-	         "\n" +
-	         "void main(void) {\n" +
-	         "   gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);\n" +
-	         "}\n",
+	vs :  "attribute vec3 aVertexPosition;\n" +
+			"attribute vec3 aVertexNormal;\n" +
+         "uniform mat4 uMVMatrix;\n" +
+         "uniform mat4 uPMatrix;\n" +
+         "varying vec3 vColor;\n" +
+         "\n" +
+         "void main(void) {\n" +
+         "   gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);\n" +
+         "   vColor = aVertexNormal;\n" +
+         "}",
 
-	fs : "precision mediump float;\n" +
-	         "void main(void) {\n" +
-	         "   gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
-	         "}"
+	fs :  "precision mediump float;\n" +
+			"varying vec3 vColor;\n" +
+         "void main(void) {\n" +
+         "   gl_FragColor = vec4(vColor, 1.0);\n" +
+         "}"
 }
 
 function ShaderProgram(gl, shaderPair) {
@@ -27,12 +31,6 @@ function ShaderProgram(gl, shaderPair) {
       alert("Could not initialise shaders");
 
    gl.useProgram(shaderProgram);
-
-   shaderProgram.vertexPositionAttribute = gl.getAttribLocation(shaderProgram, "aVertexPosition");
-   gl.enableVertexAttribArray(shaderProgram.vertexPositionAttribute);
-
-   shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
-   shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
 
    return shaderProgram;
 }
