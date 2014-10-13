@@ -20,7 +20,7 @@ Portal.prototype.updateState = function() {
 }
 
 Portal.prototype.drawFrame = function() {
-   this.gl.viewport(0, 0, this.gl.viewportWidth, this.gl.viewportHeight);
+   this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
    var modelM = this.makeModelMatrix();
@@ -65,7 +65,7 @@ Portal.prototype.makeViewMatrix = function() {
 Portal.prototype.makeProjectionMatrix = function() {
    var projectionM = mat4.create();
 
-   var aspect = this.gl.viewportWidth / this.gl.viewportHeight;
+   var aspect = this.gl.drawingBufferWidth / this.gl.drawingBufferHeight;
    mat4.perspective(projectionM, 1.0, aspect, 0.1, 100.0);
 
    return projectionM;

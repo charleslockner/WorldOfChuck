@@ -16,7 +16,7 @@
    </head>
 
    <body>
-      <canvas id="portal" width="500" height="500"></canvas>
+      <canvas id="portal" width="1500" height="1000"></canvas>
    </body>
 
    <!-- Library Files -->
@@ -27,17 +27,13 @@
    <script type="text/javascript" src="js/src/fixes.js"></script>   
    <script type="text/javascript" src="js/src/geometry.js"></script>
    <script type="text/javascript" src="js/src/shaders.js"></script>
-   <script type="text/javascript" src="js/src/setup.js"></script>
-   <script type="text/javascript" src="js/src/system.js"></script>
    <script type="text/javascript" src="js/src/portal.js"></script>
+   <script type="text/javascript" src="js/src/system.js"></script>
 
-   <!-- Set up the individual pages -->
    <script>
-      // $(document).ready(function() {
-      //    $.ajaxSetup({ 
-      //       cache: true  // allows loading js files to work correctly
-      //    }); 
-      // });
+      $(document).ready(function() {
+         new Portal(document.getElementById("portal"));
+      });
    </script>
 </html>
 
