@@ -5,9 +5,30 @@ glm::mat4 Scale = glm::scale(MAT4_ID, scale(vec3));
 glm::mat4 Rot = glm::rotate(MAT4_ID, angle, axis(vec3));
 glm::mat4 ModelM = Transl * Rot * Scale;
 
-
-glm::mat4 ProjectionM = glm::perspective(90.0f, (float)w_width/w_height, VIEW_NEAR, VIEW_DIST);
+glm::mat4 ProjM = glm::perspective(90.0f, (float)w_width/w_height, VIEW_NEAR, VIEW_DIST);
 glm::mat4 ViewM = glm::lookAt(camPos, camPos + camDir, glm::vec3(0.0f, 1.0f, 0.0f));
+
+
+safe_glUniformMatrix4fv(h_uProjM, glm::value_ptr(proj));
+safe_glUniformMatrix4fv(h_uViewM, glm::value_ptr(view));
+safe_glUniformMatrix4fv(h_uModelM, glm::value_ptr(ModelM));
+
+// set up vbo
+safe_glEnableVertexAttribArray(h_aPosition);
+glBindBuffer(GL_ARRAY_BUFFER, mesh->vbo);
+safe_glVertexAttribPointer(h_aPosition, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+// set up nbo
+safe_glEnableVertexAttribArray(h_aNormal);
+glBindBuffer(GL_ARRAY_BUFFER, mesh->nbo);
+safe_glVertexAttribPointer(h_aNormal, 3, GL_FLOAT, GL_FALSE, 0, 0);
+
+// set up ibo
+glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+
+// Draw This icicle clam!!!
+glDrawElements(GL_TRIANGLES, numFaces * 3, GL_UNSIGNED_INT, 0);
+
 
 
 

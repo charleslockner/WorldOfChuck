@@ -1,24 +1,24 @@
-var vs = "attribute vec3 aVertexPosition;\n" +
-         "uniform mat4 uMVMatrix;\n" +
-         "uniform mat4 uPMatrix;\n" +
-         "\n" +
-         "void main(void) {\n" +
-         "   gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);\n" +
-         "}\n";
 
-var fs = "precision mediump float;\n" +
-			"varying vec4 vColor;"
-         "void main(void) {\n" +
-         "   gl_FragColor = vColor;\n" +
-         "}";
+var normalShaderPair = {
+	vs : "attribute vec3 aVertexPosition;\n" +
+	         "uniform mat4 uMVMatrix;\n" +
+	         "uniform mat4 uPMatrix;\n" +
+	         "\n" +
+	         "void main(void) {\n" +
+	         "   gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);\n" +
+	         "}\n",
 
+	fs : "precision mediump float;\n" +
+	         "void main(void) {\n" +
+	         "   gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);\n" +
+	         "}"
+}
 
-var shaderProgram;
-function initShaders(gl) {
-   var fragmentShader = buildShader(gl, gl.FRAGMENT_SHADER, fs);
-   var vertexShader = buildShader(gl, gl.VERTEX_SHADER, vs);
+function ShaderProgram(gl, shaderPair) {
+   var vertexShader = this.buildShader(gl, gl.VERTEX_SHADER, shaderPair.vs);
+   var fragmentShader = this.buildShader(gl, gl.FRAGMENT_SHADER, shaderPair.fs);
 
-   shaderProgram = gl.createProgram();
+   var shaderProgram = gl.createProgram();
    gl.attachShader(shaderProgram, vertexShader);
    gl.attachShader(shaderProgram, fragmentShader);
    gl.linkProgram(shaderProgram);
@@ -33,9 +33,11 @@ function initShaders(gl) {
 
    shaderProgram.pMatrixUniform = gl.getUniformLocation(shaderProgram, "uPMatrix");
    shaderProgram.mvMatrixUniform = gl.getUniformLocation(shaderProgram, "uMVMatrix");
+
+   return shaderProgram;
 }
 
-function buildShader(gl, shaderType, script) {
+ShaderProgram.prototype.buildShader = function(gl, shaderType, script) {
    if (!shaderType)
       return null;
 

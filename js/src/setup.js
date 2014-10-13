@@ -1,21 +1,25 @@
+
 function Portal(canvas) {
    this.canvas = canvas;
    this.gl = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl");
+   this.shaderProgram = null;
 
    if (!this.gl)
       alert("Unable to initialize WebGL. Your browser may not support it.");
-   else {
-      this.initWebGL();
-      this.addEventListeners();
-   }
+   else
+      this.setup();
 }
 
-Portal.prototype.initWebGL = function() {
+Portal.prototype.setup = function() {
    this.initGLProperties();
-   initShaders(this.gl);
+   this.shaderProgram = new ShaderProgram(this.gl, normalShaderPair);
 
-   this.initBuffers();
+   this.initGeometry();
    this.drawScene();
+
+   this.addEventListeners();
+
+   // this.startMainLoop();
 }
 
 Portal.prototype.initGLProperties = function() {
@@ -32,16 +36,16 @@ Portal.prototype.addEventListeners = function() {
    // $(window).resize(this, this.onPortalResize);
 }
 
-Portal.prototype.onPortalResize = function(e) {
-   fitPortalToWindow(e.data.gl, e.data.canvas);
-}
+// Portal.prototype.onPortalResize = function(e) {
+//    fitPortalToWindow(e.data.gl, e.data.canvas);
+// }
 
-function fitPortalToWindow(gl, canvas) {
-   canvas.width = window.innerWidth;
-   canvas.height = window.innerHeight;
-   gl.viewportWidth = canvas.width;
-   gl.viewportHeight = canvas.height;
-}
+// function fitPortalToWindow(gl, canvas) {
+//    canvas.width = window.innerWidth;
+//    canvas.height = window.innerHeight;
+//    gl.viewportWidth = canvas.width;
+//    gl.viewportHeight = canvas.height;
+// }
 
 
 
@@ -57,16 +61,15 @@ var mvMatrix = mat4.create();
 var pMatrix = mat4.create();
 
 Portal.prototype.setMatrixUniforms = function () {
-   this.gl.uniformMatrix4fv(shaderProgram.pMatrixUniform, false, pMatrix);
-   this.gl.uniformMatrix4fv(shaderProgram.mvMatrixUniform, false, mvMatrix);
+   this.gl.uniformMatrix4fv(this.shaderProgram.pMatrixUniform, false, pMatrix);
+   this.gl.uniformMatrix4fv(this.shaderProgram.mvMatrixUniform, false, mvMatrix);
 }
 
 
 
 var triangleVertexPositionBuffer;
-var squareVertexPositionBuffer;
 
-Portal.prototype.initBuffers = function() {
+Portal.prototype.initGeometry = function() {
    triangleVertexPositionBuffer = this.gl.createBuffer();
    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
 
@@ -108,7 +111,7 @@ Portal.prototype.drawScene = function() {
    // mat4.translate (mvMatrix, mvMatrix, translation);
 
    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, triangleVertexPositionBuffer);
-   this.gl.vertexAttribPointer(shaderProgram.vertexPositionAttribute, triangleVertexPositionBuffer.itemSize, this.gl.FLOAT, false, 0, 0);
+   this.gl.vertexAttribPointer(this.shaderProgram.vertexPositionAttribute, triangleVertexPositionBuffer.itemSize, this.gl.FLOAT, false, 0, 0);
    this.setMatrixUniforms();
    this.gl.drawArrays(this.gl.TRIANGLES, 0, triangleVertexPositionBuffer.numItems);
 }
