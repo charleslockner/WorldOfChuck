@@ -19,3 +19,5 @@ if ("onpointerlockchange" in document) {
 } else if ("onwebkitpointerlockchange" in document) {
 	POINTER_LOCK_CHANGE = 'webkitpointerlockchange';
 }
+
+var PI = 3.14159;

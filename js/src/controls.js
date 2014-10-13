@@ -59,7 +59,7 @@ Portal.prototype.lockChangeAlert = function() {
 	if (document.pointerLockElement || document.mozPointerLockElement || document.webkitPointerLockElement)
 	    document.addEventListener("mousemove", this.moveCallback.bind(this), false);
 	else
-	  document.removeEventListener("mousemove", this.moveCallback.bind(this), false); // not working
+	    document.removeEventListener("mousemove", this.moveCallback.bind(this), false); // not working
 }
 
 Portal.prototype.moveCallback = function(e) {
