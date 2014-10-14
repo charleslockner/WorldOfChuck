@@ -5,48 +5,46 @@ var sys = require( "sys" );
 var http = require("http");
 var path = require("path"); 
 var fs = require("fs");
-var nodemailer = require('nodemailer');
-var smtpTransport = require('nodemailer-smtp-transport');
-var qs = require('querystring');
+// var qs = require('querystring');
 var _ = require("underscore");
 
-function handlePost(req, res) {
-   var body = '';
+// function handlePost(req, res) {
+//    var body = '';
 
-   req.on('data', function (data) {
-      body += data;
+//    req.on('data', function (data) {
+//       body += data;
 
-      // Too much POST data, kill the connection!
-      if (body.length > 1e6)
-          req.connection.destroy();
-   });
+//       // Too much POST data, kill the connection!
+//       if (body.length > 1e6)
+//           req.connection.destroy();
+//    });
 
-   req.on('end', function() {
-      var post = qs.parse(body);
+//    req.on('end', function() {
+//       var post = qs.parse(body);
 
-      var message = "Email sent from your website at argylleengineering:\n\n" + post.message;
+//       var message = "Email sent from your website at argylleengineering:\n\n" + post.message;
 
-      var transporter = nodemailer.createTransport();
+//       var transporter = nodemailer.createTransport();
 
-      var mailOptions = {
-         from: post.address,
-         to: config.getEmail,
-         subject: post.subject,
-         text: message
-      };
+//       var mailOptions = {
+//          from: post.address,
+//          to: config.getEmail,
+//          subject: post.subject,
+//          text: message
+//       };
 
-      // send mail with defined transport object
-      transporter.sendMail(mailOptions, function(error, info) {
-         if(error){
-            console.log(error);
-         }else{
-            console.log('Message sent.');
-            res.statusCode = 200;
-            res.end();
-         }
-      });
-   });
-}
+//       // send mail with defined transport object
+//       transporter.sendMail(mailOptions, function(error, info) {
+//          if(error){
+//             console.log(error);
+//          }else{
+//             console.log('Message sent.');
+//             res.statusCode = 200;
+//             res.end();
+//          }
+//       });
+//    });
+// }
 
 var privateFiles = [];
 
