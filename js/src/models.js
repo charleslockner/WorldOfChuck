@@ -3,7 +3,13 @@ var ModelLibrary = function(gl) {
 		cube : null
 	};
 
-	models.cube = this.initCube(gl);  	// models.cube = this.loadModel(gl, "assets/models/cube.3ds");
+	models.cube = this.initCube(gl);
+
+
+	// $.getJSON("assets/cube.json", function(json) {
+	//     console.log(json);
+	// });
+
 
 	return models;
 }
@@ -95,8 +101,7 @@ ModelLibrary.prototype.cubeModel = {
 ModelLibrary.prototype.initCube = function(gl) {
    // vertex positions
    var cube = {
-   	  numVertices : 24,
-   	  numTriangles : 12,
+   	  metadata : { faces : 12 },
    	  vbo : null,
    	  nbo : null,
    	  ibo : null

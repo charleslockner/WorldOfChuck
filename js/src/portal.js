@@ -23,7 +23,7 @@ Portal.prototype.setup = function() {
 }
 
 Portal.prototype.initGLProperties = function() {
-   this.gl.clearColor(0.2, 0.3, 0.1, 1.0);                              // Set clear color to black, fully opaque
+   this.gl.clearColor(0, 0, 0, 1.0);                              // Set clear color to black, fully opaque
    this.gl.enable(this.gl.DEPTH_TEST);                                  // Enable depth testing
    this.gl.depthFunc(this.gl.LEQUAL);                                   // Near things obscure far things
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);  // Clear the color as well as the depth buffer.
@@ -42,6 +42,11 @@ Portal.prototype.initModels = function() {
 
 Portal.prototype.initSystem = function() {
    this.system = new System();
+   this.initEntities();
+}
+
+Portal.prototype.initEntities = function() {
+   this.system.entities[0] = new Cube();
 }
 
 Portal.prototype.initControls = function() {
@@ -70,39 +75,51 @@ Portal.prototype.updateSystem = function() {
 }
 
 Portal.prototype.updateEntities = function(elapsed) {
-   this.system.rCube += (2 * elapsed) / 1000.0;
+   this.system.entities[0].rotation += (2 * elapsed) / 1000.0;
 }
 
 
 Portal.prototype.drawFrame = function() {
-   this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
-   this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-
-   var modelM = this.makeModelMatrix();
-   var viewM = this.makeViewMatrix();
-   var projectionM = this.makeProjectionMatrix();
-
-   this.gl.uniformMatrix4fv(this.shaderProgram.uModelMatrix, false, modelM);
-   this.gl.uniformMatrix4fv(this.shaderProgram.uViewMatrix, false, viewM);
-   this.gl.uniformMatrix4fv(this.shaderProgram.uProjectionMatrix, false, projectionM);
-
-   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.models.cube.vbo);
-   this.gl.vertexAttribPointer(this.shaderProgram.aVertexPosition, 3, this.gl.FLOAT, false, 0, 0);
-   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.models.cube.nbo);
-   this.gl.vertexAttribPointer(this.shaderProgram.aVertexNormal, 3, this.gl.FLOAT, false, 0, 0);
-   this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, this.models.cube.ibo);
-
-   this.gl.drawElements(this.gl.TRIANGLES, 3 * this.models.cube.numTriangles, this.gl.UNSIGNED_SHORT, 0);
+   this.updateViewport();
+   this.sendEntityIndependantShaderData();
+   this.drawEntity(this.system.entities[0]);
 }
 
-Portal.prototype.makeModelMatrix = function() {
-   // mat4 translateM = glm::translate(MAT4_ID, position(vec3));
-   // mat4 scaleM = glm::scale(MAT4_ID, scale(vec3));
-   // mat4 rotateM = glm::rotate(MAT4_ID, angle, axis(vec3));
-   // mat4 modelM = Transl * Rot * Scale;
-   var modelM = mat4.create();
+Portal.prototype.updateViewport = function() {
+   this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+   this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+}
 
-   mat4.rotate(modelM, modelM, this.system.rCube, vec3.fromValues(1.0, 3.0, 0.0));
+Portal.prototype.sendEntityIndependantShaderData = function() {
+   var viewM = this.makeViewMatrix();
+   this.gl.uniformMatrix4fv(this.shaderProgram.uViewMatrix, false, viewM);
+
+   var projectionM = this.makeProjectionMatrix();
+   this.gl.uniformMatrix4fv(this.shaderProgram.uProjectionMatrix, false, projectionM);
+}
+
+Portal.prototype.drawEntity = function(entity) {
+   var model = this.models[entity.model];
+
+   var modelM = this.makeModelMatrix(entity);
+   this.gl.uniformMatrix4fv(this.shaderProgram.uModelMatrix, false, modelM);
+
+   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, model.vbo);
+   this.gl.vertexAttribPointer(this.shaderProgram.aVertexPosition, 3, this.gl.FLOAT, false, 0, 0);
+   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, model.nbo);
+   this.gl.vertexAttribPointer(this.shaderProgram.aVertexNormal, 3, this.gl.FLOAT, false, 0, 0);
+   this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, model.ibo);
+
+   this.gl.drawElements(this.gl.TRIANGLES, 3 * model.metadata.faces, this.gl.UNSIGNED_SHORT, 0);
+}
+
+Portal.prototype.makeModelMatrix = function(entity) {
+   var modelM = mat4.create();
+   // mat4.identity(modelM); // Set to identity
+   mat4.translate(modelM, modelM, vec3.fromValues(entity.position.x, entity.position.y, entity.position.z));
+   mat4.rotate(modelM, modelM, entity.rotation, vec3.fromValues(0.0, 1.0, 0.0));
+   mat4.scale(modelM, modelM, vec3.fromValues(entity.scale.x, entity.scale.y, entity.scale.z));
+
    return modelM;
 }
 

@@ -5,18 +5,18 @@ var normalShaderPair = {
          "uniform mat4 uModelMatrix;\n" +
          "uniform mat4 uViewMatrix;\n" +
          "uniform mat4 uProjectionMatrix;\n" +
-         "varying vec4 vWorldNormal;\n" +
+         "varying vec3 vWorldNormal;\n" +
          "\n" +
          "void main(void) {\n" +
          "   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aVertexPosition, 1.0);\n" +
-         "   vWorldNormal = uModelMatrix * vec4(aVertexNormal, 1.0);\n" +
+         "   vWorldNormal = vec3(uModelMatrix * normalize(vec4(aVertexNormal, 0.0)));\n" +
          "}",
 
 	fs :  "precision mediump float;\n" +
-			"varying vec4 vWorldNormal;\n" +
+			"varying vec3 vWorldNormal;\n" +
          "\n" +
          "void main(void) {\n" +
-         "   gl_FragColor = vWorldNormal;\n" +
+         "   gl_FragColor = vec4(vWorldNormal, 1.0);\n" +
          "}"
 }
 
