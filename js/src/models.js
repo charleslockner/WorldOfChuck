@@ -1,18 +1,20 @@
 Portal.prototype.loadModels = function() {
-	this.models = {
-		cube : null
-	};
+	var self = this;
+	this.models = {};
 
-	this.initCube();
+	this.loadModel("assets/cube.json", function(model) {
+		self.models.cube = model;
+	});
+	this.loadModel("assets/pillar.json", function(model) {
+		self.models.pillar = model;
+	});
 }
 
-Portal.prototype.initCube = function() {
+Portal.prototype.loadModel = function(path, callback) {
 	var self = this;
 
-	$.getJSON("assets/pillar.json", function(json) {
-      console.log(json);
-
-      var cube = {
+	$.getJSON(path, function(json) {
+      var model = {
 	  	   faces : json.metadata.faces,
 	   	vbo : self.gl.createBuffer(),
 	   	nbo : self.gl.createBuffer(),
@@ -20,17 +22,18 @@ Portal.prototype.initCube = function() {
 	   }
 
 	   // vertex positions
-	   self.gl.bindBuffer(self.gl.ARRAY_BUFFER, cube.vbo);
+	   self.gl.bindBuffer(self.gl.ARRAY_BUFFER, model.vbo);
 	   self.gl.bufferData(self.gl.ARRAY_BUFFER, new Float32Array(json.vertices), self.gl.STATIC_DRAW);
 
 	   // vertex normals
-	   self.gl.bindBuffer(self.gl.ARRAY_BUFFER, cube.nbo);
+	   self.gl.bindBuffer(self.gl.ARRAY_BUFFER, model.nbo);
 	   self.gl.bufferData(self.gl.ARRAY_BUFFER, new Float32Array(json.normals), self.gl.STATIC_DRAW);
 
 	   // indices to vertices
-	   self.gl.bindBuffer(self.gl.ELEMENT_ARRAY_BUFFER, cube.ibo);
+	   self.gl.bindBuffer(self.gl.ELEMENT_ARRAY_BUFFER, model.ibo);
 	   self.gl.bufferData(self.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(json.faces), self.gl.STATIC_DRAW);
 
-	   self.models.cube = cube;
+	   callback(model);
+      console.log(path + " loaded.");
 	});
 }

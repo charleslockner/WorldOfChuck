@@ -47,6 +47,7 @@ Portal.prototype.initSystem = function() {
 
 Portal.prototype.initEntities = function() {
    this.system.entities[0] = new Cube();
+   this.system.entities[1] = new Pillar();
 }
 
 Portal.prototype.initControls = function() {
@@ -76,13 +77,16 @@ Portal.prototype.updateSystem = function() {
 
 Portal.prototype.updateEntities = function(elapsed) {
    this.system.entities[0].rotation += (2 * elapsed) / 1000.0;
+   this.system.entities[1].rotation += (1.5 * elapsed) / 1000.0;
 }
 
 
 Portal.prototype.drawFrame = function() {
    this.updateViewport();
    this.sendEntityIndependantShaderData();
+
    this.drawEntity(this.system.entities[0]);
+   this.drawEntity(this.system.entities[1]);
 }
 
 Portal.prototype.updateViewport = function() {
