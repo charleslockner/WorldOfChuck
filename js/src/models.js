@@ -5,7 +5,7 @@ Portal.prototype.loadModels = function() {
 	this.loadModel("assets/cube.json", function(model) {
 		self.models.cube = model;
 	});
-	this.loadModel("assets/pillar.json", function(model) {
+	this.loadModel("assets/sphere.json", function(model) {
 		self.models.pillar = model;
 	});
 }

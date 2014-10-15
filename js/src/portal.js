@@ -106,6 +106,9 @@ Portal.prototype.drawEntity = function(entity) {
    var model = this.models[entity.model];
 
    if (model) {
+      var flags = 1; // flat shade the object
+      this.gl.uniform1i(this.shaderProgram.uFlags, flags);
+
       var modelM = this.makeModelMatrix(entity);
       this.gl.uniformMatrix4fv(this.shaderProgram.uModelMatrix, false, modelM);
 

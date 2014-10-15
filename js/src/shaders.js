@@ -2,14 +2,17 @@
 var normalShaderPair = {
 	vs :  "attribute vec3 aVertexPosition;\n" +
 			"attribute vec3 aVertexNormal;\n" +
+         "uniform int uFlags;\n" +
          "uniform mat4 uModelMatrix;\n" +
          "uniform mat4 uViewMatrix;\n" +
          "uniform mat4 uProjectionMatrix;\n" +
          "varying vec3 vWorldNormal;\n" +
          "\n" +
          "void main(void) {\n" +
+         "   vec4 normal;\n" +
          "   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aVertexPosition, 1.0);\n" +
-         "   vWorldNormal = vec3(uModelMatrix * normalize(vec4(aVertexNormal, 0.0)));\n" +
+         "      normal = vec4(aVertexNormal, 0.0);\n" +
+         "   vWorldNormal = vec3(uModelMatrix * normalize(normal));\n" +
          "}",
 
 	fs :  "precision mediump float;\n" +
@@ -61,6 +64,8 @@ ShaderProgram.prototype.buildShader = function(gl, shaderType, script) {
 }
 
 ShaderProgram.prototype.setupHandles = function(gl, program) {
+   program.aFlags = gl.getUniformLocation(program, "uFlags")
+
    program.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");
    gl.enableVertexAttribArray(program.aVertexPosition);
 
