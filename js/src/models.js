@@ -13,10 +13,10 @@ Portal.prototype.initModels = function() {
    this.loadModel("assets/cube.json", function(model) {
       self.models.cube = model;
    });
-   this.loadModel("assets/sphere.json", function(model) {
+   this.loadModel("assets/cube.json", function(model) {
       self.models.sphere = model;
    });
-   this.loadModel("assets/pillar.json", function(model) {
+   this.loadModel("assets/cube.json", function(model) {
       self.models.pillar = model;
    });
 }
@@ -25,8 +25,9 @@ Portal.prototype.loadModel = function(path, callback) {
    var self = this;
 
    $.getJSON(path, function(json) {
+      console.log(json.faces.length);
       var model = {
-      faces : json.metadata.faces,
+         faces : json.faces.length/3,
          vbo : self.gl.createBuffer(),
          nbo : self.gl.createBuffer(),
          ibo : self.gl.createBuffer()
