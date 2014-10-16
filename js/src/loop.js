@@ -7,9 +7,9 @@
    |__________________________________________________________________________| */
 
 Portal.prototype.loop = function() {
-   window.requestAnimationFrame(this.loop.bind(this));
    this.updateState();
    this.drawFrame();
+   window.requestAnimationFrame(this.loop.bind(this));
 }
 
 Portal.prototype.updateState = function() {

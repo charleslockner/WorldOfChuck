@@ -13,7 +13,7 @@ Portal.prototype.initCamera = function() {
       direction : vec3.fromValues(0, 0, -1),
       up : vec3.fromValues(0, 1, 0),
       pitch : 0.0,
-      yaw : -PI / 2,
+      yaw : -PI / 2, // start facing down the -Z axis
       camSpeed : 10
    }
 }

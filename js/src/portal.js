@@ -35,6 +35,9 @@ Portal.prototype.setup = function() {
    this.initCamera();
    this.initShaders();  // shaders.js
 
+
+
+
    this.loop();         // loop.js (Begin main loop)
 }
 
@@ -46,4 +49,5 @@ Portal.prototype.initGLProperties = function() {
 
    this.gl.viewportWidth = this.canvas.width;
    this.gl.viewportHeight = this.canvas.height;
+
 }
