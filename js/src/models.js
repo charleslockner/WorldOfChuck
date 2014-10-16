@@ -13,7 +13,7 @@ Portal.prototype.initModels = function() {
    this.loadModel("assets/cube.json", function(model) {
       self.models.cube = model;
    });
-   this.loadModel("assets/cube.json", function(model) {
+   this.loadModel("assets/sphere.json", function(model) {
       self.models.sphere = model;
    });
    this.loadModel("assets/cube.json", function(model) {
