@@ -19,7 +19,7 @@ var normalShaderPair = {
          "   vec4 normal;\n" +
          "   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aVertexPosition, 1.0);\n" +
          "      normal = vec4(aVertexNormal, 0.0);\n" +
-         "   vWorldNormal = vec3(normalize(normal));\n" +
+         "   vWorldNormal = vec3(uModelMatrix * normalize(normal));\n" +
          "}",
 
 	fs :  "precision mediump float;\n" +

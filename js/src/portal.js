@@ -35,9 +35,6 @@ Portal.prototype.setup = function() {
    this.initCamera();
    this.initShaders();  // shaders.js
 
-
-
-
    this.loop();         // loop.js (Begin main loop)
 }
 
