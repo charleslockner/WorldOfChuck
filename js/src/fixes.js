@@ -1,3 +1,11 @@
+/*  __________________________________________________________________________
+   |                       World-of-Chuck Portal Project                      |
+   |                            By Charles Lockner                            |
+   |                                                                          |
+   | Anyone can use this. Just be sure to credit me by either including       |
+   | this header or simply stating that your work uses some of this code. :D  |
+   |__________________________________________________________________________| */
+
 if (!window.requestAnimationFrame) {
 	window.requestAnimationFrame = (function() {
  

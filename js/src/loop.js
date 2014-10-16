@@ -1,3 +1,10 @@
+/*  __________________________________________________________________________
+   |                       World-of-Chuck Portal Project                      |
+   |                            By Charles Lockner                            |
+   |                                                                          |
+   | Anyone can use this. Just be sure to credit me by either including       |
+   | this header or simply stating that your work uses some of this code. :D  |
+   |__________________________________________________________________________| */
 
 Portal.prototype.loop = function() {
    window.requestAnimationFrame(this.loop.bind(this));
