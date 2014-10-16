@@ -13,38 +13,53 @@ Portal.prototype.initCamera = function() {
       direction : vec3.fromValues(0, 0, -1),
       up : vec3.fromValues(0, 1, 0),
       pitch : 0.0,
-      yaw : -PI / 2
+      yaw : -PI / 2,
+      camSpeed : 10
    }
 }
 
 Portal.prototype.updateCamera = function(elapsed) {
-   var camSpeed = 10;
-   if (this.controls.leftPressed) {
-      var trans = {};
-      vec3.normalize(trans, this.camera.direction);
-      vec3.scale(trans, trans, 0.001 * camSpeed * elapsed);
-      vec3.cross(trans, trans, this.camera.up);
-      vec3.sub(this.camera.position, this.camera.position, trans);
-   }
-   if (this.controls.rightPressed) {
-      var trans = {};
-      vec3.normalize(trans, this.camera.direction);
-      vec3.scale(trans, trans, 0.001 * camSpeed * elapsed);
-      vec3.cross(trans, trans, this.camera.up);
-      vec3.add(this.camera.position, this.camera.position, trans);
-   }
-   if (this.controls.forwardPressed) {
-      var trans = {};
-      vec3.scale(trans, this.camera.direction, 0.001 * camSpeed * elapsed);
-      vec3.add(this.camera.position, this.camera.position, trans);
-   }
-   if (this.controls.backwardPressed) {
-      var trans = {};
-      vec3.scale(trans, this.camera.direction, 0.001 * camSpeed * elapsed);
-      vec3.sub(this.camera.position, this.camera.position, trans);
-   }
-
+   this.moveCamera(elapsed);
    this.aimCamera();
+}
+
+Portal.prototype.moveCamera = function(elapsed) {
+   if (this.controls.leftPressed)
+      this.moveLeft(elapsed);
+   if (this.controls.rightPressed)
+      this.moveRight(elapsed);
+   if (this.controls.forwardPressed)
+      this.moveForward(elapsed);
+   if (this.controls.backwardPressed)
+      this.moveBackward(elapsed);
+}
+
+Portal.prototype.moveLeft = function(elapsed) {
+   var trans = {};
+   vec3.cross(trans, this.camera.direction, this.camera.up);
+   vec3.normalize(trans, trans);
+   vec3.scale(trans, trans, 0.001 * this.camera.camSpeed * elapsed);
+   vec3.sub(this.camera.position, this.camera.position, trans);
+}
+
+Portal.prototype.moveRight = function(elapsed) {
+   var trans = {};
+   vec3.cross(trans, this.camera.direction, this.camera.up);
+   vec3.normalize(trans, trans);
+   vec3.scale(trans, trans, 0.001 * this.camera.camSpeed * elapsed);
+   vec3.add(this.camera.position, this.camera.position, trans);
+}
+
+Portal.prototype.moveForward = function(elapsed) {
+   var trans = {};
+   vec3.scale(trans, this.camera.direction, 0.001 * this.camera.camSpeed * elapsed);
+   vec3.add(this.camera.position, this.camera.position, trans);
+}
+
+Portal.prototype.moveBackward = function(elapsed) {
+   var trans = {};
+   vec3.scale(trans, this.camera.direction, 0.001 * this.camera.camSpeed * elapsed);
+   vec3.sub(this.camera.position, this.camera.position, trans);
 }
 
 Portal.prototype.aimCamera = function() {

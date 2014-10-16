@@ -66,7 +66,7 @@ Portal.prototype.drawEntity = function(entity) {
 Portal.prototype.makeModelMatrix = function(entity) {
    var modelM = mat4.create();
    // mat4.identity(modelM); // Set to identity
-   mat4.translate(modelM, modelM, vec3.fromValues(entity.position.x, entity.position.y, entity.position.z));
+   mat4.translate(modelM, modelM, vec3.fromValues(entity.position[0], entity.position[1], entity.position[2]));
    mat4.rotate(modelM, modelM, entity.rotation, vec3.fromValues(0.0, 1.0, 0.0));
    // mat4.scale(modelM, modelM, vec3.fromValues(entity.scale.x, entity.scale.y, entity.scale.z));
 

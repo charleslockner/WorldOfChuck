@@ -6,41 +6,33 @@
    | this header or simply stating that your work uses some of this code. :D  |
    |__________________________________________________________________________| */
 
+// Super-class
+var Entity = function(pos, rot) {
+   this.position = pos;
+   this.rotation = rot;
+   this.model = "question"; // indicates that model doesn't exist
+}
+
 var Cube = function(pos, rot) {
-   return {
-      position :
-      {
-         x : pos[0],
-         y : pos[1],
-         z : pos[2]
-      },
-      rotation : rot,
-      model : "cube"
-   }
+   Entity.call(this, pos, rot);
+   this.model = "cube";
 };
+
+Cube.prototype = new Entity();
+Cube.prototype.constructor = Cube;
 
 var Sphere = function(pos, rot) {
-   return {
-      position :
-      {
-         x : pos[0],
-         y : pos[1],
-         z : pos[2]
-      },
-      rotation : rot,
-      model : "sphere"
-   }
+   Entity.call(this, pos, rot);
+   this.model = "sphere";
 };
 
+Sphere.prototype = new Entity();
+Sphere.prototype.constructor = Sphere;
+
 var Pillar = function(pos, rot) {
-   return {
-      position :
-      {
-         x : pos[0],
-         y : pos[1],
-         z : pos[2]
-      },
-      rotation : rot,
-      model : "pillar"
-   }
+   Entity.call(this, pos, rot);
+   this.model = "pillar";
 };
+
+Pillar.prototype = new Entity();
+Pillar.prototype.constructor = Pillar;
