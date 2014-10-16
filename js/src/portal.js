@@ -11,7 +11,7 @@ var Portal = function(canvas) {
    this.gl = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl");
 
    if (!this.gl) {
-      alert("Please use Chrome, if not, then Firefox.");
+      alert("Please use Chrome, if not that, then Firefox.");
       return null;
    }
 
@@ -43,7 +43,4 @@ Portal.prototype.initGLProperties = function() {
    this.gl.enable(this.gl.DEPTH_TEST);                                  // Enable depth testing
    this.gl.depthFunc(this.gl.LEQUAL);                                   // Near things obscure far things
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);  // Clear the color as well as the depth buffer.
-
-   // this.gl.viewportWidth = this.canvas.width;
-   // this.gl.viewportHeight = this.canvas.height;
 }

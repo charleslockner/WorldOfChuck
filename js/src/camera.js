@@ -67,8 +67,8 @@ Portal.prototype.moveBackward = function(elapsed) {
 Portal.prototype.aimCamera = function() {
    if (this.controls.cursorXDelta || this.controls.cursorXDelta) {
 
-      this.camera.pitch -= this.controls.cursorYDelta * .01;
-      this.camera.yaw += this.controls.cursorXDelta * .01;
+      this.camera.pitch -= .01 * this.controls.cursorYDelta;
+      this.camera.yaw += .01 * this.controls.cursorXDelta;
 
       if (this.camera.pitch >= this.camera.PITCH_LIMIT)
          this.camera.pitch = this.camera.PITCH_LIMIT;
