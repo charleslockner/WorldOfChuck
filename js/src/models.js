@@ -1,39 +1,42 @@
-Portal.prototype.loadModels = function() {
-	var self = this;
-	this.models = {};
+Portal.prototype.initModels = function() {
+   var self = this;
+   this.models = {};
 
-	this.loadModel("assets/cube.json", function(model) {
-		self.models.cube = model;
-	});
-	this.loadModel("assets/sphere.json", function(model) {
-		self.models.pillar = model;
-	});
+   this.loadModel("assets/cube.json", function(model) {
+      self.models.cube = model;
+   });
+   this.loadModel("assets/sphere.json", function(model) {
+      self.models.sphere = model;
+   });
+   this.loadModel("assets/pillar.json", function(model) {
+      self.models.pillar = model;
+   });
 }
 
 Portal.prototype.loadModel = function(path, callback) {
-	var self = this;
+   var self = this;
 
-	$.getJSON(path, function(json) {
+   $.getJSON(path, function(json) {
       var model = {
-	  	   faces : json.metadata.faces,
-	   	vbo : self.gl.createBuffer(),
-	   	nbo : self.gl.createBuffer(),
-	   	ibo : self.gl.createBuffer()
-	   }
+      faces : json.metadata.faces,
+         vbo : self.gl.createBuffer(),
+         nbo : self.gl.createBuffer(),
+         ibo : self.gl.createBuffer()
+      }
 
-	   // vertex positions
-	   self.gl.bindBuffer(self.gl.ARRAY_BUFFER, model.vbo);
-	   self.gl.bufferData(self.gl.ARRAY_BUFFER, new Float32Array(json.vertices), self.gl.STATIC_DRAW);
+      // vertex positions
+      self.gl.bindBuffer(self.gl.ARRAY_BUFFER, model.vbo);
+      self.gl.bufferData(self.gl.ARRAY_BUFFER, new Float32Array(json.vertices), self.gl.STATIC_DRAW);
 
-	   // vertex normals
-	   self.gl.bindBuffer(self.gl.ARRAY_BUFFER, model.nbo);
-	   self.gl.bufferData(self.gl.ARRAY_BUFFER, new Float32Array(json.normals), self.gl.STATIC_DRAW);
+      // vertex normals
+      self.gl.bindBuffer(self.gl.ARRAY_BUFFER, model.nbo);
+      self.gl.bufferData(self.gl.ARRAY_BUFFER, new Float32Array(json.normals), self.gl.STATIC_DRAW);
 
-	   // indices to vertices
-	   self.gl.bindBuffer(self.gl.ELEMENT_ARRAY_BUFFER, model.ibo);
-	   self.gl.bufferData(self.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(json.faces), self.gl.STATIC_DRAW);
+      // indices to vertices
+      self.gl.bindBuffer(self.gl.ELEMENT_ARRAY_BUFFER, model.ibo);
+      self.gl.bufferData(self.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(json.faces), self.gl.STATIC_DRAW);
 
-	   callback(model);
+      callback(model);
       console.log(path + " loaded.");
-	});
+   });
 }

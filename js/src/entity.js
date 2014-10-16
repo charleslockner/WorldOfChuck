@@ -1,37 +1,38 @@
-var Cube = function() {
+var Cube = function(pos, rot) {
    return {
       position :
       {
-         x : 1,
-         y : 1,
-         z : 1
+         x : pos[0],
+         y : pos[1],
+         z : pos[2]
       },
-      rotation : 0,
-      scale :
-      {
-         x : 1,
-         y : 1.2,
-         z : 1.4
-      },
+      rotation : rot,
       model : "cube"
    }
 };
 
-var Pillar = function() {
+var Sphere = function(pos, rot) {
    return {
       position :
       {
-         x : -1,
-         y : -1,
-         z : -1
+         x : pos[0],
+         y : pos[1],
+         z : pos[2]
       },
-      rotation : 0,
-      scale :
+      rotation : rot,
+      model : "sphere"
+   }
+};
+
+var Pillar = function(pos, rot) {
+   return {
+      position :
       {
-         x : 0.6,
-         y : 0.8,
-         z : 1
+         x : pos[0],
+         y : pos[1],
+         z : pos[2]
       },
+      rotation : rot,
       model : "pillar"
    }
 };

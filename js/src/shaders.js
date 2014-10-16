@@ -12,7 +12,7 @@ var normalShaderPair = {
          "   vec4 normal;\n" +
          "   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aVertexPosition, 1.0);\n" +
          "      normal = vec4(aVertexNormal, 0.0);\n" +
-         "   vWorldNormal = vec3(uModelMatrix * normalize(normal));\n" +
+         "   vWorldNormal = vec3(normalize(normal));\n" +
          "}",
 
 	fs :  "precision mediump float;\n" +
@@ -23,16 +23,16 @@ var normalShaderPair = {
          "}"
 }
 
-var ShaderProgram = function(gl, shaderPair) {
-	var program = this.generateProgram(gl, shaderPair);
+ Portal.prototype.initShaders = function() {
+	var program = this.generateProgram(this.gl, normalShaderPair);
    
-   gl.useProgram(program);
-   this.setupHandles(gl, program);
+   this.gl.useProgram(program);
+   this.setupHandles(this.gl, program);
 
-   return program;
+   this.shaderProgram = program;
 }
 
-ShaderProgram.prototype.generateProgram = function(gl, shaderPair) {
+Portal.prototype.generateProgram = function(gl, shaderPair) {
    var vertexShader = this.buildShader(gl, gl.VERTEX_SHADER, shaderPair.vs);
    var fragmentShader = this.buildShader(gl, gl.FRAGMENT_SHADER, shaderPair.fs);
 
@@ -47,7 +47,7 @@ ShaderProgram.prototype.generateProgram = function(gl, shaderPair) {
    return shaderProgram;
 }
 
-ShaderProgram.prototype.buildShader = function(gl, shaderType, script) {
+Portal.prototype.buildShader = function(gl, shaderType, script) {
    if (!shaderType)
       return null;
 
@@ -63,7 +63,7 @@ ShaderProgram.prototype.buildShader = function(gl, shaderType, script) {
    return shader;
 }
 
-ShaderProgram.prototype.setupHandles = function(gl, program) {
+Portal.prototype.setupHandles = function(gl, program) {
    program.aFlags = gl.getUniformLocation(program, "uFlags")
 
    program.aVertexPosition = gl.getAttribLocation(program, "aVertexPosition");

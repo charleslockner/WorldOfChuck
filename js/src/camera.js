@@ -1,28 +1,39 @@
+
+Portal.prototype.initCamera = function() {
+   this.camera = {
+      position : vec3.fromValues(0, 0, 0),
+      direction : vec3.fromValues(0, 0, -1),
+      up : vec3.fromValues(0, 1, 0),
+      pitch : 0.0,
+      yaw : -PI / 2
+   }
+}
+
 Portal.prototype.updateCamera = function(elapsed) {
    var camSpeed = 10;
-   if (this.system.controls.leftPressed) {
+   if (this.controls.leftPressed) {
       var trans = {};
-      vec3.normalize(trans, this.system.camera.direction);
+      vec3.normalize(trans, this.camera.direction);
       vec3.scale(trans, trans, 0.001 * camSpeed * elapsed);
-      vec3.cross(trans, trans, this.system.camera.up);
-      vec3.sub(this.system.camera.position, this.system.camera.position, trans);
+      vec3.cross(trans, trans, this.camera.up);
+      vec3.sub(this.camera.position, this.camera.position, trans);
    }
-   if (this.system.controls.rightPressed) {
+   if (this.controls.rightPressed) {
       var trans = {};
-      vec3.normalize(trans, this.system.camera.direction);
+      vec3.normalize(trans, this.camera.direction);
       vec3.scale(trans, trans, 0.001 * camSpeed * elapsed);
-      vec3.cross(trans, trans, this.system.camera.up);
-      vec3.add(this.system.camera.position, this.system.camera.position, trans);
+      vec3.cross(trans, trans, this.camera.up);
+      vec3.add(this.camera.position, this.camera.position, trans);
    }
-   if (this.system.controls.forwardPressed) {
+   if (this.controls.forwardPressed) {
       var trans = {};
-      vec3.scale(trans, this.system.camera.direction, 0.001 * camSpeed * elapsed);
-      vec3.add(this.system.camera.position, this.system.camera.position, trans);
+      vec3.scale(trans, this.camera.direction, 0.001 * camSpeed * elapsed);
+      vec3.add(this.camera.position, this.camera.position, trans);
    }
-   if (this.system.controls.backwardPressed) {
+   if (this.controls.backwardPressed) {
       var trans = {};
-      vec3.scale(trans, this.system.camera.direction, 0.001 * camSpeed * elapsed);
-      vec3.sub(this.system.camera.position, this.system.camera.position, trans);
+      vec3.scale(trans, this.camera.direction, 0.001 * camSpeed * elapsed);
+      vec3.sub(this.camera.position, this.camera.position, trans);
    }
 
    this.aimCamera();
@@ -31,13 +42,13 @@ Portal.prototype.updateCamera = function(elapsed) {
 Portal.prototype.aimCamera = function() {
    var PITCH_LIMIT = 1.484; // 85 degrees
 
-   if (this.system.controls.cursorXDelta || this.system.controls.cursorXDelta) {
+   if (this.controls.cursorXDelta || this.controls.cursorXDelta) {
 
-      var pitch = this.system.camera.pitch;
-      var yaw = this.system.camera.yaw;
+      var pitch = this.camera.pitch;
+      var yaw = this.camera.yaw;
 
-      pitch = pitch - this.system.controls.cursorYDelta * .01;
-      yaw = yaw + this.system.controls.cursorXDelta * .01;
+      pitch = pitch - this.controls.cursorYDelta * .01;
+      yaw = yaw + this.controls.cursorXDelta * .01;
 
       if (pitch >= PITCH_LIMIT)
          pitch = PITCH_LIMIT;
@@ -51,11 +62,11 @@ Portal.prototype.aimCamera = function() {
       var tx = Math.cos(pitch) * Math.cos(yaw);
       var ty = Math.sin(pitch);
       var tz = Math.cos(pitch) * Math.cos(PI/2 - yaw);
-      this.system.camera.direction = vec3.fromValues(tx, ty, tz);
+      this.camera.direction = vec3.fromValues(tx, ty, tz);
 
-      this.system.camera.pitch = pitch;
-      this.system.camera.yaw = yaw;
-      this.system.controls.cursorXDelta = 0;
-      this.system.controls.cursorYDelta = 0;
+      this.camera.pitch = pitch;
+      this.camera.yaw = yaw;
+      this.controls.cursorXDelta = 0;
+      this.controls.cursorYDelta = 0;
    }
 }
