@@ -44,7 +44,6 @@ Portal.prototype.initGLProperties = function() {
    this.gl.depthFunc(this.gl.LEQUAL);                                   // Near things obscure far things
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);  // Clear the color as well as the depth buffer.
 
-   this.gl.viewportWidth = this.canvas.width;
-   this.gl.viewportHeight = this.canvas.height;
-
+   // this.gl.viewportWidth = this.canvas.width;
+   // this.gl.viewportHeight = this.canvas.height;
 }

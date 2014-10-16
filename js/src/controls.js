@@ -61,27 +61,21 @@ Portal.prototype.bindEvents = function() {
       }
    });
 
-   $(window).click(function () {
+   $(window).bind('click', function () {
       var canvas = self.canvas;
-      canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
+      canvas.requestPointerLock = canvas.requestPointerLock || 
+                                  canvas.mozRequestPointerLock || 
+                                  canvas.webkitRequestPointerLock || 
+                                  canvas.msRequestPointerLock;
+      // canvas.requestFullscreen = canvas.requestFullScreen ||
+      //                            canvas.mozRequestFullScreen || 
+      //                            canvas.webkitRequestFullScreen || 
+      //                            canvas.msRequestFullScreen;
       canvas.requestPointerLock();
-
       launchIntoFullscreen(canvas);
    });
 
    document.addEventListener(POINTER_LOCK_CHANGE, this.lockChangeAlert.bind(this), false);
-}
-
-function launchIntoFullscreen(element) {
-  if(element.requestFullscreen) {
-    element.requestFullscreen();
-  } else if(element.mozRequestFullScreen) {
-    element.mozRequestFullScreen();
-  } else if(element.webkitRequestFullscreen) {
-    element.webkitRequestFullscreen();
-  } else if(element.msRequestFullscreen) {
-    element.msRequestFullscreen();
-  }
 }
 
 Portal.prototype.lockChangeAlert = function() {

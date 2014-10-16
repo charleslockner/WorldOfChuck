@@ -13,7 +13,7 @@ Portal.prototype.initWorld = function() {
 Portal.prototype.placeEntities = function() {
    var entities = [1000];
    entities[0] = new Cube([0,0,-10], 0);
-   entities[1] = new Pillar([0,0,10], 0);
+   entities[1] = new Cube([0,0,10], 0);
    entities[2] = new Sphere([-10,0,0], 0);
    entities[3] = new Sphere([10,0,0], 0);
 

@@ -25,7 +25,6 @@ Portal.prototype.loadModel = function(path, callback) {
    var self = this;
 
    $.getJSON(path, function(json) {
-      console.log(json.faces.length);
       var model = {
          faces : json.faces.length/3,
          vbo : self.gl.createBuffer(),

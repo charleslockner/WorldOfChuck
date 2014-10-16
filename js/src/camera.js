@@ -14,7 +14,8 @@ Portal.prototype.initCamera = function() {
       up : vec3.fromValues(0, 1, 0),
       pitch : 0.0,
       yaw : -PI / 2, // start facing down the -Z axis
-      camSpeed : 10
+      camSpeed : 10,
+      PITCH_LIMIT : 1.484 // 85 degrees
    }
 }
 
@@ -35,6 +36,7 @@ Portal.prototype.moveCamera = function(elapsed) {
 }
 
 Portal.prototype.moveLeft = function(elapsed) {
+   console.log("left");
    var trans = {};
    vec3.cross(trans, this.camera.direction, this.camera.up);
    vec3.normalize(trans, trans);
@@ -63,32 +65,25 @@ Portal.prototype.moveBackward = function(elapsed) {
 }
 
 Portal.prototype.aimCamera = function() {
-   var PITCH_LIMIT = 1.484; // 85 degrees
-
    if (this.controls.cursorXDelta || this.controls.cursorXDelta) {
 
-      var pitch = this.camera.pitch;
-      var yaw = this.camera.yaw;
+      this.camera.pitch -= this.controls.cursorYDelta * .01;
+      this.camera.yaw += this.controls.cursorXDelta * .01;
 
-      pitch = pitch - this.controls.cursorYDelta * .01;
-      yaw = yaw + this.controls.cursorXDelta * .01;
+      if (this.camera.pitch >= this.camera.PITCH_LIMIT)
+         this.camera.pitch = this.camera.PITCH_LIMIT;
+      if (this.camera.pitch <= -this.camera.PITCH_LIMIT)
+         this.camera.pitch = -this.camera.PITCH_LIMIT;
+      if (this.camera.yaw >= 2.0 * PI)
+         this.camera.yaw -= 2.0 * PI;
+      if (this.camera.yaw < 0)
+         this.camera.yaw += 2.0 * PI;
 
-      if (pitch >= PITCH_LIMIT)
-         pitch = PITCH_LIMIT;
-      if (pitch <= -PITCH_LIMIT)
-         pitch = -PITCH_LIMIT;
-      if (yaw >= 2.0 * PI)
-         yaw -= 2.0 * PI;
-      if (yaw < 0)
-         yaw += 2.0 * PI;
-
-      var tx = Math.cos(pitch) * Math.cos(yaw);
-      var ty = Math.sin(pitch);
-      var tz = Math.cos(pitch) * Math.cos(PI/2 - yaw);
+      var tx = Math.cos(this.camera.pitch) * Math.cos(this.camera.yaw);
+      var ty = Math.sin(this.camera.pitch);
+      var tz = Math.cos(this.camera.pitch) * Math.cos(PI/2 - this.camera.yaw);
       this.camera.direction = vec3.fromValues(tx, ty, tz);
 
-      this.camera.pitch = pitch;
-      this.camera.yaw = yaw;
       this.controls.cursorXDelta = 0;
       this.controls.cursorYDelta = 0;
    }

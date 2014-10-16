@@ -6,42 +6,35 @@
    | this header or simply stating that your work uses some of this code. :D  |
    |__________________________________________________________________________| */
 
-var normalShaderPair = {
-	vs :  "attribute vec3 aVertexPosition;\n" +
-			"attribute vec3 aVertexNormal;\n" +
-         "uniform int uFlags;\n" +
-         "uniform mat4 uModelMatrix;\n" +
-         "uniform mat4 uViewMatrix;\n" +
-         "uniform mat4 uProjectionMatrix;\n" +
-         "varying vec3 vWorldNormal;\n" +
-         "\n" +
-         "void main(void) {\n" +
-         "   vec4 normal;\n" +
-         "   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aVertexPosition, 1.0);\n" +
-         "      normal = vec4(aVertexNormal, 0.0);\n" +
-         "   vWorldNormal = vec3(uModelMatrix * normalize(normal));\n" +
-         "}",
 
-	fs :  "precision mediump float;\n" +
-			"varying vec3 vWorldNormal;\n" +
-         "\n" +
-         "void main(void) {\n" +
-         "   gl_FragColor = vec4(vWorldNormal, 1.0);\n" +
-         "}"
+Portal.prototype.initShaders = function() {
+   var self = this;
+
+   this.createShaderProgram("shaders/phong.vert.glsl", "shaders/phong.frag.glsl", function(program) {
+      self.shaderProgram = program;
+      self.gl.useProgram(self.shaderProgram);
+   });
 }
 
- Portal.prototype.initShaders = function() {
-	var program = this.generateProgram(this.gl, normalShaderPair);
-   
-   this.gl.useProgram(program);
-   this.setupHandles(this.gl, program);
+Portal.prototype.createShaderProgram = function(vsPath, fsPath, callback) {
+   var self = this;
 
-   this.shaderProgram = program;
+   $.get(vsPath, function(vsString) {
+      console.log(vsPath + " loaded.");
+      $.get(fsPath, function(fsString) {
+         console.log(fsPath + " loaded.");
+
+         var program = self.generateProgram(self.gl, vsString, fsString);
+         self.setupHandles(self.gl, program);
+
+         callback(program);
+      });
+   });
 }
 
-Portal.prototype.generateProgram = function(gl, shaderPair) {
-   var vertexShader = this.buildShader(gl, gl.VERTEX_SHADER, shaderPair.vs);
-   var fragmentShader = this.buildShader(gl, gl.FRAGMENT_SHADER, shaderPair.fs);
+Portal.prototype.generateProgram = function(gl, vs, fs) {
+   var vertexShader = this.buildShader(gl, gl.VERTEX_SHADER, vs);
+   var fragmentShader = this.buildShader(gl, gl.FRAGMENT_SHADER, fs);
 
    var shaderProgram = gl.createProgram();
    gl.attachShader(shaderProgram, vertexShader);
@@ -49,7 +42,7 @@ Portal.prototype.generateProgram = function(gl, shaderPair) {
    gl.linkProgram(shaderProgram);
 
    if (!gl.getProgramParameter(shaderProgram, gl.LINK_STATUS))
-      alert("Could not initialise shaders");
+      alert("Could not initialize shaders");
 
    return shaderProgram;
 }

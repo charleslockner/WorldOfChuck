@@ -8,7 +8,8 @@
 
 Portal.prototype.loop = function() {
    this.updateState();
-   this.drawFrame();
+   if (this.shaderProgram) // We may not have returned from the glsl load call
+      this.drawFrame();
    window.requestAnimationFrame(this.loop.bind(this));
 }
 
@@ -46,7 +47,7 @@ Portal.prototype.sendEntityIndependantShaderData = function() {
 Portal.prototype.drawEntity = function(entity) {
    var model = this.models[entity.model];
 
-   if (model) {
+   if (model) { // we may not have returned from the json load call
       var flags = 1; // flat shade the object
       this.gl.uniform1i(this.shaderProgram.uFlags, flags);
 

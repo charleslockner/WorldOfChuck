@@ -20,7 +20,7 @@ var validExtensions = {
    ".png": "image/png",
    ".ico": "image/ico",
    ".json": "text/json",
-   ".3ds": "model"
+   ".glsl": "textshader"
 };
 
 function fillPrivateFiles() {
