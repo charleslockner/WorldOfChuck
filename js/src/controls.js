@@ -66,7 +66,7 @@ Portal.prototype.bindEvents = function() {
       canvas.requestPointerLock = canvas.requestPointerLock || canvas.mozRequestPointerLock || canvas.webkitRequestPointerLock;
       canvas.requestPointerLock();
 
-      launchIntoFullscreen(document.getElementById("portal"));
+      launchIntoFullscreen(canvas);
    });
 
    document.addEventListener(POINTER_LOCK_CHANGE, this.lockChangeAlert.bind(this), false);
