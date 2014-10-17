@@ -41,3 +41,7 @@ var launchIntoFullscreen = function(element) {
 }
 
 var PI = 3.14159;
+
+var randRange = function(low, high) {
+   return (high - low) * Math.random() + low;
+}

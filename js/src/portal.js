@@ -30,7 +30,7 @@ var Portal = function(canvas) {
 Portal.prototype.setup = function() {
    this.initGLProperties();
    this.initModels();   // models.js
-   this.initWorld();   // system.js (initializes the camera and the entities)
+   this.initWorld();    // system.js (initializes the camera and the entities)
    this.initControls(); // controls.js
    this.initCamera();
    this.initShaders();  // shaders.js
@@ -39,7 +39,7 @@ Portal.prototype.setup = function() {
 }
 
 Portal.prototype.initGLProperties = function() {
-   this.gl.clearColor(0, 0, 0, 1.0);                                    // Set clear color to black, fully opaque
+   this.gl.clearColor(0.05, 0.05, 0.3, 1.0);                              // Set clear color to black, fully opaque
    this.gl.enable(this.gl.DEPTH_TEST);                                  // Enable depth testing
    this.gl.depthFunc(this.gl.LEQUAL);                                   // Near things obscure far things
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);  // Clear the color as well as the depth buffer.
