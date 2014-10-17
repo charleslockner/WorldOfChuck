@@ -18,6 +18,7 @@ var Cube = function(pos, rot) {
    this.model = "cube";
 };
 
+// Make Cube a subclass of Entity
 Cube.prototype = new Entity();
 Cube.prototype.constructor = Cube;
 
@@ -26,6 +27,7 @@ var Sphere = function(pos, rot) {
    this.model = "sphere";
 };
 
+// Make Sphere a subclass of Entity
 Sphere.prototype = new Entity();
 Sphere.prototype.constructor = Sphere;
 
@@ -34,5 +36,6 @@ var Pillar = function(pos, rot) {
    this.model = "pillar";
 };
 
+// Make Pillar a subclass of Entity
 Pillar.prototype = new Entity();
 Pillar.prototype.constructor = Pillar;
