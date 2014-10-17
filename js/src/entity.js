@@ -10,8 +10,17 @@
 var Entity = function(pos, rot) {
    this.position = pos;
    this.rotation = rot;
-   this.model = "question"; // indicates that model doesn't exist
+   this.model = null;
 }
+
+var WorldOfChuck = function(pos, rot) {
+   Entity.call(this, pos, rot);
+   this.model = "worldofchuck";
+};
+
+// Make WorldOfChuck a subclass of Entity
+WorldOfChuck.prototype = new Entity();
+WorldOfChuck.prototype.constructor = WorldOfChuck;
 
 var Cube = function(pos, rot) {
    Entity.call(this, pos, rot);

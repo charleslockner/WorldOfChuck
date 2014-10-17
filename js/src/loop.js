@@ -45,23 +45,21 @@ Portal.prototype.sendEntityIndependantShaderData = function() {
 }
 
 Portal.prototype.drawEntity = function(entity) {
-   var model = this.models[entity.model];
+   var model = this.models[entity.model] || this.models.unknown;
 
-   if (model) { // we may not have returned from the json load call
-      var flags = 1; // flat shade the object
-      this.gl.uniform1i(this.shaderProgram.uFlags, flags);
+   var flags = 1; // flat shade the object
+   this.gl.uniform1i(this.shaderProgram.uFlags, flags);
 
-      var modelM = this.makeModelMatrix(entity);
-      this.gl.uniformMatrix4fv(this.shaderProgram.uModelMatrix, false, modelM);
+   var modelM = this.makeModelMatrix(entity);
+   this.gl.uniformMatrix4fv(this.shaderProgram.uModelMatrix, false, modelM);
 
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, model.vbo);
-      this.gl.vertexAttribPointer(this.shaderProgram.aVertexPosition, 3, this.gl.FLOAT, false, 0, 0);
-      this.gl.bindBuffer(this.gl.ARRAY_BUFFER, model.nbo);
-      this.gl.vertexAttribPointer(this.shaderProgram.aVertexNormal, 3, this.gl.FLOAT, false, 0, 0);
-      this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, model.ibo);
+   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, model.vbo);
+   this.gl.vertexAttribPointer(this.shaderProgram.aVertexPosition, 3, this.gl.FLOAT, false, 0, 0);
+   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, model.nbo);
+   this.gl.vertexAttribPointer(this.shaderProgram.aVertexNormal, 3, this.gl.FLOAT, false, 0, 0);
+   this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, model.ibo);
 
-      this.gl.drawElements(this.gl.TRIANGLES, 3 * model.faces, this.gl.UNSIGNED_SHORT, 0);
-   }
+   this.gl.drawElements(this.gl.TRIANGLES, 3 * model.faces, this.gl.UNSIGNED_SHORT, 0);
 }
 
 Portal.prototype.makeModelMatrix = function(entity) {
