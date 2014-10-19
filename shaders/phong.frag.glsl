@@ -1,3 +1,5 @@
+#extension GL_EXT_draw_buffers : require
+
 precision mediump float;
 varying vec3 vWorldNormal;
 

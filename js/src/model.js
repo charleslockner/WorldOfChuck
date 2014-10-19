@@ -24,6 +24,9 @@ Portal.prototype.initModels = function() {
 
    self.models.unknown = this.createModelFromJSON(unknownJSON);
 
+   var gen = new TerrainGenerator();
+   self.models.ground = this.createModelFromJSON(gen.createMountains());
+
    this.loadModel("assets/worldofchuck_text.json", function(model) {
       self.models.worldofchuck = model;
    });

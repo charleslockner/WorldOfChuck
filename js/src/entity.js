@@ -48,3 +48,12 @@ var Pillar = function(pos, rot) {
 // Make Pillar a subclass of Entity
 Pillar.prototype = new Entity();
 Pillar.prototype.constructor = Pillar;
+
+var Ground = function(pos, rot) {
+   Entity.call(this, pos, rot);
+   this.model = "ground";
+};
+
+// Make Pillar a subclass of Entity
+Ground.prototype = new Entity();
+Ground.prototype.constructor = Ground;

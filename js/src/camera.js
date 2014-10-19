@@ -36,7 +36,6 @@ Portal.prototype.moveCamera = function(elapsed) {
 }
 
 Portal.prototype.moveLeft = function(elapsed) {
-   console.log("left");
    var trans = {};
    vec3.cross(trans, this.camera.direction, this.camera.up);
    vec3.normalize(trans, trans);

@@ -13,7 +13,8 @@ Portal.prototype.initWorld = function() {
 
 Portal.prototype.placeEntities = function() {
    var entities = [1000];
-   entities[0] = new WorldOfChuck([0,0,-10], 0);
+   entities[0] = new Ground([0,-50,0], 0);
+   entities.push(new WorldOfChuck([0, 0, -10], 0));
    for (var i = 1; i < 100; i++)
       entities.push(new Cube([randRange(-50, 50), randRange(-50, 50), randRange(-50, 50)], 0));
    for (var i = 100; i < 200; i++)
@@ -27,6 +28,6 @@ Portal.prototype.updateWorld = function(elapsed) {
 }
 
 Portal.prototype.updateEntities = function(elapsed) {
-   for (var i = 0; i < this.entities.length; i++)
+   for (var i = 1; i < this.entities.length; i++)
       this.entities[i].rotation += (2 * elapsed) / 1000.0;
 }
