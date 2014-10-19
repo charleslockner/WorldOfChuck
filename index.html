@@ -34,7 +34,7 @@
    <!-- Source Files -->
    <script type="text/javascript" src="js/src/fixes.js"></script>  
    <script type="text/javascript" src="js/src/entity.js"></script>
-   <script type="text/javascript" src="js/src/terrain_generator.js"></script>
+   <script type="text/javascript" src="js/src/terrain.js"></script>
 
    <script type="text/javascript" src="js/src/portal.js"></script>
    <script type="text/javascript" src="js/src/model.js"></script> 
@@ -47,8 +47,11 @@
 
 
    <script>
+      var portal;
+
       $(document).ready(function() {
-         new Portal(document.getElementById("portal"));
+         var canvas = document.getElementById("portal");
+         portal = new Portal(canvas);
       });
    </script>
 </html>

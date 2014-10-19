@@ -28,6 +28,17 @@ Portal.prototype.updateWorld = function(elapsed) {
 }
 
 Portal.prototype.updateEntities = function(elapsed) {
-   for (var i = 1; i < this.entities.length; i++)
-      this.entities[i].rotation += (2 * elapsed) / 1000.0;
+   this.entities[1].rotation += -1.5 * elapsed / 1000.0;
+   for (var i = 2; i < this.entities.length; i++) {
+      if (i % 5 == 0)
+         this.entities[i].rotation += 5 * elapsed / 1000.0;
+      else if (i % 5 == 1)
+         this.entities[i].rotation += -3 * elapsed / 1000.0;
+      else if (i % 5 == 2)
+         this.entities[i].rotation += 8 * elapsed / 1000.0;
+      else if (i % 5 == 3)
+         this.entities[i].rotation += -2 * elapsed / 1000.0;
+      else if (i % 5 == 4)
+         this.entities[i].rotation += 18 * elapsed / 1000.0;
+   }
 }

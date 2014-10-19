@@ -2,15 +2,15 @@
 var TerrainGenerator = function() {}
 
 TerrainGenerator.prototype.createMountains = function() {
-   return this.create(2, 80, 5, 0.5);
+   return this.create(0.5, 100, 7, 0.2);
 }
 
 TerrainGenerator.prototype.create = function(width, height, reps, rough) {
    var sqArr = this.generateSquare(reps, rough);
 
    var positions = this.setPositions(sqArr, width, height);
-   var normals = this.setNormals(sqArr, positions);
    var indices = this.setIndices(sqArr);
+   var normals = this.setNormals(sqArr, positions);
 
    terr = {
       "vertices": positions,
@@ -51,7 +51,7 @@ TerrainGenerator.prototype.generateSquare = function(reps, rough) {
 
 TerrainGenerator.prototype.fillSquare = function(arr, xF, xL, yF, yL, rough) {
    var dist = xL - xF;
-   
+
    if (dist > 1) {
       var randomness = rough * dist / (arr.length - 1);
       var xMid = (xF + xL) / 2;
