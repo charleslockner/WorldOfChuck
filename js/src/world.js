@@ -13,7 +13,7 @@ Portal.prototype.initWorld = function() {
 
 Portal.prototype.placeEntities = function() {
    var entities = [1000];
-   entities[0] = new GroundTile(0, 0);
+   entities[0] = new Terrain([0,0,0], 0);
    // entities[0] = new WorldOfChuck([0, 0, -10], 0);
    for (var i = 1; i < 100; i++)
       entities.push(new Cube([randRange(-50, 50), randRange(-50, 50), randRange(-50, 50)], 0));

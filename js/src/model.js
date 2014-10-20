@@ -24,18 +24,13 @@ Portal.prototype.initModels = function() {
 
    var TILE_WIDTH = 500;
    var TILE_HEIGHT = 300;
-   this.terrainGenerator = new TerrainGenerator(TILE_WIDTH, TILE_HEIGHT, 7);
+   this.models.terrainGenerator = new TerrainGenerator(TILE_WIDTH, TILE_HEIGHT, 7);
+   this.models.tileMap = new TileMap(TILE_WIDTH, -TILE_HEIGHT/2);
+
 
    this.models.unknown = this.createModelFromJSON(unknownJSON);
 
-   // var sideArr = new Float32Array(128);
-   // for (var i = 0; i < 128; i++)
-   // 	sideArr[i] = i / 128.0;
-
-
-   var groundJSON = this.terrainGenerator.createMountains(null, this.terrainGenerator.WEST);
-   this.models.ground = new TileMap(TILE_WIDTH, -TILE_HEIGHT/2);
-   this.models.ground.put(0,0,this.createModelFromJSON(groundJSON));
+   this.createGroundTile();
 
    this.loadModel("assets/models/worldofchuck_text.json", function(model) {
       self.models.worldofchuck = model;
@@ -84,12 +79,15 @@ Portal.prototype.loadModel = function(path, callback) {
    });
 }
 
-Portal.prototype.remakeTerrain = function() {
-	var rand = randRange(0,1);
-	if (rand < .333)
-		this.models.ground = this.createModelFromJSON(this.terrainGenerator.createPlains());
-	else if (rand < .667)
-		this.models.ground = this.createModelFromJSON(this.terrainGenerator.createHills());
-	else
-		this.models.ground = this.createModelFromJSON(this.terrainGenerator.createMountains());
+Portal.prototype.createGroundTile = function() {
+	// var preArr = new Float32Array(); // var orient = this.models.terrainGenerator.WEST;
+	var tileJSON = this.models.terrainGenerator.createRandom(null, this.models.terrainGenerator.WEST);
+	var tileModel = this.createModelFromJSON(tileJSON);
+   this.models.tileMap.put(0,0,tileModel);
+
+   tileJSON = this.models.terrainGenerator.createRandom(null, this.models.terrainGenerator.WEST);
+	tileModel = this.createModelFromJSON(tileJSON);
+   this.models.tileMap.put(1,0,tileModel);
+
+   console.log(this.models.tileMap.toString());
 }

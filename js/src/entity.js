@@ -85,22 +85,41 @@ var Pillar = function(pos, rot) {
 Pillar.prototype = new Entity();
 Pillar.prototype.constructor = Pillar;
 
-var GroundTile = function(xNdx, yNdx) {
-   this.xNdx = xNdx;
-   this.yNdx = yNdx;
-   this.rotation = 0;
-   this.mapName = "ground";
+
+
+
+
+// ========================================== TERRAIN ========================================== //
+var Terrain = function(pos, rot) {
+   Entity.call(this, pos, rot);
+   this.tileOffset = [0,0,0];
 };
 
-// Make GroundModel a subclass of Entity
-GroundTile.prototype = new Entity();
-GroundTile.prototype.constructor = GroundTile;
+Terrain.prototype = new Entity();
+Terrain.prototype.constructor = Terrain;
 
-GroundTile.prototype.draw = function(gl, shaderProgram, models) {
-   var tileMap = models[this.mapName];
-   var model = tileMap.get(this.xNdx, this.yNdx);
-   this.position = [tileMap.tileWidth * this.xNdx, tileMap.tileHeight, tileMap.tileWidth * this.yNdx];
-   this.drawModel(gl, shaderProgram, model);
+Terrain.prototype.draw = function(gl, shaderProgram, models) {
+   var tileMap = models.tileMap;
+   for (var x = tileMap.xFirstNdx; x <= tileMap.xLastNdx; x++)
+      for (var y = tileMap.yFirstNdx; y <= tileMap.yLastNdx; y++) {
+         var model = tileMap.get(x, y);
+         if (model) {
+            this.tileOffset = [tileMap.tileWidth * x, tileMap.tileHeight, tileMap.tileWidth * y]; 
+            this.drawModel(gl, shaderProgram, model);
+         }
+      }
+}
+
+Terrain.prototype.makeModelMatrix = function() {
+   var modelM = mat4.create();
+   var actualPos = [this.position[0] + this.tileOffset[0], 
+                    this.position[1] + this.tileOffset[1], 
+                    this.position[2] + this.tileOffset[2]];
+   // mat4.identity(modelM); // Set to identity
+   mat4.translate(modelM, modelM, vec3.fromValues(actualPos[0], actualPos[1], actualPos[2]));
+   mat4.rotate(modelM, modelM, this.rotation, vec3.fromValues(0.0, 1.0, 0.0));
+   // mat4.scale(modelM, modelM, vec3.fromValues(entity.scale.x, entity.scale.y, entity.scale.z));
+   return modelM;
 }
 
 

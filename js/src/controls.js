@@ -40,7 +40,7 @@ Portal.prototype.bindEvents = function() {
             self.controls.backwardPressed = true;
             break;
          case 82: // R
-            self.remakeTerrain();
+            self.createGroundTile();
             break;
       }
    });

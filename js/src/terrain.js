@@ -18,16 +18,30 @@ var TerrainGenerator = function(width, height, subDivs) {
    this.EAST = 4;
 }
 
+// Returns a JSON object
+TerrainGenerator.prototype.createRandom = function(initVerts, orientation) {
+   var rand = randRange(0,1);
+   if (rand < 1/3)
+      return this.createPlains();
+   else if (rand < 2/3)
+      return this.createHills();
+   else
+      return this.createMountains();
+}
+
+// Returns a JSON object
 TerrainGenerator.prototype.createMountains = function(initVerts, orientation) {
    var preMap = this.createPrefilledArray(initVerts, orientation);
    return this.create(preMap, this.height, 0.45);
 }
 
+// Returns a JSON object
 TerrainGenerator.prototype.createHills = function(initVerts, orientation) {
    var preMap = this.createPrefilledArray(initVerts, orientation);
    return this.create(preMap, 0.8 * this.height, 0.25);
 }
 
+// Returns a JSON object
 TerrainGenerator.prototype.createPlains = function(initVerts, orientation) {
    var preMap = this.createPrefilledArray(initVerts, orientation);
    return this.create(preMap, 0.25 * this.height, 0.15)
