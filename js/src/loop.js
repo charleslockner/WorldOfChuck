@@ -85,7 +85,7 @@ Portal.prototype.makeProjectionMatrix = function() {
    var projectionM = mat4.create();
 
    var aspect = this.gl.drawingBufferWidth / this.gl.drawingBufferHeight;
-   mat4.perspective(projectionM, 1.0, aspect, 0.1, 100.0);
+   mat4.perspective(projectionM, 1.0, aspect, this.NEAR_DISTANCE, this.FAR_DISTANCE);
 
    return projectionM;
 }

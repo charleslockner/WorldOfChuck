@@ -1,16 +1,74 @@
-// width => width of individual subsquare
-var TerrainGenerator = function() {}
+/*  __________________________________________________________________________
+   |                       World-of-Chuck Portal Project                      |
+   |                            By Charles Lockner                            |
+   |                                                                          |
+   | Anyone can use this. Just be sure to credit me by either including       |
+   | this header or simply stating that your work uses some of this code. :D  |
+   |__________________________________________________________________________| */
 
-TerrainGenerator.prototype.createMountains = function() {
-   return this.create(0.5, 100, 7, 0.2);
+
+var TerrainGenerator = function(width, height, subDivs) {
+   this.width = width;
+   this.height = height;
+   this.sideVerts = Math.pow(2, subDivs) + 1;
+   this.NONE = 0;
+   this.NORTH = 1;
+   this.SOUTH = 2;
+   this.WEST = 3;
+   this.EAST = 4;
 }
 
-TerrainGenerator.prototype.create = function(width, height, reps, rough) {
-   var sqArr = this.generateSquare(reps, rough);
+TerrainGenerator.prototype.createMountains = function(initVerts, orientation) {
+   var preMap = this.createPrefilledArray(initVerts, orientation);
+   return this.create(preMap, this.height, 0.45);
+}
 
-   var positions = this.setPositions(sqArr, width, height);
-   var indices = this.setIndices(sqArr);
-   var normals = this.setNormals(sqArr, positions);
+TerrainGenerator.prototype.createHills = function(initVerts, orientation) {
+   var preMap = this.createPrefilledArray(initVerts, orientation);
+   return this.create(preMap, 0.8 * this.height, 0.25);
+}
+
+TerrainGenerator.prototype.createPlains = function(initVerts, orientation) {
+   var preMap = this.createPrefilledArray(initVerts, orientation);
+   return this.create(preMap, 0.25 * this.height, 0.15)
+}
+
+TerrainGenerator.prototype.createPrefilledArray = function(verts, orient) {
+   var arr = this.createEmptyArray();
+   if (!verts || !orient || orient < 0 || orient > 4)
+      return arr;
+
+   console.log(arr);
+
+   if (orient == this.NORTH)
+      for (var x = 0; x < arr.length; x++)
+         arr[x][0] = verts[x];
+   else if (orient == this.SOUTH)
+      for (var x = 0; x < arr.length; x++)
+         arr[x][arr.length-1] = verts[x];
+   else if (orient == this.WEST)
+      for (var y = 0; y < arr.length; y++)
+         arr[0][y] = verts[y];
+   else if (orient == this.EAST)
+      arr[arr.length-1][y] = verts[y];
+
+   return arr;
+}
+
+TerrainGenerator.prototype.createEmptyArray = function() {
+   var arr = new Array(this.sideVerts);
+   for (var x = 0; x < this.sideVerts; x++)
+      arr[x] = new Float32Array(this.sideVerts);
+
+   return arr;
+}
+
+TerrainGenerator.prototype.create = function(preMap, height, rough) {
+   var hMap = this.generateSquare(rough, preMap);
+
+   var positions = this.setPositions(hMap, height);
+   var indices = this.setIndices(hMap);
+   var normals = this.setNormals(hMap, positions);
 
    terr = {
       "vertices": positions,
@@ -21,32 +79,31 @@ TerrainGenerator.prototype.create = function(width, height, reps, rough) {
       "bones": [],
       "boneWeights": [],
       "boneIndices": [],
-      "animations": {}
+      "animations": {},
+      "heightMap": hMap
    }
 
    return terr;
 }
 
-// creates a height-map with random values between 0 and 1 using the diamond-square algorithm
-TerrainGenerator.prototype.generateSquare = function(reps, rough) {
-   var arrWidth = Math.pow(2, reps) + 1;
-   var arr = new Array(arrWidth);
-
-   for (var x = 0; x < arrWidth; x++)
-      arr[x] = new Float32Array(arrWidth);
-
+// Creates a height-map with random values between 0 and 1 using the diamond-square algorithm
+TerrainGenerator.prototype.generateSquare = function(rough, arr) {   
    var xF = 0;
-   var xL = arrWidth-1;
+   var xL = arr.length-1;
    var yF = 0;
-   var yL = arrWidth-1;
+   var yL = arr.length-1;
 
-   arr[xF][yF] = randRange(0, 1);
-   arr[xL][yF] = randRange(0, 1);
-   arr[xF][yL] = randRange(0, 1);
-   arr[xL][yL] = randRange(0, 1);
+   arr[xF][yF] = this.jitter(rough);
+   arr[xL][yF] = this.jitter(rough);
+   arr[xF][yL] = this.jitter(rough);
+   arr[xL][yL] = this.jitter(rough);
 
    this.fillSquare(arr, xF, xL, yF, yL, rough);
    return arr;
+}
+
+TerrainGenerator.prototype.jitter = function(randomness) {
+   return Math.max(0, Math.min(1, randomness * randRange(-1, 1)));
 }
 
 TerrainGenerator.prototype.fillSquare = function(arr, xF, xL, yF, yL, rough) {
@@ -75,19 +132,16 @@ TerrainGenerator.prototype.fillSquare = function(arr, xF, xL, yF, yL, rough) {
    }
 }
 
-TerrainGenerator.prototype.jitter = function(randomness) {
-   return Math.max(0, Math.min(1, randomness * randRange(-1, 1)));
-}
-
-TerrainGenerator.prototype.setPositions = function(sqArr, width, height) {
-   var vertsAcross = sqArr.length;
+TerrainGenerator.prototype.setPositions = function(hMap, height) {
+   var vertsAcross = hMap.length;
+   var subWidth = this.width / (vertsAcross-1);
    var positions = [];
 
    for (var x = 0; x < vertsAcross; x++)
       for (var z = 0; z < vertsAcross; z++) {
-         var xPos = width * ((1 - vertsAcross)/2 + x);
-         var yPos = height * (sqArr[x][z] - 0.5);
-         var zPos = width * ((1 - vertsAcross)/2 + z);
+         var xPos = subWidth * ((1 - vertsAcross)/2 + x);
+         var yPos = height * (hMap[x][z] - 0.5);
+         var zPos = subWidth * ((1 - vertsAcross)/2 + z);
 
          positions.push(xPos);
          positions.push(yPos);
@@ -97,8 +151,8 @@ TerrainGenerator.prototype.setPositions = function(sqArr, width, height) {
    return positions;
 }
 
-TerrainGenerator.prototype.setIndices = function(sqArr) {
-   var vertsAcross = sqArr.length;
+TerrainGenerator.prototype.setIndices = function(hMap) {
+   var vertsAcross = hMap.length;
    var indices = [];
 
    for (var x = 0; x < vertsAcross-1; x++)
@@ -122,8 +176,8 @@ TerrainGenerator.prototype.setIndices = function(sqArr) {
    return indices;
 }
 
-TerrainGenerator.prototype.setNormals = function(sqArr, positions) {
-   var vertsAcross = sqArr.length;
+TerrainGenerator.prototype.setNormals = function(hMap, positions) {
+   var vertsAcross = hMap.length;
    var normals = [];
 
    for (var x = 0; x < vertsAcross; x++)
@@ -170,7 +224,7 @@ TerrainGenerator.prototype.setNormals = function(sqArr, positions) {
             vec3.normalize(brNorm, brNorm);
          } else brNorm = null;
 
-         // average face normals
+         // Average face normals
          var normal = vec3.fromValues(0,0,0);
          if (tlNorm)
             vec3.add(normal, normal, tlNorm);
@@ -180,8 +234,9 @@ TerrainGenerator.prototype.setNormals = function(sqArr, positions) {
             vec3.add(normal, normal, blNorm);
          if (brNorm)
             vec3.add(normal, normal, brNorm);
+         vec3.normalize(normal, normal);
 
-         // add normal to normal array
+         // Add normal to normal array
          normals.push(normal[0]);
          normals.push(normal[1]);
          normals.push(normal[2]);

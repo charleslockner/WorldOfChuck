@@ -21,11 +21,15 @@ var unknownJSON = {
 Portal.prototype.initModels = function() {
    var self = this;
    this.models = {};
+   this.terrainGenerator = new TerrainGenerator(500, 300, 7);
 
-   self.models.unknown = this.createModelFromJSON(unknownJSON);
+   this.models.unknown = this.createModelFromJSON(unknownJSON);
 
-   var gen = new TerrainGenerator();
-   self.models.ground = this.createModelFromJSON(gen.createMountains());
+   var sideArr = new Float32Array(128);
+   for (var i = 0; i < 128; i++)
+   	  sideArr[i] = i / 128.0;
+   var groundJSON = this.terrainGenerator.createMountains(null, this.terrainGenerator.WEST);
+   this.models.ground = this.createModelFromJSON(groundJSON);
 
    this.loadModel("assets/worldofchuck_text.json", function(model) {
       self.models.worldofchuck = model;
@@ -38,16 +42,6 @@ Portal.prototype.initModels = function() {
    });
    this.loadModel("assets/pillar.json", function(model) {
       self.models.pillar = model;
-   });
-}
-
-Portal.prototype.loadModel = function(path, callback) {
-   var self = this;
-
-   $.getJSON(path, function(json) {
-      console.log(path + " loaded.");
-      var model = self.createModelFromJSON(json);
-      callback(model);
    });
 }
 
@@ -72,4 +66,24 @@ Portal.prototype.createModelFromJSON = function(json) {
    this.gl.bufferData(this.gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(json.faces), this.gl.STATIC_DRAW);
 
    return model;
+}
+
+Portal.prototype.loadModel = function(path, callback) {
+   var self = this;
+
+   $.getJSON(path, function(json) {
+      console.log(path + " loaded.");
+      var model = self.createModelFromJSON(json);
+      callback(model);
+   });
+}
+
+Portal.prototype.remakeTerrain = function() {
+	var rand = randRange(0,1);
+	if (rand < .333)
+		this.models.ground = this.createModelFromJSON(this.terrainGenerator.createPlains());
+	else if (rand < .667)
+		this.models.ground = this.createModelFromJSON(this.terrainGenerator.createHills());
+	else
+		this.models.ground = this.createModelFromJSON(this.terrainGenerator.createMountains());
 }
