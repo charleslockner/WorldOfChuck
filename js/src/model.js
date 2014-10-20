@@ -21,26 +21,32 @@ var unknownJSON = {
 Portal.prototype.initModels = function() {
    var self = this;
    this.models = {};
-   this.terrainGenerator = new TerrainGenerator(500, 300, 7);
+
+   var TILE_WIDTH = 500;
+   var TILE_HEIGHT = 300;
+   this.terrainGenerator = new TerrainGenerator(TILE_WIDTH, TILE_HEIGHT, 7);
 
    this.models.unknown = this.createModelFromJSON(unknownJSON);
 
-   var sideArr = new Float32Array(128);
-   for (var i = 0; i < 128; i++)
-   	  sideArr[i] = i / 128.0;
-   var groundJSON = this.terrainGenerator.createMountains(null, this.terrainGenerator.WEST);
-   this.models.ground = this.createModelFromJSON(groundJSON);
+   // var sideArr = new Float32Array(128);
+   // for (var i = 0; i < 128; i++)
+   // 	sideArr[i] = i / 128.0;
 
-   this.loadModel("assets/worldofchuck_text.json", function(model) {
+
+   var groundJSON = this.terrainGenerator.createMountains(null, this.terrainGenerator.WEST);
+   this.models.ground = new TileMap(TILE_WIDTH, -TILE_HEIGHT/2);
+   this.models.ground.put(0,0,this.createModelFromJSON(groundJSON));
+
+   this.loadModel("assets/models/worldofchuck_text.json", function(model) {
       self.models.worldofchuck = model;
    });
-   this.loadModel("assets/cube.json", function(model) {
+   this.loadModel("assets/models/cube.json", function(model) {
       self.models.cube = model;
    });
-   this.loadModel("assets/sphere.json", function(model) {
+   this.loadModel("assets/models/sphere.json", function(model) {
       self.models.sphere = model;
    });
-   this.loadModel("assets/pillar.json", function(model) {
+   this.loadModel("assets/models/pillar.json", function(model) {
       self.models.pillar = model;
    });
 }

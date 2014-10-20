@@ -28,7 +28,7 @@ Portal.prototype.drawFrame = function() {
    this.sendEntityIndependantShaderData();
 
    for (var i = 0; i < this.entities.length; i++)
-      this.drawEntity(this.entities[i]);
+      this.entities[i].draw(this.gl, this.shaderProgram, this.models);
 }
 
 Portal.prototype.updateViewport = function() {
@@ -42,34 +42,6 @@ Portal.prototype.sendEntityIndependantShaderData = function() {
 
    var projectionM = this.makeProjectionMatrix();
    this.gl.uniformMatrix4fv(this.shaderProgram.uProjectionMatrix, false, projectionM);
-}
-
-Portal.prototype.drawEntity = function(entity) {
-   var model = this.models[entity.model] || this.models.unknown;
-
-   var flags = 1; // flat shade the object
-   this.gl.uniform1i(this.shaderProgram.uFlags, flags);
-
-   var modelM = this.makeModelMatrix(entity);
-   this.gl.uniformMatrix4fv(this.shaderProgram.uModelMatrix, false, modelM);
-
-   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, model.vbo);
-   this.gl.vertexAttribPointer(this.shaderProgram.aVertexPosition, 3, this.gl.FLOAT, false, 0, 0);
-   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, model.nbo);
-   this.gl.vertexAttribPointer(this.shaderProgram.aVertexNormal, 3, this.gl.FLOAT, false, 0, 0);
-   this.gl.bindBuffer(this.gl.ELEMENT_ARRAY_BUFFER, model.ibo);
-
-   this.gl.drawElements(this.gl.TRIANGLES, 3 * model.faces, this.gl.UNSIGNED_SHORT, 0);
-}
-
-Portal.prototype.makeModelMatrix = function(entity) {
-   var modelM = mat4.create();
-   // mat4.identity(modelM); // Set to identity
-   mat4.translate(modelM, modelM, vec3.fromValues(entity.position[0], entity.position[1], entity.position[2]));
-   mat4.rotate(modelM, modelM, entity.rotation, vec3.fromValues(0.0, 1.0, 0.0));
-   // mat4.scale(modelM, modelM, vec3.fromValues(entity.scale.x, entity.scale.y, entity.scale.z));
-
-   return modelM;
 }
 
 Portal.prototype.makeViewMatrix = function() {
