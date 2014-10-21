@@ -83,14 +83,27 @@ TerrainGenerator.prototype.generateSquare = function(rough, arr) {
    var yF = 0;
    var yL = arr.length-1;
 
+   var aveHeight = 0;
+   var count = 0;
+
+   for (var x = xF; x <= xL; x++)
+      for (var y = yF; y <= yL; y++)
+         if (arr[x][y]) {
+            aveHeight += arr[x][y];
+            count++;
+         }
+
+   if (count)
+      aveHeight /= count;
+
    if (!arr[xF][yF])
-      arr[xF][yF] = this.jitter(rough);
+      arr[xF][yF] = aveHeight + this.jitter(rough);
    if (!arr[xL][yF])
-      arr[xL][yF] = this.jitter(rough);
+      arr[xL][yF] = aveHeight + this.jitter(rough);
    if (!arr[xF][yL])
-      arr[xF][yL] = this.jitter(rough);
+      arr[xF][yL] = aveHeight + this.jitter(rough);
    if (!arr[xL][yL])
-      arr[xL][yL] = this.jitter(rough);
+      arr[xL][yL] = aveHeight + this.jitter(rough);
 
    this.fillSquare(arr, xF, xL, yF, yL, rough);
    return arr;

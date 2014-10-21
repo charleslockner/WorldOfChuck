@@ -24,17 +24,12 @@ Portal.prototype.initModels = function() {
 
    this.models.unknown = ModelLoader.createFromJSON(this.gl, unknownJSON);
 
-
-   var TILE_WIDTH = 500;
+   this.models.tileWidth = 500;
    var TILE_HEIGHT = 300;
    var RECURSIONS = 6;
-   this.models.terrainHandler = new TerrainHandler(this.gl, TILE_WIDTH, TILE_HEIGHT, RECURSIONS);
+   this.models.terrainHandler = new TerrainHandler(this.gl, this.models.tileWidth, TILE_HEIGHT, RECURSIONS);
    this.models.terrainHandler.createTile(0, 0);
-   this.models.terrainHandler.createTile(1, 0);
-   this.models.terrainHandler.createTile(1, 1);
-   this.models.terrainHandler.createTile(0, 1);
 
-   
 
 
    ModelLoader.load(this.gl, "assets/models/worldofchuck_text.json", function(model) {

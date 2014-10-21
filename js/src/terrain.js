@@ -56,3 +56,7 @@ TerrainHandler.prototype.createTile = function(x, z) {
 
    this.tileMap.put(x, z, tile);
 }
+
+TerrainHandler.prototype.removeTile = function(x, z) {
+   this.tileMap.remove(x,z);
+}

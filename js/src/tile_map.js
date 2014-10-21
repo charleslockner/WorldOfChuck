@@ -86,7 +86,7 @@ TileMap.prototype.get = function(x, y) {
 				return this.posArr[x].posArr[y];
 		}
 	}
-	
+
 	return null;
 }
 
@@ -110,6 +110,29 @@ TileMap.prototype.remove = function(x, y) {
 		}
 	}
 }
+
+TileMap.prototype.exists = function(x, y) {
+	if (x < 0) {
+		if (y < 0) {
+			if (this.negArr[-x] && this.negArr[-x].negArr[-y])
+				return true;
+		} else {
+			if (this.negArr[-x] && this.negArr[-x].posArr[y])
+				return true;
+		}
+	} else {
+		if (y < 0) {
+			if (this.posArr[x] && this.posArr[x].negArr[-y])
+				return true;
+		} else {
+			if (this.posArr[x] && this.posArr[x].posArr[y])
+				return true;
+		}
+	}
+
+	return false;
+}
+
 
 TileMap.prototype.toString = function() {
 	var str = "";
