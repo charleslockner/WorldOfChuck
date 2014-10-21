@@ -63,7 +63,6 @@ Portal.prototype.updateTerrain = function(elapsed) {
    for (var x = xKeepF; x <= xKeepL; x++)
       for (var z = zKeepF; z <= zKeepL; z++)
          if (!this.models.terrainHandler.tileMap.exists(x, z)) {
-            // console.log("added tile (" + x + ", " + z + ")");
             this.models.terrainHandler.createTile(x,z);
             console.log(this.models.terrainHandler.tileMap.toString());
          }
@@ -72,7 +71,6 @@ Portal.prototype.updateTerrain = function(elapsed) {
    for (var x = xF; x < xKeepF; x++)
       for (var z = zF; z <= zL; z++)
          if (this.models.terrainHandler.tileMap.exists(x,z)) {
-            // console.log("removed west tile (" + x + ", " + z + ")");
             this.models.terrainHandler.removeTile(x, z);
             console.log(this.models.terrainHandler.tileMap.toString());
          }
@@ -81,25 +79,22 @@ Portal.prototype.updateTerrain = function(elapsed) {
    for (var x = xKeepL+1; x <= xL; x++)
       for (var z = zF; z <= zL; z++)
          if (this.models.terrainHandler.tileMap.exists(x,z)) {
-            // console.log("removed east tile (" + x + ", " + z + ")");
             this.models.terrainHandler.removeTile(x, z);
-            console.log(this.models.terrainHandler.tileMap.toString());
-         }
-
-   // remove SOUTH tiles
-   for (var x = xKeepF; x <= xKeepL; x++)
-      for (var z = zF; z < zKeepF; z++)
-         if (this.models.terrainHandler.tileMap.exists(x,z)) {
-            // console.log("removed south tile (" + x + ", " + z + ")");
-            this.models.terrainHandler.removeTile(x, z);   
             console.log(this.models.terrainHandler.tileMap.toString());
          }
 
    // remove NORTH tiles
    for (var x = xKeepF; x <= xKeepL; x++)
+      for (var z = zF; z < zKeepF; z++)
+         if (this.models.terrainHandler.tileMap.exists(x,z)) {
+            this.models.terrainHandler.removeTile(x, z);   
+            console.log(this.models.terrainHandler.tileMap.toString());
+         }
+
+   // remove SOUTH tiles
+   for (var x = xKeepF; x <= xKeepL; x++)
       for (var z = zKeepL+1; z <= zL; z++)
          if (this.models.terrainHandler.tileMap.exists(x,z)) {
-            // console.log("removed north tile (" + x + ", " + z + ")");
             this.models.terrainHandler.removeTile(x, z);  
             console.log(this.models.terrainHandler.tileMap.toString());
          }
