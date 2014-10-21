@@ -22,6 +22,9 @@ Portal.prototype.initModels = function() {
    var self = this;
    this.models = {};
 
+   this.models.unknown = ModelLoader.createFromJSON(this.gl, unknownJSON);
+
+
    var TILE_WIDTH = 500;
    var TILE_HEIGHT = 300;
    var RECURSIONS = 6;
@@ -31,9 +34,7 @@ Portal.prototype.initModels = function() {
    this.models.terrainHandler.createTile(1, 1);
    this.models.terrainHandler.createTile(0, 1);
 
-
    
-   this.models.unknown = ModelLoader.createFromJSON(this.gl, unknownJSON);
 
 
    ModelLoader.load(this.gl, "assets/models/worldofchuck_text.json", function(model) {
