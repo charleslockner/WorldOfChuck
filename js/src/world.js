@@ -97,7 +97,7 @@ Portal.prototype.updateTerrain = function(elapsed) {
 
    // remove NORTH tiles
    for (var x = xKeepF; x <= xKeepL; x++)
-      for (var z = zKeepL+1; z < zL; z++)
+      for (var z = zKeepL+1; z <= zL; z++)
          if (this.models.terrainHandler.tileMap.exists(x,z)) {
             // console.log("removed north tile (" + x + ", " + z + ")");
             this.models.terrainHandler.removeTile(x, z);  
