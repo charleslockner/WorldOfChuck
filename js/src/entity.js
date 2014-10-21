@@ -99,12 +99,13 @@ Terrain.prototype = new Entity();
 Terrain.prototype.constructor = Terrain;
 
 Terrain.prototype.draw = function(gl, shaderProgram, models) {
-   var tileMap = models.tileMap;
+   var tileMap = models.terrainHandler.tileMap;
    for (var x = tileMap.xFirstNdx; x <= tileMap.xLastNdx; x++)
       for (var y = tileMap.yFirstNdx; y <= tileMap.yLastNdx; y++) {
-         var model = tileMap.get(x, y);
-         if (model) {
-            this.tileOffset = [tileMap.tileWidth * x, tileMap.tileHeight, tileMap.tileWidth * y]; 
+         var tile = tileMap.get(x, y);
+         if (tile) {
+            var model = tile.model;
+            this.tileOffset = [tileMap.tileWidth * x, 0, tileMap.tileWidth * y]; 
             this.drawModel(gl, shaderProgram, model);
          }
       }

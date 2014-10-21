@@ -14,7 +14,7 @@ Portal.prototype.initCamera = function() {
       up : vec3.fromValues(0, 1, 0),
       pitch : 0.0,
       yaw : -PI / 2, // start facing down the -Z axis
-      camSpeed : 10,
+      camSpeed : 100,
       PITCH_LIMIT : 1.484 // 85 degrees
    }
 }
