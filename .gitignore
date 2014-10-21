@@ -1,2 +1,5 @@
 .*
 ./log/*
+./assets/*
+./assets/models/*
+./assets/models/terrain/*
