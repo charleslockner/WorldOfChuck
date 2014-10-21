@@ -23,7 +23,7 @@ var Portal = function(canvas) {
    this.shaderProgram = null;
    this.lastUpdateTime = 0;
    this.NEAR_DISTANCE = 0.1;
-   this.FAR_DISTANCE = 1000;
+   this.FAR_DISTANCE = 2000;
 
    // Rev-up this icicle clam!!
    this.setup()

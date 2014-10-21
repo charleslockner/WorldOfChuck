@@ -135,32 +135,21 @@ TileMap.prototype.exists = function(x, y) {
 
 
 TileMap.prototype.toString = function() {
-	var str = "";
+	var str = "_|";
 
-	for (var x = this.xFirstNdx; x <= this.xLastNdx; x++) {
-		for (var y = this.yFirstNdx; y <= this.yLastNdx; y++) {
-			var val = this.get(x,y) ? "X" : "-";
-			str = str + "[" + x + "][" + y + "][" + val + "] ";
+	for (var x = this.xFirstNdx; x <= this.xLastNdx; x++)
+		str += x + "_";
+	str += "\n";
+
+	for (var y = this.yFirstNdx; y <= this.yLastNdx; y++) {
+		str += y + "|";
+		for (var x = this.xFirstNdx; x <= this.xLastNdx; x++) {
+			var val = this.exists(x,y) ? "X" : "-";
+			str +=  val + "|";
 		}
-		str = str + "\n";
+		str += "\n";
 	}
 
 	return str;
 }
-
-// var tileArray = new TileArray();
-// tileArray.put(1,1,{val:10, str:"hi"});
-// tileArray.put(1,-1,{val:20, str:"hi"});
-// tileArray.put(-1,1,{val:30, str:"hi"});
-// tileArray.put(-1,-1,{val:40, str:"hi"})
-// console.log(tileArray.get(1,1));
-// console.log(tileArray.get(1,-1));
-// console.log(tileArray.get(-1,1));
-// console.log(tileArray.get(-1,-1));
-// console.log(tileArray.get(10,10));
-// console.log(tileArray.get(10,-10));
-// console.log(tileArray.get(-10,10));
-// console.log(tileArray.get(-10,-10));
-// tileArray.remove(1,1);
-// console.log(tileArray.get(1,1));
 
