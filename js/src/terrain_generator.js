@@ -27,7 +27,7 @@ TerrainGenerator.prototype.createRandom = function(initMap) {
 // Returns a JSON object
 TerrainGenerator.prototype.createMountains = function(initMap) {
    var preMap = this.sanitizeArray(initMap);
-   return this.create(preMap, this.height, 0.45);
+   return this.create(preMap, 0.8 * this.height, 0.45);
 }
 
 // Returns a JSON object
@@ -39,11 +39,11 @@ TerrainGenerator.prototype.createHills = function(initMap) {
 // Returns a JSON object
 TerrainGenerator.prototype.createPlains = function(initMap) {
    var preMap = this.sanitizeArray(initMap);
-   return this.create(preMap, 0.25 * this.height, 0.15)
+   return this.create(preMap, 0.8 * this.height, 0.15)
 }
 
 TerrainGenerator.prototype.sanitizeArray = function(arr) {
-   return arr || this.createEmptyArray();
+   return arr ? arr : this.createEmptyArray();
 }
 
 TerrainGenerator.prototype.createEmptyArray = function() {
@@ -56,7 +56,6 @@ TerrainGenerator.prototype.createEmptyArray = function() {
 
 TerrainGenerator.prototype.create = function(preMap, height, rough) {
    var hMap = this.generateSquare(rough, preMap);
-
    var positions = this.setPositions(hMap, height);
    var indices = this.setIndices(hMap);
    var normals = this.setNormals(hMap, positions);
@@ -84,17 +83,21 @@ TerrainGenerator.prototype.generateSquare = function(rough, arr) {
    var yF = 0;
    var yL = arr.length-1;
 
-   arr[xF][yF] = this.jitter(rough);
-   arr[xL][yF] = this.jitter(rough);
-   arr[xF][yL] = this.jitter(rough);
-   arr[xL][yL] = this.jitter(rough);
+   if (!arr[xF][yF])
+      arr[xF][yF] = this.jitter(rough);
+   if (!arr[xL][yF])
+      arr[xL][yF] = this.jitter(rough);
+   if (!arr[xF][yL])
+      arr[xF][yL] = this.jitter(rough);
+   if (!arr[xL][yL])
+      arr[xL][yL] = this.jitter(rough);
 
    this.fillSquare(arr, xF, xL, yF, yL, rough);
    return arr;
 }
 
 TerrainGenerator.prototype.jitter = function(randomness) {
-   return Math.max(0, Math.min(1, randomness * randRange(-1, 1)));
+   return  randomness * randRange(-1, 1);
 }
 
 TerrainGenerator.prototype.fillSquare = function(arr, xF, xL, yF, yL, rough) {

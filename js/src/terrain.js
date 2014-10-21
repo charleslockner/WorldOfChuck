@@ -15,8 +15,39 @@ var TerrainHandler = function(gl, tileWidth, tileHeight, reps) {
 
 
 TerrainHandler.prototype.createTile = function(x, z) {
-   // var preArr = new Float32Array(); // var orient = this.models.terrainGenerator.WEST;
-   var tileJSON = this.generator.createRandom(null, null);
+   var preArr = this.generator.createEmptyArray();
+   var sideVerts = this.generator.sideVerts;
+
+   var leftTile = this.tileMap.get(x-1, z);
+   var rightTile = this.tileMap.get(x+1, z);
+   var topTile = this.tileMap.get(x, z-1);
+   var bottomTile = this.tileMap.get(x, z+1);
+
+   if (leftTile) {
+      var lMap = leftTile.JSON.heightMap;
+      for (var i = 0; i < sideVerts; i++)
+         preArr[0][i] = lMap[sideVerts-1][i];
+   }
+
+   if (rightTile) {
+      var rMap = rightTile.JSON.heightMap;
+      for (var i = 0; i < sideVerts; i++)
+         preArr[sideVerts-1][i] = rMap[0][i];
+   }
+
+   if (topTile) {
+      var tMap = topTile.JSON.heightMap;
+      for (var i = 0; i < sideVerts; i++)
+         preArr[i][0] = tMap[i][sideVerts-1];
+   }
+
+   if (bottomTile) {
+      var bMap = bottomTile.JSON.heightMap;
+      for (var i = 0; i < sideVerts; i++)
+         preArr[i][sideVerts-1] = bMap[i][0];
+   }
+
+   var tileJSON = this.generator.createRandom(preArr);
    var tileModel = ModelLoader.createFromJSON(this.gl, tileJSON);
    var tile = {
       JSON : tileJSON,

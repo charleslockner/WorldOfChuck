@@ -73,27 +73,21 @@ TileMap.prototype.get = function(x, y) {
 		if (y < 0) {
 			if (this.negArr[-x] && this.negArr[-x].negArr[-y])
 				return this.negArr[-x].negArr[-y];
-			else
-				return null;
 		} else {
 			if (this.negArr[-x] && this.negArr[-x].posArr[y])
 				return this.negArr[-x].posArr[y];
-			else
-				return null;
 		}
 	} else {
 		if (y < 0) {
 			if (this.posArr[x] && this.posArr[x].negArr[-y])
 				return this.posArr[x].negArr[-y];
-			else
-				return null;
 		} else {
 			if (this.posArr[x] && this.posArr[x].posArr[y])
 				return this.posArr[x].posArr[y];
-			else
-				return null;
 		}
 	}
+	
+	return null;
 }
 
 // TODO : updateBounds when removing something
