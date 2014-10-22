@@ -29,7 +29,8 @@ TerrainGenerator.prototype.createTile = function(preMap, roughness) {
       "colors": [],
       "uvs": [],
       "faces": indices,
-      "heightMap": hMap
+      "heightMap": hMap,
+      "roughness": roughness
    };
 }
 

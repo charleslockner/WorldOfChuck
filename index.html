@@ -11,7 +11,7 @@
    <head>
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <meta name="description" content="">
+      <meta name="description" content="Entirely 3D site that will be in continual development, devoted to the godly software engineer, Charles Lockner. Take a look around and see the colorful lucious landscapes that await you in the World of Chuck.">
       <meta name="author" content="Charles Lockner">
       
       <!-- FAVICON -->
@@ -29,9 +29,10 @@
 
    <!-- Library Files -->
    <script type="text/javascript" src="js/lib/jquery.min.js"></script>
+   <script type="text/javascript" src="js/lib/jquery.cookie.js"></script>
    <script type="text/javascript" src="js/lib/gl-matrix-min.js"></script>
 
-   <!-- Source Files -->
+   <!-- Source Files (Individual Modules) -->
    <script type="text/javascript" src="js/src/fixes.js"></script>
    <script type="text/javascript" src="js/src/model_loader.js"></script> 
    <script type="text/javascript" src="js/src/entity.js"></script>
@@ -39,16 +40,14 @@
    <script type="text/javascript" src="js/src/terrain_generator.js"></script>
    <script type="text/javascript" src="js/src/terrain_handler.js"></script>
 
-
+   <!-- Source Files (Core Portal class with all supporting files) -->
    <script type="text/javascript" src="js/src/portal.js"></script>
+   <script type="text/javascript" src="js/src/loop.js"></script>
    <script type="text/javascript" src="js/src/model.js"></script> 
    <script type="text/javascript" src="js/src/world.js"></script>
    <script type="text/javascript" src="js/src/camera.js"></script>
    <script type="text/javascript" src="js/src/controls.js"></script>
    <script type="text/javascript" src="js/src/shaders.js"></script>
-   <script type="text/javascript" src="js/src/loop.js"></script>
-
-
 
    <script>
       var portal;
