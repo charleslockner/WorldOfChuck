@@ -15,46 +15,47 @@ var TerrainHandler = function(gl, tileWidth, tileHeight, reps) {
 }
 
 TerrainHandler.prototype.createTile = function(x, z) {
-   var preArr = this.generator.createEmptyArray();
-   var sideVerts = this.generator.sideVerts;
-
-   var leftTile = this.tileMap.get(x-1, z);
-   var rightTile = this.tileMap.get(x+1, z);
-   var topTile = this.tileMap.get(x, z-1);
-   var bottomTile = this.tileMap.get(x, z+1);
-
-   if (leftTile) {
-      var lMap = leftTile.JSON.heightMap;
-      for (var i = 0; i < sideVerts; i++)
-         preArr[0][i] = lMap[sideVerts-1][i];
-   }
-
-   if (rightTile) {
-      var rMap = rightTile.JSON.heightMap;
-      for (var i = 0; i < sideVerts; i++)
-         preArr[sideVerts-1][i] = rMap[0][i];
-   }
-
-   if (topTile) {
-      var tMap = topTile.JSON.heightMap;
-      for (var i = 0; i < sideVerts; i++)
-         preArr[i][0] = tMap[i][sideVerts-1];
-   }
-
-   if (bottomTile) {
-      var bMap = bottomTile.JSON.heightMap;
-      for (var i = 0; i < sideVerts; i++)
-         preArr[i][sideVerts-1] = bMap[i][0];
-   }
-
+   var preArr = this.createMapFromSurroundings(x, z);
    var tileJSON = this.generator.createRandom(preArr);
    var tileModel = ModelLoader.createFromJSON(this.gl, tileJSON);
+
    var tile = {
       JSON : tileJSON,
       model : tileModel
    }
 
    this.tileMap.put(x, z, tile);
+}
+
+TerrainHandler.prototype.createMapFromSurroundings = function(x, z) {
+   var preArr = this.generator.createEmptyArray();
+   var sideVerts = this.generator.sideVerts;
+
+   // Set left side
+   var leftTile = this.tileMap.get(x-1, z);
+   if (leftTile)
+      for (var i = 0; i < sideVerts; i++)
+         preArr[0][i] = leftTile.JSON.heightMap[sideVerts-1][i];
+
+   // Set right side
+   var rightTile = this.tileMap.get(x+1, z);
+   if (rightTile)
+      for (var i = 0; i < sideVerts; i++)
+         preArr[sideVerts-1][i] = rightTile.JSON.heightMap[0][i];
+
+   // Set top side
+   var topTile = this.tileMap.get(x, z-1);
+   if (topTile)
+      for (var i = 0; i < sideVerts; i++)
+         preArr[i][0] = topTile.JSON.heightMap[i][sideVerts-1];
+
+   // Set bottom side
+   var bottomTile = this.tileMap.get(x, z+1);
+   if (bottomTile)
+      for (var i = 0; i < sideVerts; i++)
+         preArr[i][sideVerts-1] = bottomTile.JSON.heightMap[i][0];
+
+   return preArr;
 }
 
 TerrainHandler.prototype.getTile = function(x, z) {

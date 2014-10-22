@@ -27,19 +27,19 @@ TerrainGenerator.prototype.createRandom = function(initMap) {
 // Returns a JSON object
 TerrainGenerator.prototype.createMountains = function(initMap) {
    var preMap = this.sanitizeArray(initMap);
-   return this.create(preMap, this.height, 0.25);
+   return this.create(preMap, 0.25);
 }
 
 // Returns a JSON object
 TerrainGenerator.prototype.createHills = function(initMap) {
    var preMap = this.sanitizeArray(initMap);
-   return this.create(preMap, this.height, 0.10);
+   return this.create(preMap, 0.10);
 }
 
 // Returns a JSON object
 TerrainGenerator.prototype.createPlains = function(initMap) {
    var preMap = this.sanitizeArray(initMap);
-   return this.create(preMap, this.height, 0.04)
+   return this.create(preMap, 0.04)
 }
 
 TerrainGenerator.prototype.sanitizeArray = function(arr) {
@@ -54,9 +54,9 @@ TerrainGenerator.prototype.createEmptyArray = function() {
    return arr;
 }
 
-TerrainGenerator.prototype.create = function(preMap, height, rough) {
-   var hMap = this.generateSquare(rough, preMap);
-   var positions = this.setPositions(hMap, height);
+TerrainGenerator.prototype.createTile = function(preMap, rough) {
+   var hMap = this.generateMap(rough, preMap);
+   var positions = this.setPositions(hMap, this.height);
    var indices = this.setIndices(hMap);
    var normals = this.setNormals(hMap, positions);
 
@@ -77,7 +77,7 @@ TerrainGenerator.prototype.create = function(preMap, height, rough) {
 }
 
 // Creates a height-map with random values between 0 and 1 using the diamond-square algorithm
-TerrainGenerator.prototype.generateSquare = function(rough, arr) {   
+TerrainGenerator.prototype.generateMap = function(rough, arr) {   
    var xF = 0;
    var xL = arr.length-1;
    var yF = 0;
@@ -105,7 +105,7 @@ TerrainGenerator.prototype.generateSquare = function(rough, arr) {
    if (!arr[xL][yL])
       arr[xL][yL] = aveHeight + this.jitter(rough);
 
-   this.fillSquare(arr, xF, xL, yF, yL, rough);
+   this.generateSubMap(arr, xF, xL, yF, yL, rough);
    return arr;
 }
 
@@ -113,7 +113,7 @@ TerrainGenerator.prototype.jitter = function(randomness) {
    return  randomness * randRange(-1, 1);
 }
 
-TerrainGenerator.prototype.fillSquare = function(arr, xF, xL, yF, yL, rough) {
+TerrainGenerator.prototype.generateSubMap = function(arr, xF, xL, yF, yL, rough) {
    var dist = xL - xF;
 
    if (dist > 1) {
@@ -132,10 +132,10 @@ TerrainGenerator.prototype.fillSquare = function(arr, xF, xL, yF, yL, rough) {
       if (!arr[xL][yMid]) // right height
          arr[xL][yMid] = (arr[xL][yF] + arr[xL][yL]) / 2 + this.jitter(randomness);
 
-      this.fillSquare(arr, xF, xMid, yF, yMid, rough); // recurse top left square
-      this.fillSquare(arr, xMid, xL, yF, yMid, rough); // recurse top right square
-      this.fillSquare(arr, xF, xMid, yMid, yL, rough); // recurse bottom left square
-      this.fillSquare(arr, xMid, xL, yMid, yL, rough); // recurse bottome right square
+      this.generateSubMap(arr, xF, xMid, yF, yMid, rough); // recurse top left square
+      this.generateSubMap(arr, xMid, xL, yF, yMid, rough); // recurse top right square
+      this.generateSubMap(arr, xF, xMid, yMid, yL, rough); // recurse bottom left square
+      this.generateSubMap(arr, xMid, xL, yMid, yL, rough); // recurse bottome right square
    }
 }
 
