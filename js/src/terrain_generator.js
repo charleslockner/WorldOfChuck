@@ -13,33 +13,24 @@ var TerrainGenerator = function(width, height, subDivs) {
    this.sideVerts = Math.pow(2, subDivs) + 1;
 }
 
-// Returns a JSON object
-TerrainGenerator.prototype.createRandom = function(initMap) {
-   var rand = Math.random();
-   if (rand < 1/3)
-      return this.createPlains(initMap);
-   else if (rand < 2/3)
-      return this.createHills(initMap);
-   else
-      return this.createMountains(initMap);
+TerrainGenerator.prototype.createRandomTile = function(initMap, low, high) {
+   return this.createTile(initMap, randRange(low, high));
 }
 
-// Returns a JSON object
-TerrainGenerator.prototype.createMountains = function(initMap) {
-   var preMap = this.sanitizeArray(initMap);
-   return this.create(preMap, 0.25);
-}
+TerrainGenerator.prototype.createTile = function(preMap, roughness) {
+   var hMap = this.generateMap(roughness, this.sanitizeArray(preMap));
+   var positions = this.setPositions(hMap, this.height);
+   var indices = this.setIndices(hMap);
+   var normals = this.setNormals(hMap, positions);
 
-// Returns a JSON object
-TerrainGenerator.prototype.createHills = function(initMap) {
-   var preMap = this.sanitizeArray(initMap);
-   return this.create(preMap, 0.10);
-}
-
-// Returns a JSON object
-TerrainGenerator.prototype.createPlains = function(initMap) {
-   var preMap = this.sanitizeArray(initMap);
-   return this.create(preMap, 0.04)
+   return {
+      "vertices": positions,
+      "normals": normals,
+      "colors": [],
+      "uvs": [],
+      "faces": indices,
+      "heightMap": hMap
+   };
 }
 
 TerrainGenerator.prototype.sanitizeArray = function(arr) {
@@ -54,70 +45,48 @@ TerrainGenerator.prototype.createEmptyArray = function() {
    return arr;
 }
 
-TerrainGenerator.prototype.createTile = function(preMap, rough) {
-   var hMap = this.generateMap(rough, preMap);
-   var positions = this.setPositions(hMap, this.height);
-   var indices = this.setIndices(hMap);
-   var normals = this.setNormals(hMap, positions);
+// Creates a height-map with random values between 0 and 1 using the diamond-square algorithm
+TerrainGenerator.prototype.generateMap = function(roughness, arr) {
+   var lastNdx = arr.length-1;
+   var aveHeight = this.averageHeight(arr);
 
-   terr = {
-      "vertices": positions,
-      "normals": normals,
-      "colors": [],
-      "uvs": [],
-      "faces": indices,
-      "bones": [],
-      "boneWeights": [],
-      "boneIndices": [],
-      "animations": {},
-      "heightMap": hMap
-   }
+   if (!arr[0][0])
+      arr[0][0] = aveHeight + this.jitter(roughness);
+   if (!arr[lastNdx][0])
+      arr[lastNdx][0] = aveHeight + this.jitter(roughness);
+   if (!arr[0][lastNdx])
+      arr[0][lastNdx] = aveHeight + this.jitter(roughness);
+   if (!arr[lastNdx][lastNdx])
+      arr[lastNdx][lastNdx] = aveHeight + this.jitter(roughness);
 
-   return terr;
+   // Recursively fill out array
+   this.generateSubMap(arr, 0, lastNdx, 0, lastNdx, roughness);
+   return arr;
 }
 
-// Creates a height-map with random values between 0 and 1 using the diamond-square algorithm
-TerrainGenerator.prototype.generateMap = function(rough, arr) {   
-   var xF = 0;
-   var xL = arr.length-1;
-   var yF = 0;
-   var yL = arr.length-1;
-
+TerrainGenerator.prototype.averageHeight = function(arr) {
    var aveHeight = 0;
    var count = 0;
 
-   for (var x = xF; x <= xL; x++)
-      for (var y = yF; y <= yL; y++)
+   for (var x = 0; x < arr.length; x++)
+      for (var y = 0; y < arr.length; y++)
          if (arr[x][y]) {
             aveHeight += arr[x][y];
             count++;
          }
 
-   if (count)
-      aveHeight /= count;
-
-   if (!arr[xF][yF])
-      arr[xF][yF] = aveHeight + this.jitter(rough);
-   if (!arr[xL][yF])
-      arr[xL][yF] = aveHeight + this.jitter(rough);
-   if (!arr[xF][yL])
-      arr[xF][yL] = aveHeight + this.jitter(rough);
-   if (!arr[xL][yL])
-      arr[xL][yL] = aveHeight + this.jitter(rough);
-
-   this.generateSubMap(arr, xF, xL, yF, yL, rough);
-   return arr;
+   return count ? aveHeight /= count : 0;
 }
 
 TerrainGenerator.prototype.jitter = function(randomness) {
    return  randomness * randRange(-1, 1);
 }
 
-TerrainGenerator.prototype.generateSubMap = function(arr, xF, xL, yF, yL, rough) {
+TerrainGenerator.prototype.generateSubMap = function(arr, xF, xL, yF, yL, roughness) {
    var dist = xL - xF;
 
    if (dist > 1) {
-      var randomness = rough * dist / (arr.length - 1);
+      var randomness = roughness * dist / (arr.length - 1);
       var xMid = (xF + xL) / 2;
       var yMid = (yF + yL) / 2;
 
@@ -132,14 +101,14 @@ TerrainGenerator.prototype.generateSubMap = function(arr, xF, xL, yF, yL, rough)
       if (!arr[xL][yMid]) // right height
          arr[xL][yMid] = (arr[xL][yF] + arr[xL][yL]) / 2 + this.jitter(randomness);
 
-      this.generateSubMap(arr, xF, xMid, yF, yMid, rough); // recurse top left square
-      this.generateSubMap(arr, xMid, xL, yF, yMid, rough); // recurse top right square
-      this.generateSubMap(arr, xF, xMid, yMid, yL, rough); // recurse bottom left square
-      this.generateSubMap(arr, xMid, xL, yMid, yL, rough); // recurse bottome right square
+      this.generateSubMap(arr, xF, xMid, yF, yMid, roughness); // recurse top left square
+      this.generateSubMap(arr, xMid, xL, yF, yMid, roughness); // recurse top right square
+      this.generateSubMap(arr, xF, xMid, yMid, yL, roughness); // recurse bottom left square
+      this.generateSubMap(arr, xMid, xL, yMid, yL, roughness); // recurse bottome right square
    }
 }
 
-TerrainGenerator.prototype.setPositions = function(hMap, height) {
+TerrainGenerator.prototype.setPositions = function(hMap) {
    var vertsAcross = hMap.length;
    var subWidth = this.width / (vertsAcross-1);
    var positions = [];
@@ -147,7 +116,7 @@ TerrainGenerator.prototype.setPositions = function(hMap, height) {
    for (var x = 0; x < vertsAcross; x++)
       for (var z = 0; z < vertsAcross; z++) {
          var xPos = subWidth * ((1 - vertsAcross)/2 + x);
-         var yPos = height * (hMap[x][z] - 0.5);
+         var yPos = this.height * (hMap[x][z] - 0.5);
          var zPos = subWidth * ((1 - vertsAcross)/2 + z);
 
          positions.push(xPos);

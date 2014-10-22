@@ -16,7 +16,7 @@ var TerrainHandler = function(gl, tileWidth, tileHeight, reps) {
 
 TerrainHandler.prototype.createTile = function(x, z) {
    var preArr = this.createMapFromSurroundings(x, z);
-   var tileJSON = this.generator.createRandom(preArr);
+   var tileJSON = this.generator.createRandomTile(preArr, 0.02, 0.5);
    var tileModel = ModelLoader.createFromJSON(this.gl, tileJSON);
 
    var tile = {
