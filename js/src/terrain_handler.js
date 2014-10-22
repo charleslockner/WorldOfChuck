@@ -12,30 +12,14 @@ var TerrainHandler = function(gl, tileWidth, tileHeight, reps) {
 
    this.generator = new TerrainGenerator(tileWidth, tileHeight, reps);
    this.tileMap = new TileMap(tileWidth);
-}
 
-TerrainHandler.prototype.saveTile = function(x, z) {
-   $.post("/some/url", data, function(returnedData) {
-      // This callback is executed if the post was successful     
-   })
-}
-
-TerrainHandler.prototype.loadTile = function(x, z, callback) {
-   var path = "assets/models/terrain/" + x + "." + z + ".json";
-
-   $.getJSON(path, function(data) {
-      callback(data);
-   })
-   .fail(function() {
-      callback(null);
-   });
+   $.cookie.json = true; // Makes cookies take in json by default
 }
 
 TerrainHandler.prototype.createTile = function(x, z) {
-   var preArr = this.createMapFromSurroundings(x, z);
-   var roughness = this.calculateRoughnessFromSurroundings(x, z, 0.02, 0.5, 0.2);
-   // console.log(roughness);
-   var tileJSON = this.generator.createTile(preArr, roughness);
+   var loadedTile = this.loadTile(x, z);
+   console.log(loadedTile);
+   var tileJSON = loadedTile ? loadedTile : this.createNewTile(x, z);
    var tileModel = ModelLoader.createFromJSON(this.gl, tileJSON);
 
    var tile = {
@@ -44,6 +28,14 @@ TerrainHandler.prototype.createTile = function(x, z) {
    }
 
    this.tileMap.put(x, z, tile);
+}
+
+TerrainHandler.prototype.createNewTile = function(x, z) {
+   var preArr = this.createMapFromSurroundings(x, z);
+   var roughness = this.calculateRoughnessFromSurroundings(x, z, 0.02, 0.5, 0.2);
+   var tileJSON = this.generator.createTile(preArr, roughness);
+   this.saveTile(x, z, tileJSON);
+   return tileJSON;
 }
 
 TerrainHandler.prototype.createMapFromSurroundings = function(x, z) {
@@ -114,6 +106,16 @@ TerrainHandler.prototype.calculateRoughnessFromSurroundings = function(x, z, min
    }
    else
       return randRange(min, max);
+}
+
+TerrainHandler.prototype.saveTile = function(x, z, tileJSON) {
+   var name = "terrain_" + x + "_" + z;
+   $.cookie(name, tileJSON, { expires: 7, path: '/' });
+}
+
+TerrainHandler.prototype.loadTile = function(x, z) {
+   var name = "terrain_" + x + "_" + z;
+   return $.cookie(name);
 }
 
 TerrainHandler.prototype.getTile = function(x, z) {

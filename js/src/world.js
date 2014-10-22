@@ -64,7 +64,7 @@ Portal.prototype.updateTerrain = function(elapsed) {
       for (var z = zKeepF; z <= zKeepL; z++)
          if (!this.models.terrainHandler.tileMap.exists(x, z)) {
             this.models.terrainHandler.createTile(x,z);
-            console.log(this.models.terrainHandler.tileMap.toString());
+            // console.log(this.models.terrainHandler.tileMap.toString());
          }
 
    // remove WEST tiles
@@ -72,7 +72,7 @@ Portal.prototype.updateTerrain = function(elapsed) {
       for (var z = zF; z <= zL; z++)
          if (this.models.terrainHandler.tileMap.exists(x,z)) {
             this.models.terrainHandler.removeTile(x, z);
-            console.log(this.models.terrainHandler.tileMap.toString());
+            // console.log(this.models.terrainHandler.tileMap.toString());
          }
 
    // remove EAST tiles
@@ -80,7 +80,7 @@ Portal.prototype.updateTerrain = function(elapsed) {
       for (var z = zF; z <= zL; z++)
          if (this.models.terrainHandler.tileMap.exists(x,z)) {
             this.models.terrainHandler.removeTile(x, z);
-            console.log(this.models.terrainHandler.tileMap.toString());
+            // console.log(this.models.terrainHandler.tileMap.toString());
          }
 
    // remove NORTH tiles
@@ -88,7 +88,7 @@ Portal.prototype.updateTerrain = function(elapsed) {
       for (var z = zF; z < zKeepF; z++)
          if (this.models.terrainHandler.tileMap.exists(x,z)) {
             this.models.terrainHandler.removeTile(x, z);   
-            console.log(this.models.terrainHandler.tileMap.toString());
+            // console.log(this.models.terrainHandler.tileMap.toString());
          }
 
    // remove SOUTH tiles
@@ -96,7 +96,7 @@ Portal.prototype.updateTerrain = function(elapsed) {
       for (var z = zKeepL+1; z <= zL; z++)
          if (this.models.terrainHandler.tileMap.exists(x,z)) {
             this.models.terrainHandler.removeTile(x, z);  
-            console.log(this.models.terrainHandler.tileMap.toString());
+            // console.log(this.models.terrainHandler.tileMap.toString());
          }
 }
 
