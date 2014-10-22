@@ -15,7 +15,7 @@ var TerrainGenerator = function(width, height, subDivs) {
 
 // Returns a JSON object
 TerrainGenerator.prototype.createRandom = function(initMap) {
-   var rand = randRange(0,1);
+   var rand = Math.random();
    if (rand < 1/3)
       return this.createPlains(initMap);
    else if (rand < 2/3)
@@ -27,19 +27,19 @@ TerrainGenerator.prototype.createRandom = function(initMap) {
 // Returns a JSON object
 TerrainGenerator.prototype.createMountains = function(initMap) {
    var preMap = this.sanitizeArray(initMap);
-   return this.create(preMap, 0.8 * this.height, 0.45);
+   return this.create(preMap, this.height, 0.25);
 }
 
 // Returns a JSON object
 TerrainGenerator.prototype.createHills = function(initMap) {
    var preMap = this.sanitizeArray(initMap);
-   return this.create(preMap, 0.8 * this.height, 0.25);
+   return this.create(preMap, this.height, 0.10);
 }
 
 // Returns a JSON object
 TerrainGenerator.prototype.createPlains = function(initMap) {
    var preMap = this.sanitizeArray(initMap);
-   return this.create(preMap, 0.8 * this.height, 0.15)
+   return this.create(preMap, this.height, 0.04)
 }
 
 TerrainGenerator.prototype.sanitizeArray = function(arr) {

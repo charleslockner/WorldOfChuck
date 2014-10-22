@@ -8,11 +8,11 @@
 
 var TerrainHandler = function(gl, tileWidth, tileHeight, reps) {
    this.gl = gl;
+   this.tileWidth = tileWidth;
 
    this.generator = new TerrainGenerator(tileWidth, tileHeight, reps);
    this.tileMap = new TileMap(tileWidth);
 }
-
 
 TerrainHandler.prototype.createTile = function(x, z) {
    var preArr = this.generator.createEmptyArray();
@@ -57,6 +57,34 @@ TerrainHandler.prototype.createTile = function(x, z) {
    this.tileMap.put(x, z, tile);
 }
 
+TerrainHandler.prototype.getTile = function(x, z) {
+   return this.tileMap.get(x,z);
+}
+
+TerrainHandler.prototype.tileExists = function(x, z) {
+   return this.tileMap.exists(x,z);
+}
+
 TerrainHandler.prototype.removeTile = function(x, z) {
-   this.tileMap.remove(x,z);
+   return this.tileMap.remove(x,z);
+}
+
+TerrainHandler.prototype.getTileWidth = function() {
+   return this.tileWidth;
+}
+
+TerrainHandler.prototype.getXFirstNdx = function() {
+   return this.tileMap.xFirstNdx;
+}
+
+TerrainHandler.prototype.getXLastNdx = function() {
+   return this.tileMap.xLastNdx;
+}
+
+TerrainHandler.prototype.getYFirstNdx = function() {
+   return this.tileMap.yFirstNdx;
+}
+
+TerrainHandler.prototype.getYLastNdx = function() {
+   return this.tileMap.yLastNdx;
 }

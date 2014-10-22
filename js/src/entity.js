@@ -86,10 +86,8 @@ Pillar.prototype = new Entity();
 Pillar.prototype.constructor = Pillar;
 
 
-
-
-
 // ========================================== TERRAIN ========================================== //
+
 var Terrain = function(pos, rot) {
    Entity.call(this, pos, rot);
    this.tileOffset = [0,0,0];
@@ -99,13 +97,18 @@ Terrain.prototype = new Entity();
 Terrain.prototype.constructor = Terrain;
 
 Terrain.prototype.draw = function(gl, shaderProgram, models) {
-   var tileMap = models.terrainHandler.tileMap;
-   for (var x = tileMap.xFirstNdx; x <= tileMap.xLastNdx; x++)
-      for (var y = tileMap.yFirstNdx; y <= tileMap.yLastNdx; y++) {
-         var tile = tileMap.get(x, y);
+   var xF = models.terrainHandler.getXFirstNdx();
+   var xL = models.terrainHandler.getXLastNdx();
+   var yF = models.terrainHandler.getYFirstNdx();
+   var yL = models.terrainHandler.getYLastNdx();
+   var tileWidth = models.terrainHandler.getTileWidth();
+
+   for (var x = xF; x <= xL; x++)
+      for (var y = yF; y <= yL; y++) {
+         var tile = models.terrainHandler.getTile(x, y);
          if (tile) {
             var model = tile.model;
-            this.tileOffset = [tileMap.tileWidth * x, 0, tileMap.tileWidth * y]; 
+            this.tileOffset = [tileWidth * x, 0, tileWidth * y]; 
             this.drawModel(gl, shaderProgram, model);
          }
       }
