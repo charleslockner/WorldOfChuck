@@ -5,8 +5,27 @@ var sys = require( "sys" );
 var http = require("http");
 var path = require("path"); 
 var fs = require("fs");
-// var qs = require('querystring');
+var qs = require('querystring');
 var _ = require("underscore");
+
+
+function handlePost(req, res) {
+   var body = '';
+
+   req.on('data', function (data) {
+      body += data;
+
+      // Too much POST data, kill the connection!
+      // if (body.length > 1e6)
+      //     req.connection.destroy();
+   });
+
+   req.on('end', function() {
+      var post = qs.parse(body);
+
+      console.log(post);
+   });
+}
 
 var privateFiles = [];
 
@@ -50,7 +69,7 @@ function serveFile(req, res) {
       localPath += filename;
       fs.exists(localPath, function(exists) {
          if (exists && isAccessable) {
-            console.log("Serving file: " + localPath);
+            // console.log("Serving file: " + localPath);
             getFile(localPath, res, validExtensions[ext]);
          } else {
             console.log("File not found: " + localPath);

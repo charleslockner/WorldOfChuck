@@ -1,0 +1,28 @@
+
+events.js:72
+        throw er; // Unhandled 'error' event
+              ^
+Error: listen EADDRNOTAVAIL
+    at errnoException (net.js:904:11)
+    at Server._listen2 (net.js:1023:19)
+    at listen (net.js:1064:10)
+    at net.js:1146:9
+    at dns.js:72:18
+    at process._tickCallback (node.js:419:13)
+    at Function.Module.runMain (module.js:499:11)
+    at startup (node.js:119:16)
+    at node.js:906:3
+
+events.js:72
+        throw er; // Unhandled 'error' event
+              ^
+Error: listen EADDRNOTAVAIL
+    at errnoException (net.js:904:11)
+    at Server._listen2 (net.js:1023:19)
+    at listen (net.js:1064:10)
+    at net.js:1146:9
+    at dns.js:72:18
+    at process._tickCallback (node.js:419:13)
+    at Function.Module.runMain (module.js:499:11)
+    at startup (node.js:119:16)
+    at node.js:906:3

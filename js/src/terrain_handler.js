@@ -11,23 +11,27 @@ var TerrainHandler = function(gl, tileWidth, tileHeight, reps) {
    this.tileWidth = tileWidth;
 
    this.generator = new TerrainGenerator(tileWidth, tileHeight, reps);
-   this.tileMap = new TileMap(tileWidth);
-
-   $.cookie.json = true; // Makes cookies take in json by default
+   this.tileMap = new TileMap();
+   this.visibleMap = new TileMap();
 }
 
-TerrainHandler.prototype.createTile = function(x, z) {
-   var loadedTile = this.loadTile(x, z);
-   console.log(loadedTile);
-   var tileJSON = loadedTile ? loadedTile : this.createNewTile(x, z);
-   var tileModel = ModelLoader.createFromJSON(this.gl, tileJSON);
+TerrainHandler.prototype.placeTile = function(x, z, visible) {
+      this.setVisible(x, z, visible);
 
-   var tile = {
-      JSON : tileJSON,
-      model : tileModel
-   }
+      if (!this.tileExists(x, z)) {
+         var tileJSON = this.createNewTile(x, z);
+         var tileModel = ModelLoader.createFromJSON(this.gl, tileJSON);
 
-   this.tileMap.put(x, z, tile);
+         var tile = {
+            JSON : tileJSON,
+            model : tileModel
+         }
+
+         this.tileMap.put(x, z, tile);
+      }
+   // this.loadTile(x, z, function(loadedTile) {
+   // console.log(loadedTile);
+   // });
 }
 
 TerrainHandler.prototype.createNewTile = function(x, z) {
@@ -86,7 +90,6 @@ TerrainHandler.prototype.calculateRoughnessFromSurroundings = function(x, z, min
    }
 
    var leftTile = this.tileMap.get(x-1, z);
-
    if (leftTile) {
       roughSum += leftTile.JSON.roughness;
       tileCount++;
@@ -109,13 +112,34 @@ TerrainHandler.prototype.calculateRoughnessFromSurroundings = function(x, z, min
 }
 
 TerrainHandler.prototype.saveTile = function(x, z, tileJSON) {
-   var name = "terrain_" + x + "_" + z;
-   $.cookie(name, tileJSON, { expires: 7, path: '/' });
+   // var postData = {
+   //    "x" : x,
+   //    "z" : z,
+   //    "tile" : tileJSON
+   // }
+
+   // $.post("/server.js", postData, function(data) {
+   //    console.log(data);
+   // });
 }
 
-TerrainHandler.prototype.loadTile = function(x, z) {
-   var name = "terrain_" + x + "_" + z;
-   return $.cookie(name);
+TerrainHandler.prototype.loadTile = function(x, z, callback) {
+   var path = "assets/models/terrain/" + x + "." + z + ".json";
+
+   $.getJSON(path, function(data) {
+      callback(data);
+   })
+   .fail(function() {
+      callback(null);
+   });
+}
+
+TerrainHandler.prototype.isVisible = function(x, z) {
+   return this.visibleMap.get(x, z);
+}
+
+TerrainHandler.prototype.setVisible = function(x, z, visible) {
+   this.visibleMap.put(x, z, visible);
 }
 
 TerrainHandler.prototype.getTile = function(x, z) {

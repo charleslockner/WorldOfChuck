@@ -28,16 +28,7 @@ Portal.prototype.initModels = function() {
    var TILE_HEIGHT = 1500;
    var RECURSIONS = 7;
    this.models.terrainHandler = new TerrainHandler(this.gl, this.models.tileWidth, TILE_HEIGHT, RECURSIONS);
-   this.models.terrainHandler.createTile(-1, 1);
-   this.models.terrainHandler.createTile(0, 1);
-   this.models.terrainHandler.createTile(1, 1);
-   this.models.terrainHandler.createTile(-1, 0);
-   this.models.terrainHandler.createTile(0, 0);
-   this.models.terrainHandler.createTile(1, 0);
-   this.models.terrainHandler.createTile(-1, -1);
-   this.models.terrainHandler.createTile(0, -1);
-   this.models.terrainHandler.createTile(1, -1);
-
+   
 
    ModelLoader.load(this.gl, "assets/models/worldofchuck_text.json", function(model) {
       self.models.worldofchuck = model;

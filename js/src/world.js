@@ -9,6 +9,16 @@
 
 Portal.prototype.initWorld = function() {
    this.entities = this.placeEntities();
+
+   this.models.terrainHandler.placeTile(-1, 1, true);
+   this.models.terrainHandler.placeTile(0, 1, true);
+   this.models.terrainHandler.placeTile(1, 1, true);
+   this.models.terrainHandler.placeTile(-1, 0, true);
+   this.models.terrainHandler.placeTile(0, 0, true);
+   this.models.terrainHandler.placeTile(1, 0, true);
+   this.models.terrainHandler.placeTile(-1, -1, true);
+   this.models.terrainHandler.placeTile(0, -1, true);
+   this.models.terrainHandler.placeTile(1, -1, true);
 }
 
 Portal.prototype.placeEntities = function() {
@@ -62,41 +72,27 @@ Portal.prototype.updateTerrain = function(elapsed) {
    // create tiles
    for (var x = xKeepF; x <= xKeepL; x++)
       for (var z = zKeepF; z <= zKeepL; z++)
-         if (!this.models.terrainHandler.tileMap.exists(x, z)) {
-            this.models.terrainHandler.createTile(x,z);
-            // console.log(this.models.terrainHandler.tileMap.toString());
-         }
+         this.models.terrainHandler.placeTile(x, z, true);
 
    // remove WEST tiles
    for (var x = xF; x < xKeepF; x++)
       for (var z = zF; z <= zL; z++)
-         if (this.models.terrainHandler.tileMap.exists(x,z)) {
-            this.models.terrainHandler.removeTile(x, z);
-            // console.log(this.models.terrainHandler.tileMap.toString());
-         }
+         this.models.terrainHandler.setVisible(x, z, false);
 
    // remove EAST tiles
    for (var x = xKeepL+1; x <= xL; x++)
       for (var z = zF; z <= zL; z++)
-         if (this.models.terrainHandler.tileMap.exists(x,z)) {
-            this.models.terrainHandler.removeTile(x, z);
-            // console.log(this.models.terrainHandler.tileMap.toString());
-         }
+            this.models.terrainHandler.setVisible(x, z, false);
 
    // remove NORTH tiles
    for (var x = xKeepF; x <= xKeepL; x++)
       for (var z = zF; z < zKeepF; z++)
-         if (this.models.terrainHandler.tileMap.exists(x,z)) {
-            this.models.terrainHandler.removeTile(x, z);   
-            // console.log(this.models.terrainHandler.tileMap.toString());
-         }
+         this.models.terrainHandler.setVisible(x, z, false);
 
    // remove SOUTH tiles
    for (var x = xKeepF; x <= xKeepL; x++)
       for (var z = zKeepL+1; z <= zL; z++)
-         if (this.models.terrainHandler.tileMap.exists(x,z)) {
-            this.models.terrainHandler.removeTile(x, z);  
-            // console.log(this.models.terrainHandler.tileMap.toString());
-         }
+         this.models.terrainHandler.setVisible(x, z, false);
+
 }
 

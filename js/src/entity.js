@@ -105,11 +105,17 @@ Terrain.prototype.draw = function(gl, shaderProgram, models) {
 
    for (var x = xF; x <= xL; x++)
       for (var y = yF; y <= yL; y++) {
-         var tile = models.terrainHandler.getTile(x, y);
-         if (tile) {
-            var model = tile.model;
-            this.tileOffset = [tileWidth * x, 0, tileWidth * y]; 
-            this.drawModel(gl, shaderProgram, model);
+         var isVisible = models.terrainHandler.isVisible(x, y);
+         
+         if (isVisible) {
+            var tile = models.terrainHandler.getTile(x, y);
+
+            if (tile) {
+               var model = tile.model || models.unknown;
+
+               this.tileOffset = [tileWidth * x, 0, tileWidth * y]; 
+               this.drawModel(gl, shaderProgram, model);
+            }
          }
       }
 }

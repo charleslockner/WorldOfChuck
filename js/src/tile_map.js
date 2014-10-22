@@ -6,12 +6,10 @@
    | this header or simply stating that your work uses some of this code. :D  |
    |__________________________________________________________________________| */
 
-var TileMap = function(tileWidth) {
+var TileMap = function() {
 	this.negArr = new Array();
 	this.posArr = new Array();
 	// this.ndxArr = new Uint32Array();
-
-	this.tileWidth = tileWidth;
 
 	this.xFirstNdx = 0;
 	this.xLastNdx = 0;
