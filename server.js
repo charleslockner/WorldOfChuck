@@ -8,6 +8,18 @@ var fs = require("fs");
 var qs = require('querystring');
 var _ = require("underscore");
 
+// Create our HTTP server.
+var server = http.createServer( function( req, res ) {
+   if (req.method == 'POST')
+      handlePost(req, res);
+   else
+      serveFile(req, res);
+});
+
+server.listen( config.getPort(), config.getAddress() );
+console.log("Serving files at " + config.getAddress() + " (Port " + config.getPort() + ")");
+ 
+
 
 function handlePost(req, res) {
    var body = '';
@@ -16,8 +28,8 @@ function handlePost(req, res) {
       body += data;
 
       // Too much POST data, kill the connection!
-      // if (body.length > 1e6)
-      //     req.connection.destroy();
+      if (body.length > 1e6)
+          req.connection.destroy();
    });
 
    req.on('end', function() {
@@ -27,9 +39,7 @@ function handlePost(req, res) {
    });
 }
 
-var privateFiles = [];
-
-var validExtensions = {
+var extToMime = {
    ".html" : "text/html",        
    ".js": "application/javascript", 
    ".css": "text/css",
@@ -39,45 +49,26 @@ var validExtensions = {
    ".png": "image/png",
    ".ico": "image/ico",
    ".json": "text/json",
-   ".glsl": "textshader"
+   ".glsl": "application/x-glsl"
 };
-
-function fillPrivateFiles() {
-   fs.readdir(".", function (err, files) {
-      if (err)
-         console.log("Error reading directory: " + err);
-      privateFiles = files;
-   });
-}
-
 
 function serveFile(req, res) {
    var filename = req.url || "index.html";
-   var isAccessable;
-
-   if (filename == "/" || filename == "/index.html") {
+   if (filename == "/" || filename == "/index.html")
       filename = "/index.html";
-      isAccessable = true;
-   } else
-      isAccessable = !(_.include(privateFiles, filename.substr(1)));
 
-   var ext = path.extname(filename);
-   var localPath = __dirname;
-   var isValidExt = validExtensions[ext];
- 
-   if (isValidExt) {
-      localPath += filename;
-      fs.exists(localPath, function(exists) {
-         if (exists && isAccessable) {
-            // console.log("Serving file: " + localPath);
-            getFile(localPath, res, validExtensions[ext]);
-         } else {
-            console.log("File not found: " + localPath);
-            res.writeHead(404);
-            res.end("HOLY CRAP, NO FILES ARE HERE!\n");
-         }
-      });
-   }
+   var ext = path.extname(filename); 
+   var localPath = __dirname + filename;
+   fs.exists(localPath, function(exists) {
+      if (exists) {
+         console.log("Serving file: " + filename);
+         getFile(localPath, res, extToMime[ext]);
+      } else {
+         console.log("File not found: " + filename);
+         res.writeHead(404);
+         res.end("Get a move on! There's nothing here! (404)\n");
+      }
+   });
 }
 
 function getFile(localPath, res, mimeType) {
@@ -93,16 +84,3 @@ function getFile(localPath, res, mimeType) {
       }
    });
 }
-
-// Create our HTTP server.
-var server = http.createServer( function( req, res ) {
-   if (req.method == 'POST')
-      handlePost(req, res);
-   else
-      serveFile(req, res);
-});
-
-fillPrivateFiles();
-server.listen( config.getPort(), config.getAddress() );
-console.log("Serving files at " + config.getAddress() + " (Port " + config.getPort() + ")");
- 

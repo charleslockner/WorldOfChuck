@@ -112,13 +112,25 @@ TerrainHandler.prototype.calculateRoughnessFromSurroundings = function(x, z, min
 }
 
 TerrainHandler.prototype.saveTile = function(x, z, tileJSON) {
-   // var postData = {
-   //    "x" : x,
-   //    "z" : z,
-   //    "tile" : tileJSON
-   // }
+   var postData = {
+      "x" : x,
+      "z" : z,
+      "tile" : tileJSON
+   }
 
-   // $.post("/server.js", postData, function(data) {
+   // $.ajax({
+   //    type: 'POST',
+   //    url: '/server.js',
+   //    data: "hi",
+   //    // dataType: dataType,
+   //    async: true,
+   //    success: function(result) {
+   //                 if(result.isOk == false)
+   //                     console.log(result.message);
+   //             }
+   //  }); 
+
+   // $.post("/server.js", "hi", function(data) {
    //    console.log(data);
    // });
 }
