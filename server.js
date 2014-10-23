@@ -1,41 +1,57 @@
 
-// Load the necessary libraries.
-var config = require("./config");
+// Load the lib files
 var sys = require( "sys" );
 var http = require("http");
 var path = require("path"); 
 var fs = require("fs");
-var qs = require('querystring');
+var qs = require("querystring");
 var _ = require("underscore");
+
+// Load the src files
+var config = require("./config");
+var terrain = require("./server/terrain.js");
 
 // Create our HTTP server.
 var server = http.createServer( function( req, res ) {
-   if (req.method == 'POST')
+   if (req.method == 'GET')
+      handleGet(req, res);
+   else if (req.method == 'POST')
       handlePost(req, res);
-   else
-      serveFile(req, res);
 });
 
+// Start it up!
 server.listen( config.getPort(), config.getAddress() );
 console.log("Serving files at " + config.getAddress() + " (Port " + config.getPort() + ")");
- 
 
 
-function handlePost(req, res) {
-   var body = '';
 
-   req.on('data', function (data) {
-      body += data;
 
-      // Too much POST data, kill the connection!
-      if (body.length > 1e6)
-          req.connection.destroy();
-   });
+terrain.generateWorld();
 
-   req.on('end', function() {
-      var post = qs.parse(body);
 
-      console.log(post);
+
+
+function handleGet(req, res) {
+   var filename = req.url;
+   if (filename == "/")
+      filename = "/index.html";
+
+   var localPath = __dirname + filename;
+   var siteDirname = path.dirname(filename);
+   var isTerrain = siteDirname == "/assets/models/terrain";
+
+   fs.exists(localPath, function(exists) {
+      if (exists) {
+         console.log("Serving: " + filename);
+         serveFile(localPath, res);
+      } else if (isTerrain) {
+         console.log("Generating terrain: " + filename);
+         // var terrainFile = createTerrain
+         // serveFileFromString(terrainFile);
+      } else {
+         console.log("Couldn't find: " + filename);
+         serveNotFound(localPath, res);
+      }
    });
 }
 
@@ -52,26 +68,9 @@ var extToMime = {
    ".glsl": "application/x-glsl"
 };
 
-function serveFile(req, res) {
-   var filename = req.url || "index.html";
-   if (filename == "/" || filename == "/index.html")
-      filename = "/index.html";
+function serveFile(localPath, res) {
+   var mimeType = extToMime[path.extname(localPath)]; 
 
-   var ext = path.extname(filename); 
-   var localPath = __dirname + filename;
-   fs.exists(localPath, function(exists) {
-      if (exists) {
-         console.log("Serving file: " + filename);
-         getFile(localPath, res, extToMime[ext]);
-      } else {
-         console.log("File not found: " + filename);
-         res.writeHead(404);
-         res.end("Get a move on! There's nothing here! (404)\n");
-      }
-   });
-}
-
-function getFile(localPath, res, mimeType) {
    fs.readFile(localPath, function(err, contents) {
       if(!err) {
          res.setHeader("Content-Length", contents.length);
@@ -82,5 +81,29 @@ function getFile(localPath, res, mimeType) {
          res.writeHead(500);
          res.end();
       }
+   });
+}
+
+function serveNotFound(localPath, res) {
+   console.log("File not found: " + localPath);
+   res.writeHead(404);
+   res.end("Get a move on! There's nothing here! (404)\n");
+}
+
+function handlePost(req, res) {
+   var body = '';
+
+   req.on('data', function (data) {
+      body += data;
+
+      // Too much POST data, kill the connection!
+      if (body.length > 1000000)
+          req.connection.destroy();
+   });
+
+   req.on('end', function() {
+      var post = qs.parse(body);
+
+      console.log("got post");
    });
 }
