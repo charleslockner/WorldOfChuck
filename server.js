@@ -9,7 +9,8 @@ var _ = require("underscore");
 
 // Load the src files
 var config = require("./config");
-var terrain = require("./server/terrain.js");
+var terrain = require("./server/terrain_handler.js");
+var tileWidth = 100, tileHeight = 20, subdivs = 1;
 
 // Create our HTTP server.
 var server = http.createServer( function( req, res ) {
@@ -19,17 +20,17 @@ var server = http.createServer( function( req, res ) {
       handlePost(req, res);
 });
 
+var generateWorld = function() {
+   for (var x = -10; x <= 10; x++)
+      for (var y = -10; y <= 10; y++)
+         terrain.createTile(x, y, tileWidth, tileHeight, subdivs);
+}
+
+generateWorld();
+
 // Start it up!
 server.listen( config.getPort(), config.getAddress() );
 console.log("Serving files at " + config.getAddress() + " (Port " + config.getPort() + ")");
-
-
-
-
-terrain.generateWorld();
-
-
-
 
 function handleGet(req, res) {
    var filename = req.url;
@@ -45,9 +46,9 @@ function handleGet(req, res) {
          console.log("Serving: " + filename);
          serveFile(localPath, res);
       } else if (isTerrain) {
-         console.log("Generating terrain: " + filename);
-         // var terrainFile = createTerrain
-         // serveFileFromString(terrainFile);
+         console.log("Generating tile (but not really) " + filename);
+         // terrain.createTile(0, 0, tileWidth, tileHeight, subdivs);
+
       } else {
          console.log("Couldn't find: " + filename);
          serveNotFound(localPath, res);

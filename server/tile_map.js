@@ -14,6 +14,11 @@ var xLastNdx = 0;
 var yFirstNdx = 0;
 var yLastNdx = 0;
 
+module.exports.xFirstNdx = xFirstNdx;
+module.exports.xLastNdx = xLastNdx;
+module.exports.yFirstNdx = yFirstNdx;
+module.exports.yLastNdx = yLastNdx;
+
 module.exports.put = function(x, y, val) {
 	if (x < 0) {
 		if (y < 0) {

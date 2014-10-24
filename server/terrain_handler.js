@@ -2,82 +2,83 @@
    |                       World-of-Chuck Portal Project                      |
    |                            By Charles Lockner                            |
    |                                                                          |
-   | Anyone can use this. Just be sure to credit me by either including       |
+   | Anyone can use  Just be sure to credit me by either including       |
    | this header or simply stating that your work uses some of this code. :D  |
    |__________________________________________________________________________| */
 
-var TerrainHandler = function(tileWidth, tileHeight, reps) {
-   this.tileWidth = tileWidth;
+var generator = require("./terrain_generator.js");
+var tileMap = require("./tile_map.js");
+var fs = require("fs");
 
-   this.generator = new TerrainGenerator(tileWidth, tileHeight, reps);
-   this.tileMap = new TileMap();
+var MAX_ROUGHNESS = 0.3;
+var MIN_ROUGHNESS = 0.02;
+var ROUGHNESS_DEV = 0.2;
+
+module.exports.createTile = function(x, z, tileWidth, tileHeight, subdivs) {
+   var sideVerts = Math.pow(2, subdivs) + 1
+   var preArr = createMapFromSurroundings(x, z, sideVerts);
+   var roughness = calculateRoughnessFromSurroundings(x, z, MIN_ROUGHNESS, MAX_ROUGHNESS, ROUGHNESS_DEV);
+   var tileJSON = generator.createTile(preArr, tileWidth, tileHeight, subdivs, roughness);
+
+   tileMap.put(x, z, tileJSON);
+   saveTile(x, z, tileJSON);
 }
 
-TerrainHandler.prototype.createNewTile = function(x, z) {
-   var preArr = this.createMapFromSurroundings(x, z);
-   var roughness = this.calculateRoughnessFromSurroundings(x, z, 0.02, 0.5, 0.2);
-   var tileJSON = this.generator.createTile(preArr, roughness);
-   this.tileMap.put(x, z, tile);
-   this.saveTile(x, z, tileJSON);
-   return tileJSON;
-}
-
-TerrainHandler.prototype.createMapFromSurroundings = function(x, z) {
-   var preArr = this.generator.createEmptyArray();
-   var sideVerts = this.generator.sideVerts;
+var createMapFromSurroundings = function(x, z, sideVerts) {
+   var preArr = generator.createEmptyArray(sideVerts);
 
    // Set left side
-   var leftTile = this.tileMap.get(x-1, z);
+   var leftTile = tileMap.get(x-1, z);
    if (leftTile)
       for (var i = 0; i < sideVerts; i++)
-         preArr[0][i] = leftTile.JSON.heightMap[sideVerts-1][i];
+         preArr[0][i] = leftTile.heightMap[sideVerts-1][i];
 
    // Set right side
-   var rightTile = this.tileMap.get(x+1, z);
+   var rightTile = tileMap.get(x+1, z);
    if (rightTile)
       for (var i = 0; i < sideVerts; i++)
-         preArr[sideVerts-1][i] = rightTile.JSON.heightMap[0][i];
+         preArr[sideVerts-1][i] = rightTile.heightMap[0][i];
 
    // Set top side
-   var topTile = this.tileMap.get(x, z-1);
+   var topTile = tileMap.get(x, z-1);
    if (topTile)
       for (var i = 0; i < sideVerts; i++)
-         preArr[i][0] = topTile.JSON.heightMap[i][sideVerts-1];
+         preArr[i][0] = topTile.heightMap[i][sideVerts-1];
 
    // Set bottom side
-   var bottomTile = this.tileMap.get(x, z+1);
+   var bottomTile = tileMap.get(x, z+1);
    if (bottomTile)
       for (var i = 0; i < sideVerts; i++)
-         preArr[i][sideVerts-1] = bottomTile.JSON.heightMap[i][0];
+         preArr[i][sideVerts-1] = bottomTile.heightMap[i][0];
 
    return preArr;
 }
 
-TerrainHandler.prototype.calculateRoughnessFromSurroundings = function(x, z, min, max, sensitivity) {
+var calculateRoughnessFromSurroundings = function(x, z, min, max, sensitivity) {
    var roughSum = 0;
    var tileCount = 0;
 
-   var topTile = this.tileMap.get(x, z-1);
+   var topTile = tileMap.get(x, z-1);
    if (topTile) {
-      roughSum += topTile.JSON.roughness;
+      roughSum += topTile.roughness;
       tileCount++;
    }
 
-   var bottomTile = this.tileMap.get(x, z+1);
+   var bottomTile = tileMap.get(x, z+1);
    if (bottomTile) {
-      roughSum += bottomTile.JSON.roughness;
+      roughSum += bottomTile.roughness;
       tileCount++;
    }
 
-   var leftTile = this.tileMap.get(x-1, z);
+   var leftTile = tileMap.get(x-1, z);
    if (leftTile) {
-      roughSum += leftTile.JSON.roughness;
+      roughSum += leftTile.roughness;
       tileCount++;
    }
 
-   var rightTile = this.tileMap.get(x+1, z);
+   var rightTile = tileMap.get(x+1, z);
    if (rightTile) {
-      roughSum += rightTile.JSON.roughness;
+      roughSum += rightTile.roughness;
       tileCount++;
    }
 
@@ -91,46 +92,15 @@ TerrainHandler.prototype.calculateRoughnessFromSurroundings = function(x, z, min
       return randRange(min, max);
 }
 
-TerrainHandler.prototype.saveTile = function(x, z, tileJSON) {
+var randRange = function(low, high) {
+   return (high - low) * Math.random() - low
+}
+
+var saveTile = function(x, z, tileJSON) {
    var path = "assets/models/terrain/" + x + "." + z + ".json";
 
-   fs.writeFile(path, tileJSON, function(err) {
-       if(err) {
-           console.log(err);
-       } else {
-           console.log("The file was saved!");
-       }
+   fs.writeFile(path, JSON.stringify(tileJSON), function(err) {
+      if(err)
+         console.log(err);
    }); 
-}
-
-TerrainHandler.prototype.getTile = function(x, z) {
-   return this.tileMap.get(x,z);
-}
-
-TerrainHandler.prototype.tileExists = function(x, z) {
-   return this.tileMap.exists(x,z);
-}
-
-TerrainHandler.prototype.removeTile = function(x, z) {
-   return this.tileMap.remove(x,z);
-}
-
-TerrainHandler.prototype.getTileWidth = function() {
-   return this.tileWidth;
-}
-
-TerrainHandler.prototype.getXFirstNdx = function() {
-   return this.tileMap.xFirstNdx;
-}
-
-TerrainHandler.prototype.getXLastNdx = function() {
-   return this.tileMap.xLastNdx;
-}
-
-TerrainHandler.prototype.getYFirstNdx = function() {
-   return this.tileMap.yFirstNdx;
-}
-
-TerrainHandler.prototype.getYLastNdx = function() {
-   return this.tileMap.yLastNdx;
 }

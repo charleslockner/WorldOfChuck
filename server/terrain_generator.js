@@ -9,34 +9,18 @@
 
 require('sylvester');
 
-var randRange = function(low, high) {
-   return (high - low) * Math.random() + low;
-}
-
-var normalize = function(vector) {
-   var sum = 0;
-   vector.each(function(val, i) {
-      sum += val * val;
-   });
-   var len = Math.sqrt(sum);
-   return vector.map(function(val) { return val/len });
-}
-
 var width;
 var height;
-var sideVerts;
 
 module.exports.createTile = function(preMap, widthP, heightP, subDivs, roughness) {
    width = widthP;
    height = heightP;
-   sideVerts = Math.pow(2, subDivs) + 1;
-
-   var hMap = generateMap(roughness, sanitizeArray(preMap));
+   var sideVerts = Math.pow(2, subDivs) + 1;
+   preMap = sanitizeArray(preMap);
+   var hMap = generateMap(roughness, preMap);
    var positions = setPositions(hMap);
    var indices = setIndices(hMap);
    var normals = setNormals(hMap, positions);
-
-   console.log(normals);
 
    return {
       "vertices": positions,
@@ -49,15 +33,14 @@ module.exports.createTile = function(preMap, widthP, heightP, subDivs, roughness
    };
 }
 
-var sanitizeArray = function(arr) {
-   return arr ? arr : createEmptyArray();
+var sanitizeArray = function(arr, sideVerts) {
+   return arr ? arr : module.exports.createEmptyArray(sideVerts);
 }
 
-var createEmptyArray = function() {
+module.exports.createEmptyArray = function(sideVerts) {
    var arr = new Array(sideVerts);
    for (var x = 0; x < sideVerts; x++)
       arr[x] = new Float32Array(sideVerts);
-
    return arr;
 }
 
@@ -95,7 +78,7 @@ var averageHeight = function(arr) {
 }
 
 var jitter = function(randomness) {
-   return  randomness * randRange(-1, 1);
+   return  randomness * (2 * Math.random() - 1);
 }
 
 var generateSubMap = function(arr, xF, xL, yF, yL, roughness) {
@@ -187,50 +170,30 @@ var setNormals = function(hMap, positions) {
          var rPos = (x < vertsAcross - 1) ? $V([positions[3*r], positions[3*r+1], positions[3*r+2]]) : null;
 
          // Determine directional vectors from center to outer vertices
-         var tVec = tPos ? normalize(tPos.subtract(mPos)) : null;
-         var bVec = bPos ? normalize(bPos.subtract(mPos)) : null;
-         var lVec = lPos ? normalize(lPos.subtract(mPos)) : null;
-         var rVec = rPos ? normalize(rPos.subtract(mPos)) : null;
+         var tVec = tPos ? tPos.subtract(mPos).toUnitVector() : null;
+         var bVec = bPos ? bPos.subtract(mPos).toUnitVector() : null;
+         var lVec = lPos ? lPos.subtract(mPos).toUnitVector() : null;
+         var rVec = rPos ? rPos.subtract(mPos).toUnitVector() : null;
 
          // Determine surrounding face normals
-         // not actually correct, since a face can have two triangles with different normals
-         // var tlNorm = null;
-         // if (tVec && lVec) {
-         //    tlNorm = lVec.cross(tVec);
-         //    vec3.normalize(tlNorm, tlNorm);
-         // } else tlNorm = null;
-         // var trNorm = {};
-         // if (tVec && rVec) {
-         //    vec3.cross(trNorm, tVec, rVec);
-         //    vec3.normalize(trNorm, trNorm);
-         // } else trNorm = null;
-         // var blNorm = {};
-         // if (bVec && lVec) {
-         //    vec3.cross(blNorm, bVec, lVec);
-         //    vec3.normalize(blNorm, blNorm);
-         // } else blNorm = null;
-         // var brNorm = {};
-         // if (bVec && rVec) {
-         //    vec3.cross(brNorm, rVec, bVec);
-         //    vec3.normalize(brNorm, brNorm);
-         // } else brNorm = null;
+         var tlNorm = (tVec && lVec) ? tVec.cross(lVec).toUnitVector() : null;
+         var trNorm = (tVec && rVec) ? rVec.cross(tVec).toUnitVector() : null;
+         var blNorm = (bVec && lVec) ? lVec.cross(bVec).toUnitVector() : null;
+         var brNorm = (bVec && rVec) ? bVec.cross(rVec).toUnitVector() : null;
 
-         // // Average face normals
-         // var normal = vec3.fromValues(0,0,0);
-         // if (tlNorm)
-         //    vec3.add(normal, normal, tlNorm);
-         // if (trNorm)
-         //    vec3.add(normal, normal, trNorm);
-         // if (blNorm)
-         //    vec3.add(normal, normal, blNorm);
-         // if (brNorm)
-         //    vec3.add(normal, normal, brNorm);
-         // vec3.normalize(normal, normal);
 
-         // // Add normal to normal array
-         // normals.push(normal[0]);
-         // normals.push(normal[1]);
-         // normals.push(normal[2]);
+         // Average face normals
+         var normal = $V([0,0,0]);
+         if (tlNorm) normal = normal.add(tlNorm);
+         if (trNorm) normal = normal.add(trNorm);
+         if (blNorm) normal = normal.add(blNorm);
+         if (brNorm) normal = normal.add(brNorm);
+         normal = normal.toUnitVector();
+
+         // Add normal to normal array
+         normals.push(normal.elements[0]);
+         normals.push(normal.elements[1]);
+         normals.push(normal.elements[2]);
       }
 
    return normals;
