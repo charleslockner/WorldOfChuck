@@ -114,8 +114,8 @@ TerrainGenerator.prototype.setPositions = function(hMap) {
    var subWidth = this.width / (vertsAcross-1);
    var positions = [];
 
-   for (var x = 0; x < vertsAcross; x++)
-      for (var z = 0; z < vertsAcross; z++) {
+   for (var z = 0; z < vertsAcross; z++)
+      for (var x = 0; x < vertsAcross; x++) {
          var xPos = subWidth * ((1 - vertsAcross)/2 + x);
          var yPos = this.height * (hMap[x][z] - 0.5);
          var zPos = subWidth * ((1 - vertsAcross)/2 + z);
@@ -173,31 +173,51 @@ TerrainGenerator.prototype.setNormals = function(hMap, positions) {
          var rPos = (x < vertsAcross - 1) ? vec3.fromValues(positions[3*r], positions[3*r+1], positions[3*r+2]) : null;
 
          // Determine directional vectors from center to outer vertices
-         var tVec = {}; tVec = tPos ? vec3.sub(tVec, tPos, mPos) : null;
-         var bVec = {}; bVec = bPos ? vec3.sub(bVec, bPos, mPos) : null;
-         var lVec = {}; lVec = lPos ? vec3.sub(lVec, lPos, mPos) : null;
-         var rVec = {}; rVec = rPos ? vec3.sub(rVec, rPos, mPos) : null;
+         var tVec = {};
+         if (tPos) {
+            vec3.sub(tVec, tPos, mPos);
+            vec3.normalize(tVec, tVec);
+         } else tVec = null;
+         
+         var bVec = {};
+         if (bPos) {
+            vec3.sub(bVec, bPos, mPos);
+            vec3.normalize(bVec, bVec);
+         } else bVec = null;
+         
+         var lVec = {};
+         if (lPos) {
+            vec3.sub(lVec, lPos, mPos);
+            vec3.normalize(lVec, lVec);
+         } else lVec = null;
+         
+         var rVec = {};
+         if (rPos) {
+            vec3.sub(rVec, rPos, mPos);
+            vec3.normalize(rVec, rVec);
+         } else rVec = null;
+
 
          // Determine surrounding face normals
          // not actually correct, since a face can have two triangles with different normals
          var tlNorm = {};
          if (tVec && lVec) {
-            vec3.cross(tlNorm, lVec, tVec);
+            vec3.cross(tlNorm, tVec, lVec);
             vec3.normalize(tlNorm, tlNorm);
          } else tlNorm = null;
          var trNorm = {};
          if (tVec && rVec) {
-            vec3.cross(trNorm, tVec, rVec);
+            vec3.cross(trNorm, rVec, tVec);
             vec3.normalize(trNorm, trNorm);
          } else trNorm = null;
          var blNorm = {};
          if (bVec && lVec) {
-            vec3.cross(blNorm, bVec, lVec);
+            vec3.cross(blNorm, lVec, bVec);
             vec3.normalize(blNorm, blNorm);
          } else blNorm = null;
          var brNorm = {};
          if (bVec && rVec) {
-            vec3.cross(brNorm, rVec, bVec);
+            vec3.cross(brNorm, bVec, rVec);
             vec3.normalize(brNorm, brNorm);
          } else brNorm = null;
 

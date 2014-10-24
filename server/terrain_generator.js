@@ -6,23 +6,37 @@
    | this header or simply stating that your work uses some of this code. :D  |
    |__________________________________________________________________________| */
 
+
+require('sylvester');
+
 var randRange = function(low, high) {
    return (high - low) * Math.random() + low;
+}
+
+var normalize = function(vector) {
+   var sum = 0;
+   vector.each(function(val, i) {
+      sum += val * val;
+   });
+   var len = Math.sqrt(sum);
+   return vector.map(function(val) { return val/len });
 }
 
 var width;
 var height;
 var sideVerts;
 
-module.exports.createTile = function(preMap, width, height, subDivs, roughness) {
-   width = width;
-   height = height;
+module.exports.createTile = function(preMap, widthP, heightP, subDivs, roughness) {
+   width = widthP;
+   height = heightP;
    sideVerts = Math.pow(2, subDivs) + 1;
 
    var hMap = generateMap(roughness, sanitizeArray(preMap));
-   var positions = setPositions(hMap, height);
+   var positions = setPositions(hMap);
    var indices = setIndices(hMap);
    var normals = setNormals(hMap, positions);
+
+   console.log(normals);
 
    return {
       "vertices": positions,
@@ -166,57 +180,57 @@ var setNormals = function(hMap, positions) {
          var r = m + 1;
 
          // Determine positions of outer vertices
-         var mPos = vec3.fromValues(positions[3*m], positions[3*m+1], positions[3*m+2]);
-         var tPos = (z > 0) ? vec3.fromValues(positions[3*t], positions[3*t+1], positions[3*t+2]) : null;
-         var bPos = (z < vertsAcross - 1) ? vec3.fromValues(positions[3*b], positions[3*b+1], positions[3*b+2]) : null;
-         var lPos = (x > 0) ? vec3.fromValues(positions[3*l], positions[3*l+1], positions[3*l+2]) : null;
-         var rPos = (x < vertsAcross - 1) ? vec3.fromValues(positions[3*r], positions[3*r+1], positions[3*r+2]) : null;
+         var mPos = $V([positions[3*m], positions[3*m+1], positions[3*m+2]]);
+         var tPos = (z > 0) ? $V([positions[3*t], positions[3*t+1], positions[3*t+2]]) : null;
+         var bPos = (z < vertsAcross - 1) ? $V([positions[3*b], positions[3*b+1], positions[3*b+2]]) : null;
+         var lPos = (x > 0) ? $V([positions[3*l], positions[3*l+1], positions[3*l+2]]) : null;
+         var rPos = (x < vertsAcross - 1) ? $V([positions[3*r], positions[3*r+1], positions[3*r+2]]) : null;
 
          // Determine directional vectors from center to outer vertices
-         var tVec = {}; tVec = tPos ? vec3.sub(tVec, tPos, mPos) : null;
-         var bVec = {}; bVec = bPos ? vec3.sub(bVec, bPos, mPos) : null;
-         var lVec = {}; lVec = lPos ? vec3.sub(lVec, lPos, mPos) : null;
-         var rVec = {}; rVec = rPos ? vec3.sub(rVec, rPos, mPos) : null;
+         var tVec = tPos ? normalize(tPos.subtract(mPos)) : null;
+         var bVec = bPos ? normalize(bPos.subtract(mPos)) : null;
+         var lVec = lPos ? normalize(lPos.subtract(mPos)) : null;
+         var rVec = rPos ? normalize(rPos.subtract(mPos)) : null;
 
          // Determine surrounding face normals
          // not actually correct, since a face can have two triangles with different normals
-         var tlNorm = {};
-         if (tVec && lVec) {
-            vec3.cross(tlNorm, lVec, tVec);
-            vec3.normalize(tlNorm, tlNorm);
-         } else tlNorm = null;
-         var trNorm = {};
-         if (tVec && rVec) {
-            vec3.cross(trNorm, tVec, rVec);
-            vec3.normalize(trNorm, trNorm);
-         } else trNorm = null;
-         var blNorm = {};
-         if (bVec && lVec) {
-            vec3.cross(blNorm, bVec, lVec);
-            vec3.normalize(blNorm, blNorm);
-         } else blNorm = null;
-         var brNorm = {};
-         if (bVec && rVec) {
-            vec3.cross(brNorm, rVec, bVec);
-            vec3.normalize(brNorm, brNorm);
-         } else brNorm = null;
+         // var tlNorm = null;
+         // if (tVec && lVec) {
+         //    tlNorm = lVec.cross(tVec);
+         //    vec3.normalize(tlNorm, tlNorm);
+         // } else tlNorm = null;
+         // var trNorm = {};
+         // if (tVec && rVec) {
+         //    vec3.cross(trNorm, tVec, rVec);
+         //    vec3.normalize(trNorm, trNorm);
+         // } else trNorm = null;
+         // var blNorm = {};
+         // if (bVec && lVec) {
+         //    vec3.cross(blNorm, bVec, lVec);
+         //    vec3.normalize(blNorm, blNorm);
+         // } else blNorm = null;
+         // var brNorm = {};
+         // if (bVec && rVec) {
+         //    vec3.cross(brNorm, rVec, bVec);
+         //    vec3.normalize(brNorm, brNorm);
+         // } else brNorm = null;
 
-         // Average face normals
-         var normal = vec3.fromValues(0,0,0);
-         if (tlNorm)
-            vec3.add(normal, normal, tlNorm);
-         if (trNorm)
-            vec3.add(normal, normal, trNorm);
-         if (blNorm)
-            vec3.add(normal, normal, blNorm);
-         if (brNorm)
-            vec3.add(normal, normal, brNorm);
-         vec3.normalize(normal, normal);
+         // // Average face normals
+         // var normal = vec3.fromValues(0,0,0);
+         // if (tlNorm)
+         //    vec3.add(normal, normal, tlNorm);
+         // if (trNorm)
+         //    vec3.add(normal, normal, trNorm);
+         // if (blNorm)
+         //    vec3.add(normal, normal, blNorm);
+         // if (brNorm)
+         //    vec3.add(normal, normal, brNorm);
+         // vec3.normalize(normal, normal);
 
-         // Add normal to normal array
-         normals.push(normal[0]);
-         normals.push(normal[1]);
-         normals.push(normal[2]);
+         // // Add normal to normal array
+         // normals.push(normal[0]);
+         // normals.push(normal[1]);
+         // normals.push(normal[2]);
       }
 
    return normals;

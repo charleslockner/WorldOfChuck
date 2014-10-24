@@ -24,9 +24,9 @@ Portal.prototype.initModels = function() {
 
    this.models.unknown = ModelLoader.createFromJSON(this.gl, unknownJSON);
 
-   this.models.tileWidth = 1000;
-   var TILE_HEIGHT = 1500;
-   var RECURSIONS = 7;
+   this.models.tileWidth = 700;
+   var TILE_HEIGHT = 500;
+   var RECURSIONS = 6;
    this.models.terrainHandler = new TerrainHandler(this.gl, this.models.tileWidth, TILE_HEIGHT, RECURSIONS);
    
 

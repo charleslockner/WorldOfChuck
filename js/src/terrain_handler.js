@@ -9,7 +9,6 @@
 var TerrainHandler = function(gl, tileWidth, tileHeight, reps) {
    this.gl = gl;
    this.tileWidth = tileWidth;
-
    this.generator = new TerrainGenerator(tileWidth, tileHeight, reps);
    this.tileMap = new TileMap();
    this.visibleMap = new TileMap();
@@ -36,7 +35,7 @@ TerrainHandler.prototype.placeTile = function(x, z, visible) {
 
 TerrainHandler.prototype.createNewTile = function(x, z) {
    var preArr = this.createMapFromSurroundings(x, z);
-   var roughness = this.calculateRoughnessFromSurroundings(x, z, 0.02, 0.5, 0.2);
+   var roughness = this.calculateRoughnessFromSurroundings(x, z, 0.02, 0.3, 0.05);
    var tileJSON = this.generator.createTile(preArr, roughness);
    this.saveTile(x, z, tileJSON);
    return tileJSON;

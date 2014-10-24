@@ -59,10 +59,10 @@ Portal.prototype.updateTerrain = function(elapsed) {
    var curX = Math.floor(this.camera.position[0] / this.models.tileWidth + 0.5);
    var curZ = Math.floor(this.camera.position[2] / this.models.tileWidth + 0.5);
 
-   var xKeepF = curX - 1;
-   var xKeepL = curX + 1;
-   var zKeepF = curZ - 1;
-   var zKeepL = curZ + 1;
+   var xKeepF = curX - 2;
+   var xKeepL = curX + 2;
+   var zKeepF = curZ - 2;
+   var zKeepL = curZ + 2;
 
    var xF = this.models.terrainHandler.tileMap.xFirstNdx;
    var xL = this.models.terrainHandler.tileMap.xLastNdx;
