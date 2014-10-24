@@ -14,14 +14,19 @@ var MAX_ROUGHNESS = 0.3;
 var MIN_ROUGHNESS = 0.02;
 var ROUGHNESS_DEV = 0.12;
 
-module.exports.createTile = function(x, z, tileWidth, tileHeight, subdivs) {
-   var sideVerts = Math.pow(2, subdivs) + 1
-   var preArr = createMapFromSurroundings(x, z, sideVerts);
-   var roughness = calculateRoughnessFromSurroundings(x, z, MIN_ROUGHNESS, MAX_ROUGHNESS, ROUGHNESS_DEV);
-   var tileJSON = generator.createTile(preArr, tileWidth, tileHeight, subdivs, roughness);
+module.exports.createTile = function(x, z, tileWidth, tileHeight, subdivs, callback) {
+   // process.nextTick(function() {
+      var sideVerts = Math.pow(2, subdivs) + 1
+      var preArr = createMapFromSurroundings(x, z, sideVerts);
+      var roughness = calculateRoughnessFromSurroundings(x, z, MIN_ROUGHNESS, MAX_ROUGHNESS, ROUGHNESS_DEV);
+      var tileJSON = generator.createTile(preArr, tileWidth, tileHeight, subdivs, roughness);
 
-   tileMap.put(x, z, tileJSON);
-   saveTile(x, z, tileJSON);
+      tileMap.put(x, z, tileJSON);
+      saveTile(x, z, tileJSON);
+      
+      if (callback)
+         callback(tileJSON, x, z);       
+    // });
 }
 
 var createMapFromSurroundings = function(x, z, sideVerts) {
@@ -96,7 +101,7 @@ var randRange = function(low, high) {
    return (high - low) * Math.random() - low
 }
 
-var saveTile = function(x, z, tileJSON) {
+var saveTile = function(x, z, tileJSON, callcack) {
    var path = "assets/models/terrain/" + x + "." + z + ".json";
 
    fs.writeFile(path, JSON.stringify(tileJSON), function(err) {

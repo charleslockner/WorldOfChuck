@@ -30,9 +30,9 @@ module.exports.createTile = function(preMap, widthP, heightP, subDivs, roughness
       "faces": indices,
       "heightMap": hMap,
       "roughness": roughness,
-      "xWidth" : width,
-      "zWidth" : width,
-      "height" : height
+      "xWidth": width,
+      "zWidth": width,
+      "height": height
    };
 }
 

@@ -10,7 +10,7 @@ var _ = require("underscore");
 // Load the src files
 var config = require("./config");
 var terrain = require("./server/terrain_handler.js");
-var tileWidth = 1000, tileHeight = 1800, subdivs = 6;
+var tileWidth = 1000, tileHeight = 1800, subdivs = 5;
 
 // Create our HTTP server.
 var server = http.createServer( function( req, res ) {
@@ -26,13 +26,15 @@ console.log("Serving files at " + config.getAddress() + " (Port " + config.getPo
 
 var generateWorld = function() {
    console.log("Generating world");
-   for (var x = -10; x <= 10; x++)
-      for (var y = -10; y <= 10; y++)
-         terrain.createTile(x, y, tileWidth, tileHeight, subdivs);
-   console.log("Finished generating");
+   for (var x = -2; x <= 2; x++)
+      for (var y = -2; y <= 2; y++) {
+         terrain.createTile(x, y, tileWidth, tileHeight, subdivs, function(JSONTile, nX, nY) {
+            console.log("Created tile: [" + nX + "][" + nY + "]");
+         });
+      }
 }
 
-generateWorld();
+// generateWorld();
 
 function handleGet(req, res) {
    var filename = req.url;
@@ -48,8 +50,12 @@ function handleGet(req, res) {
          console.log("Serving: " + filename);
          serveFile(localPath, res);
       } else if (isTerrain) {
-         console.log("Generating tile (but not really) " + filename);
-         // terrain.createTile(0, 0, tileWidth, tileHeight, subdivs);
+         console.log("Generating new tile." + filename);
+         var coords = filename.split(path.sep).pop().split(".");
+         terrain.createTile(coords[0], coords[1], tileWidth, tileHeight, subdivs, function(JSONTile, nX, nY) {
+            console.log("Created tile: [" + nX + "][" + nY + "]");
+            serveNewTile(localPath, res, JSONTile);
+         });
 
       } else {
          console.log("Couldn't find: " + filename);
@@ -70,6 +76,16 @@ var extToMime = {
    ".json": "text/json",
    ".glsl": "application/x-glsl"
 };
+
+function serveNewTile(localPath, res, JSONTile) {
+   var mimeType = extToMime[path.extname(localPath)]; 
+   var JSONString = JSON.stringify(JSONTile);
+
+   res.setHeader("Content-Length", JSONString.length);
+   res.setHeader("Content-Type", mimeType);
+   res.statusCode = 200;
+   res.end(JSONString);
+}
 
 function serveFile(localPath, res) {
    var mimeType = extToMime[path.extname(localPath)]; 
