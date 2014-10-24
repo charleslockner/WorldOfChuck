@@ -12,7 +12,7 @@ var fs = require("fs");
 
 var MAX_ROUGHNESS = 0.3;
 var MIN_ROUGHNESS = 0.02;
-var ROUGHNESS_DEV = 0.2;
+var ROUGHNESS_DEV = 0.12;
 
 module.exports.createTile = function(x, z, tileWidth, tileHeight, subdivs) {
    var sideVerts = Math.pow(2, subdivs) + 1

@@ -20,7 +20,10 @@ var ModelLoader = {
          faces : json.faces.length/3,
          vbo : gl.createBuffer(),
          nbo : gl.createBuffer(),
-         ibo : gl.createBuffer()
+         ibo : gl.createBuffer(),
+         xWidth : json.xWidth || null,
+         zWidth : json.zWidth || null,
+         height : json.height || null
       }
 
       // vertex positions

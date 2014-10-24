@@ -99,23 +99,19 @@ Terrain.prototype.constructor = Terrain;
 Terrain.prototype.draw = function(gl, shaderProgram, models) {
    var xF = models.terrainHandler.getXFirstNdx();
    var xL = models.terrainHandler.getXLastNdx();
-   var yF = models.terrainHandler.getYFirstNdx();
-   var yL = models.terrainHandler.getYLastNdx();
+   var zF = models.terrainHandler.getYFirstNdx();
+   var zL = models.terrainHandler.getYLastNdx();
    var tileWidth = models.terrainHandler.getTileWidth();
 
    for (var x = xF; x <= xL; x++)
-      for (var y = yF; y <= yL; y++) {
-         var isVisible = models.terrainHandler.isVisible(x, y);
+      for (var z = zF; z <= zL; z++) {
+         var isVisible = models.terrainHandler.isVisible(x, z);
          
          if (isVisible) {
-            var tile = models.terrainHandler.getTile(x, y);
+            var model = models.terrainHandler.getTile(x, z) || models.unknown;
 
-            if (tile) {
-               var model = tile.model || models.unknown;
-
-               this.tileOffset = [tileWidth * x, 0, tileWidth * y]; 
-               this.drawModel(gl, shaderProgram, model);
-            }
+            this.tileOffset = [model.xWidth * x, 0, model.zWidth * z]; 
+            this.drawModel(gl, shaderProgram, model);
          }
       }
 }

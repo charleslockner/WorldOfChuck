@@ -56,8 +56,8 @@ Portal.prototype.updateEntities = function(elapsed) {
 }
 
 Portal.prototype.updateTerrain = function(elapsed) {
-   var curX = Math.floor(this.camera.position[0] / this.models.tileWidth + 0.5);
-   var curZ = Math.floor(this.camera.position[2] / this.models.tileWidth + 0.5);
+   var curX = Math.floor(this.camera.position[0] / this.models.terrainHandler.tileWidth + 0.5);
+   var curZ = Math.floor(this.camera.position[2] / this.models.terrainHandler.tileWidth + 0.5);
 
    var xKeepF = curX - 2;
    var xKeepL = curX + 2;

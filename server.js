@@ -10,7 +10,7 @@ var _ = require("underscore");
 // Load the src files
 var config = require("./config");
 var terrain = require("./server/terrain_handler.js");
-var tileWidth = 100, tileHeight = 20, subdivs = 1;
+var tileWidth = 1000, tileHeight = 1800, subdivs = 6;
 
 // Create our HTTP server.
 var server = http.createServer( function( req, res ) {
@@ -20,17 +20,19 @@ var server = http.createServer( function( req, res ) {
       handlePost(req, res);
 });
 
-var generateWorld = function() {
-   for (var x = -10; x <= 10; x++)
-      for (var y = -10; y <= 10; y++)
-         terrain.createTile(x, y, tileWidth, tileHeight, subdivs);
-}
-
-generateWorld();
-
 // Start it up!
 server.listen( config.getPort(), config.getAddress() );
 console.log("Serving files at " + config.getAddress() + " (Port " + config.getPort() + ")");
+
+var generateWorld = function() {
+   console.log("Generating world");
+   for (var x = -10; x <= 10; x++)
+      for (var y = -10; y <= 10; y++)
+         terrain.createTile(x, y, tileWidth, tileHeight, subdivs);
+   console.log("Finished generating");
+}
+
+generateWorld();
 
 function handleGet(req, res) {
    var filename = req.url;

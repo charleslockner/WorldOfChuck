@@ -6,143 +6,29 @@
    | this header or simply stating that your work uses some of this code. :D  |
    |__________________________________________________________________________| */
 
-var TerrainHandler = function(gl, tileWidth, tileHeight, reps) {
+var TerrainHandler = function(gl) {
    this.gl = gl;
-   this.tileWidth = tileWidth;
-   this.generator = new TerrainGenerator(tileWidth, tileHeight, reps);
+   this.tileWidth = 1000; // have to mirror the server until we fix it
    this.tileMap = new TileMap();
    this.visibleMap = new TileMap();
+   this.isLoading = false;
 }
 
 TerrainHandler.prototype.placeTile = function(x, z, visible) {
-      this.setVisible(x, z, visible);
+   this.setVisible(x, z, visible);
+   var self = this;
 
-      if (!this.tileExists(x, z)) {
-         var tileJSON = this.createNewTile(x, z);
-         var tileModel = ModelLoader.createFromJSON(this.gl, tileJSON);
-
-         var tile = {
-            JSON : tileJSON,
-            model : tileModel
-         }
-
-         this.tileMap.put(x, z, tile);
+   // if we don't have the tile in memory, go load it from the server
+   if (!this.tileMap.exists(x, z)) {
+      if (!this.isLoading) {
+         this.isLoading = true;
+         var path = "assets/models/terrain/" + x + "." + z + ".json"
+         var tileModel = ModelLoader.load(this.gl, path, function(model) {
+            self.tileMap.put(x, z, model);
+            self.isLoading = false;
+         });
       }
-   // this.loadTile(x, z, function(loadedTile) {
-   // console.log(loadedTile);
-   // });
-}
-
-TerrainHandler.prototype.createNewTile = function(x, z) {
-   var preArr = this.createMapFromSurroundings(x, z);
-   var roughness = this.calculateRoughnessFromSurroundings(x, z, 0.02, 0.3, 0.05);
-   var tileJSON = this.generator.createTile(preArr, roughness);
-   this.saveTile(x, z, tileJSON);
-   return tileJSON;
-}
-
-TerrainHandler.prototype.createMapFromSurroundings = function(x, z) {
-   var preArr = this.generator.createEmptyArray();
-   var sideVerts = this.generator.sideVerts;
-
-   // Set left side
-   var leftTile = this.tileMap.get(x-1, z);
-   if (leftTile)
-      for (var i = 0; i < sideVerts; i++)
-         preArr[0][i] = leftTile.JSON.heightMap[sideVerts-1][i];
-
-   // Set right side
-   var rightTile = this.tileMap.get(x+1, z);
-   if (rightTile)
-      for (var i = 0; i < sideVerts; i++)
-         preArr[sideVerts-1][i] = rightTile.JSON.heightMap[0][i];
-
-   // Set top side
-   var topTile = this.tileMap.get(x, z-1);
-   if (topTile)
-      for (var i = 0; i < sideVerts; i++)
-         preArr[i][0] = topTile.JSON.heightMap[i][sideVerts-1];
-
-   // Set bottom side
-   var bottomTile = this.tileMap.get(x, z+1);
-   if (bottomTile)
-      for (var i = 0; i < sideVerts; i++)
-         preArr[i][sideVerts-1] = bottomTile.JSON.heightMap[i][0];
-
-   return preArr;
-}
-
-TerrainHandler.prototype.calculateRoughnessFromSurroundings = function(x, z, min, max, sensitivity) {
-   var roughSum = 0;
-   var tileCount = 0;
-
-   var topTile = this.tileMap.get(x, z-1);
-   if (topTile) {
-      roughSum += topTile.JSON.roughness;
-      tileCount++;
    }
-
-   var bottomTile = this.tileMap.get(x, z+1);
-   if (bottomTile) {
-      roughSum += bottomTile.JSON.roughness;
-      tileCount++;
-   }
-
-   var leftTile = this.tileMap.get(x-1, z);
-   if (leftTile) {
-      roughSum += leftTile.JSON.roughness;
-      tileCount++;
-   }
-
-   var rightTile = this.tileMap.get(x+1, z);
-   if (rightTile) {
-      roughSum += rightTile.JSON.roughness;
-      tileCount++;
-   }
-
-   if (tileCount > 0) {
-      var dev = sensitivity / 2;
-      var ave = roughSum / tileCount;
-      var rawRandomness = randRange(ave - dev, ave + dev);
-      return Math.max(min, Math.min(max, rawRandomness));
-   }
-   else
-      return randRange(min, max);
-}
-
-TerrainHandler.prototype.saveTile = function(x, z, tileJSON) {
-   var postData = {
-      "x" : x,
-      "z" : z,
-      "tile" : tileJSON
-   }
-
-   // $.ajax({
-   //    type: 'POST',
-   //    url: '/server.js',
-   //    data: "hi",
-   //    // dataType: dataType,
-   //    async: true,
-   //    success: function(result) {
-   //                 if(result.isOk == false)
-   //                     console.log(result.message);
-   //             }
-   //  }); 
-
-   // $.post("/server.js", "hi", function(data) {
-   //    console.log(data);
-   // });
-}
-
-TerrainHandler.prototype.loadTile = function(x, z, callback) {
-   var path = "assets/models/terrain/" + x + "." + z + ".json";
-
-   $.getJSON(path, function(data) {
-      callback(data);
-   })
-   .fail(function() {
-      callback(null);
-   });
 }
 
 TerrainHandler.prototype.isVisible = function(x, z) {

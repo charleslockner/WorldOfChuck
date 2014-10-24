@@ -29,7 +29,10 @@ module.exports.createTile = function(preMap, widthP, heightP, subDivs, roughness
       "uvs": [],
       "faces": indices,
       "heightMap": hMap,
-      "roughness": roughness
+      "roughness": roughness,
+      "xWidth" : width,
+      "zWidth" : width,
+      "height" : height
    };
 }
 
@@ -176,11 +179,10 @@ var setNormals = function(hMap, positions) {
          var rVec = rPos ? rPos.subtract(mPos).toUnitVector() : null;
 
          // Determine surrounding face normals
-         var tlNorm = (tVec && lVec) ? tVec.cross(lVec).toUnitVector() : null;
-         var trNorm = (tVec && rVec) ? rVec.cross(tVec).toUnitVector() : null;
-         var blNorm = (bVec && lVec) ? lVec.cross(bVec).toUnitVector() : null;
-         var brNorm = (bVec && rVec) ? bVec.cross(rVec).toUnitVector() : null;
-
+         var tlNorm = (tVec && lVec) ? lVec.cross(tVec).toUnitVector() : null;
+         var trNorm = (tVec && rVec) ? tVec.cross(rVec).toUnitVector() : null;
+         var blNorm = (bVec && lVec) ? bVec.cross(lVec).toUnitVector() : null;
+         var brNorm = (bVec && rVec) ? rVec.cross(bVec).toUnitVector() : null;
 
          // Average face normals
          var normal = $V([0,0,0]);
