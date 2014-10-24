@@ -1,4 +1,5 @@
 .*
+config.js
 ./log/*
 ./assets/*
 ./assets/models/terrain

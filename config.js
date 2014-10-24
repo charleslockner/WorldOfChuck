@@ -1,5 +1,5 @@
 var getAddress = function() {
-   return "127.0.0.1";
+   return "0.0.0.0";
 };
 var getPort = function() { 
    return 8080;

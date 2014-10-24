@@ -10,7 +10,7 @@ var _ = require("underscore");
 // Load the src files
 var config = require("./config");
 var terrain = require("./server/terrain_handler.js");
-var tileWidth = 1000, tileHeight = 1800, subdivs = 5;
+var tileWidth = 1000, tileHeight = 1800, subdivs = 6;
 
 // Create our HTTP server.
 var server = http.createServer( function( req, res ) {
