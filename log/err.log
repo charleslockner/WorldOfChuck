@@ -26,3 +26,12 @@ Error: listen EADDRNOTAVAIL
     at Function.Module.runMain (module.js:499:11)
     at startup (node.js:119:16)
     at node.js:906:3
+
+/var/www/site/server/terrain_handler.js:45
+         preArr[sideVerts-1][i] = rightTile.heightMap[0][i];
+                                                     ^
+TypeError: Cannot read property '0' of undefined
+    at createMapFromSurroundings (/var/www/site/server/terrain_handler.js:45:54)
+    at Object.module.exports.createTile (/var/www/site/server/terrain_handler.js:20:20)
+    at /var/www/site/server.js:55:18
+    at Object.cb [as oncomplete] (fs.js:168:19)

@@ -499,3 +499,404 @@ Generating new tile./assets/models/terrain/12.17.json
 Created tile: [12][17]
 Generating new tile./assets/models/terrain/12.18.json
 Created tile: [12][18]
+Serving: /index.html
+Serving: /index.html
+Generating new tile./assets/models/terrain/8.19.json
+Created tile: [8][19]
+Generating new tile./assets/models/terrain/9.19.json
+Created tile: [9][19]
+Generating new tile./assets/models/terrain/10.19.json
+Created tile: [10][19]
+Generating new tile./assets/models/terrain/11.19.json
+Created tile: [11][19]
+Generating new tile./assets/models/terrain/12.19.json
+Created tile: [12][19]
+Generating new tile./assets/models/terrain/13.15.json
+Created tile: [13][15]
+Generating new tile./assets/models/terrain/13.16.json
+Created tile: [13][16]
+Generating new tile./assets/models/terrain/13.17.json
+Created tile: [13][17]
+Generating new tile./assets/models/terrain/13.18.json
+Created tile: [13][18]
+Generating new tile./assets/models/terrain/13.19.json
+Created tile: [13][19]
+Generating new tile./assets/models/terrain/8.20.json
+Created tile: [8][20]
+Generating new tile./assets/models/terrain/9.20.json
+Created tile: [9][20]
+Generating new tile./assets/models/terrain/10.20.json
+Created tile: [10][20]
+Generating new tile./assets/models/terrain/11.20.json
+Created tile: [11][20]
+Generating new tile./assets/models/terrain/12.20.json
+Created tile: [12][20]
+Generating new tile./assets/models/terrain/13.20.json
+Created tile: [13][20]
+Generating new tile./assets/models/terrain/12.13.json
+Created tile: [12][13]
+Generating new tile./assets/models/terrain/12.12.json
+Created tile: [12][12]
+Generating new tile./assets/models/terrain/6.17.json
+Created tile: [6][17]
+Generating new tile./assets/models/terrain/6.18.json
+Created tile: [6][18]
+Generating new tile./assets/models/terrain/6.19.json
+Created tile: [6][19]
+Generating new tile./assets/models/terrain/7.19.json
+Created tile: [7][19]
+Generating new tile./assets/models/terrain/5.15.json
+Created tile: [5][15]
+Generating new tile./assets/models/terrain/5.16.json
+Created tile: [5][16]
+Generating new tile./assets/models/terrain/5.17.json
+Created tile: [5][17]
+Generating new tile./assets/models/terrain/5.18.json
+Created tile: [5][18]
+Generating new tile./assets/models/terrain/5.19.json
+Created tile: [5][19]
+Couldn't find: http://www.mafengwo.com/
+File not found: /var/www/sitehttp://www.mafengwo.com/
+Couldn't find: /manager/html
+File not found: /var/www/site/manager/html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Couldn't find: /manager/html
+File not found: /var/www/site/manager/html
+Serving: /index.html
+Serving: /index.html
+Couldn't find: /assets/images/favicon.ico
+File not found: /var/www/site/assets/images/favicon.ico
+Serving: /index.html
+Serving: /js/lib/jquery.min.js
+Serving: /css/portal.css
+Serving: /js/lib/jquery.cookie.js
+Serving: /js/lib/gl-matrix-min.js
+Serving: /js/src/model_loader.js
+Serving: /js/src/fixes.js
+Serving: /js/src/entity.js
+Serving: /js/src/tile_map.js
+Serving: /js/src/terrain_handler.js
+Serving: /js/src/portal.js
+Serving: /js/src/loop.js
+Serving: /js/src/model.js
+Serving: /js/src/world.js
+Serving: /js/src/camera.js
+Serving: /js/src/controls.js
+Serving: /js/src/shaders.js
+Serving: /assets/models/worldofchuck_text.json
+Serving: /assets/models/cube.json
+Serving: /shaders/normal.vert.glsl
+Serving: /assets/models/pillar.json
+Serving: /assets/models/sphere.json
+Generating new tile./assets/models/terrain/-1.1.json
+Created tile: [-1][1]
+Couldn't find: /assets/images/favicon.ico
+File not found: /var/www/site/assets/images/favicon.ico
+Serving: /shaders/normal.frag.glsl
+Generating new tile./assets/models/terrain/-2.-2.json
+Created tile: [-2][-2]
+Generating new tile./assets/models/terrain/-2.-1.json
+Created tile: [-2][-1]
+Generating new tile./assets/models/terrain/-2.0.json
+Created tile: [-2][0]
+Generating new tile./assets/models/terrain/-2.1.json
+Created tile: [-2][1]
+Generating new tile./assets/models/terrain/-2.2.json
+Created tile: [-2][2]
+Generating new tile./assets/models/terrain/-1.-2.json
+Created tile: [-1][-2]
+Generating new tile./assets/models/terrain/-1.-1.json
+Created tile: [-1][-1]
+Generating new tile./assets/models/terrain/-1.0.json
+Created tile: [-1][0]
+Generating new tile./assets/models/terrain/-1.2.json
+Created tile: [-1][2]
+Generating new tile./assets/models/terrain/0.-2.json
+Created tile: [0][-2]
+Generating new tile./assets/models/terrain/0.-1.json
+Created tile: [0][-1]
+Generating new tile./assets/models/terrain/0.0.json
+Created tile: [0][0]
+Generating new tile./assets/models/terrain/0.1.json
+Created tile: [0][1]
+Generating new tile./assets/models/terrain/0.2.json
+Created tile: [0][2]
+Generating new tile./assets/models/terrain/1.-2.json
+Created tile: [1][-2]
+Generating new tile./assets/models/terrain/1.-1.json
+Created tile: [1][-1]
+Generating new tile./assets/models/terrain/1.0.json
+Serving files at 0.0.0.0 (Port 8080)
+Serving: /index.html
+Serving: /index.html
+Couldn't find: /manager/html
+File not found: /var/www/site/manager/html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Couldn't find: /manager/html
+File not found: /var/www/site/manager/html
+got post
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Couldn't find: /manager/html
+File not found: /var/www/site/manager/html
+Serving: /index.html
+Serving: /index.html
+Couldn't find: /rom-0
+File not found: /var/www/site/rom-0
+Couldn't find: /manager/html
+File not found: /var/www/site/manager/html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /js/lib/jquery.cookie.js
+Serving: /css/portal.css
+Serving: /js/lib/jquery.min.js
+Serving: /js/src/entity.js
+Serving: /js/lib/gl-matrix-min.js
+Serving: /js/src/fixes.js
+Serving: /js/src/model_loader.js
+Serving: /js/src/terrain_handler.js
+Serving: /js/src/tile_map.js
+Serving: /js/src/loop.js
+Serving: /js/src/model.js
+Serving: /js/src/portal.js
+Serving: /js/src/world.js
+Serving: /js/src/camera.js
+Serving: /js/src/shaders.js
+Serving: /js/src/controls.js
+Serving: /assets/models/worldofchuck_text.json
+Serving: /assets/models/cube.json
+Serving: /assets/models/pillar.json
+Serving: /assets/models/sphere.json
+Serving: /assets/models/terrain/-1.1.json
+Serving: /shaders/normal.vert.glsl
+Couldn't find: /assets/images/favicon.ico
+File not found: /var/www/site/assets/images/favicon.ico
+Serving: /shaders/normal.frag.glsl
+Serving: /assets/models/terrain/-2.-2.json
+Serving: /assets/models/terrain/-2.-1.json
+Serving: /assets/models/terrain/-2.0.json
+Serving: /assets/models/terrain/-2.1.json
+Serving: /assets/models/terrain/-2.2.json
+Serving: /assets/models/terrain/-1.-2.json
+Serving: /assets/models/terrain/-1.-1.json
+Serving: /assets/models/terrain/-1.0.json
+Serving: /assets/models/terrain/-1.2.json
+Serving: /assets/models/terrain/0.-2.json
+Serving: /assets/models/terrain/0.-1.json
+Serving: /assets/models/terrain/0.0.json
+Serving: /assets/models/terrain/0.1.json
+Serving: /assets/models/terrain/0.2.json
+Serving: /assets/models/terrain/1.-2.json
+Serving: /assets/models/terrain/1.-1.json
+Generating new tile./assets/models/terrain/1.0.json
+Created tile: [1][0]
+Generating new tile./assets/models/terrain/1.1.json
+Created tile: [1][1]
+Generating new tile./assets/models/terrain/1.2.json
+Created tile: [1][2]
+Generating new tile./assets/models/terrain/2.-2.json
+Created tile: [2][-2]
+Generating new tile./assets/models/terrain/2.-1.json
+Created tile: [2][-1]
+Generating new tile./assets/models/terrain/2.0.json
+Created tile: [2][0]
+Generating new tile./assets/models/terrain/2.1.json
+Created tile: [2][1]
+Generating new tile./assets/models/terrain/2.2.json
+Created tile: [2][2]
+Generating new tile./assets/models/terrain/-2.3.json
+Created tile: [-2][3]
+Generating new tile./assets/models/terrain/-1.3.json
+Created tile: [-1][3]
+Generating new tile./assets/models/terrain/0.3.json
+Created tile: [0][3]
+Generating new tile./assets/models/terrain/1.3.json
+Created tile: [1][3]
+Generating new tile./assets/models/terrain/2.3.json
+Created tile: [2][3]
+Generating new tile./assets/models/terrain/3.-1.json
+Created tile: [3][-1]
+Generating new tile./assets/models/terrain/3.0.json
+Created tile: [3][0]
+Generating new tile./assets/models/terrain/3.1.json
+Created tile: [3][1]
+Generating new tile./assets/models/terrain/3.2.json
+Created tile: [3][2]
+Generating new tile./assets/models/terrain/3.3.json
+Created tile: [3][3]
+Generating new tile./assets/models/terrain/3.-2.json
+Created tile: [3][-2]
+Generating new tile./assets/models/terrain/-3.-2.json
+Created tile: [-3][-2]
+Generating new tile./assets/models/terrain/-3.-1.json
+Created tile: [-3][-1]
+Generating new tile./assets/models/terrain/-3.0.json
+Created tile: [-3][0]
+Generating new tile./assets/models/terrain/-3.1.json
+Created tile: [-3][1]
+Generating new tile./assets/models/terrain/-3.2.json
+Created tile: [-3][2]
+Generating new tile./assets/models/terrain/-3.-3.json
+Created tile: [-3][-3]
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Couldn't find: /robots.txt
+File not found: /var/www/site/robots.txt
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Couldn't find: /manager/html
+File not found: /var/www/site/manager/html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Couldn't find: /manager/html
+File not found: /var/www/site/manager/html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Couldn't find: /manager/html
+File not found: /var/www/site/manager/html
+Couldn't find: /robots.txt
+File not found: /var/www/site/robots.txt
+Serving: /index.html
+Serving: /js/src/controls.js
+Serving: /js/src/shaders.js
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Couldn't find: /manager/html
+File not found: /var/www/site/manager/html
+Serving: /index.html
+Serving: /index.html
+Serving: /index.html
+Couldn't find: /assets/images/favicon.ico
+File not found: /var/www/site/assets/images/favicon.ico
+Serving files at 0.0.0.0 (Port 8080)
+Serving files at 0.0.0.0 (Port 8080)
+Serving: /index.html
+Serving: /css/portal.css
+Serving: /js/lib/jquery.min.js
+Serving: /js/lib/jquery.cookie.js
+Serving: /js/lib/gl-matrix-min.js
+Serving: /js/src/fixes.js
+Serving: /js/src/model_loader.js
+Serving: /js/src/entity.js
+Serving: /js/src/tile_map.js
+Serving: /js/src/terrain_handler.js
+Serving: /js/src/loop.js
+Serving: /js/src/portal.js
+Serving: /js/src/camera.js
+Serving: /js/src/controls.js
+Serving: /js/src/shaders.js
+Serving: /js/src/world.js
+Serving: /js/src/model.js
+Serving: /assets/models/worldofchuck_text.json
+Serving: /assets/models/sphere.json
+Serving: /assets/models/cube.json
+Serving: /assets/models/pillar.json
+Created tile: [-1][1]
+Serving: /shaders/normal.vert.glsl
+Serving: /shaders/normal.frag.glsl
+Created tile: [-2][-2]
+Created tile: [-2][-1]
+Created tile: [-2][0]
+Created tile: [-2][1]
+Created tile: [-2][2]
+Created tile: [-1][-2]
+Created tile: [-1][-1]
+Created tile: [-1][0]
+Created tile: [-1][2]
+Created tile: [0][-2]
+Created tile: [0][-1]
+Created tile: [0][0]
+Created tile: [0][1]
+Created tile: [0][2]
+Created tile: [1][-2]
+Created tile: [1][-1]
+Created tile: [1][0]
+Created tile: [1][1]
+Created tile: [1][2]
+Created tile: [2][-2]
+Created tile: [2][-1]
+Created tile: [2][0]
+Created tile: [2][1]
+Created tile: [2][2]
+Created tile: [-2][3]
+Created tile: [-1][3]
+Created tile: [0][3]
+Created tile: [1][3]
+Created tile: [2][3]
+Created tile: [-3][-2]
+Created tile: [-3][-1]
+Created tile: [-3][0]
+Created tile: [-3][1]
+Created tile: [-3][2]
+Created tile: [-3][-3]
+Created tile: [-2][-3]
+Created tile: [-1][-3]
+Created tile: [0][-3]
+Created tile: [1][-3]
+Created tile: [-4][-3]
+Created tile: [-4][-2]
+Created tile: [-4][-1]
+Created tile: [-4][0]
+Created tile: [-4][1]
+Created tile: [-5][-3]
+Created tile: [-5][-2]
+Created tile: [-5][-1]
+Created tile: [-5][0]
+Created tile: [-5][1]
+Created tile: [-5][2]
+Created tile: [-4][2]
+Created tile: [-6][-2]
+Created tile: [-6][-1]
+Created tile: [-4][-4]
+Created tile: [-3][-4]
+Created tile: [-2][-4]
+Created tile: [-1][-4]
+Created tile: [0][-4]
+Created tile: [1][-4]
+Created tile: [2][-4]
+Created tile: [2][-3]
+Created tile: [-3][-5]
+Created tile: [-2][-5]
+Created tile: [-1][-5]
+Created tile: [0][-5]
+Created tile: [1][-5]
+Created tile: [-4][-5]

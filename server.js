@@ -8,7 +8,7 @@ var qs = require("querystring");
 var _ = require("underscore");
 
 // Load the src files
-var config = require("./config");
+var config = require("./config.js");
 var terrain = require("./server/terrain_handler.js");
 var tileWidth = 1000, tileHeight = 1800, subdivs = 6;
 
@@ -24,18 +24,6 @@ var server = http.createServer( function( req, res ) {
 server.listen( config.getPort(), config.getAddress() );
 console.log("Serving files at " + config.getAddress() + " (Port " + config.getPort() + ")");
 
-var generateWorld = function() {
-   console.log("Generating world");
-   for (var x = -2; x <= 2; x++)
-      for (var y = -2; y <= 2; y++) {
-         terrain.createTile(x, y, tileWidth, tileHeight, subdivs, function(JSONTile, nX, nY) {
-            console.log("Created tile: [" + nX + "][" + nY + "]");
-         });
-      }
-}
-
-// generateWorld();
-
 function handleGet(req, res) {
    var filename = req.url;
    if (filename == "/")
@@ -43,14 +31,13 @@ function handleGet(req, res) {
 
    var localPath = __dirname + filename;
    var siteDirname = path.dirname(filename);
-   var isTerrain = siteDirname == "/assets/models/terrain";
+   var isTerrainPath = siteDirname == "/assets/models/terrain";
 
    fs.exists(localPath, function(exists) {
       if (exists) {
          console.log("Serving: " + filename);
          serveFile(localPath, res);
-      } else if (isTerrain) {
-         console.log("Generating new tile." + filename);
+      } else if (isTerrainPath) {
          var coords = filename.split(path.sep).pop().split(".");
          terrain.createTile(coords[0], coords[1], tileWidth, tileHeight, subdivs, function(JSONTile, nX, nY) {
             console.log("Created tile: [" + nX + "][" + nY + "]");
