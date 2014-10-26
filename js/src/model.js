@@ -24,23 +24,28 @@ Portal.prototype.initModels = function() {
 
    this.models.unknown = ModelLoader.createFromJSON(this.gl, unknownJSON);
 
-   this.models.tileWidth = 700;
-   var TILE_HEIGHT = 500;
-   var RECURSIONS = 6;
-   this.models.terrainHandler = new TerrainHandler(this.gl, this.models.tileWidth, TILE_HEIGHT, RECURSIONS);
+   // this.models.tileWidth = 700;
+   // var TILE_HEIGHT = 500;
+   // var RECURSIONS = 6;
+   // this.models.terrainHandler = new TerrainHandler(this.gl, this.models.tileWidth, TILE_HEIGHT, RECURSIONS);
    
-
-   ModelLoader.load(this.gl, "assets/models/worldofchuck_text.json", function(model) {
-      self.models.worldofchuck = model;
-   });
-   ModelLoader.load(this.gl, "assets/models/cube.json", function(model) {
+   // ModelLoader.load(this.gl, "assets/models/character.json", function(model) {
+   //    self.models.character = model;
+   // });
+   // ModelLoader.load(this.gl, "assets/models/monkey.json", function(model) {
+   //    self.models.monkey = model;
+   // });
+   // ModelLoader.load(this.gl, "assets/models/worldofchuck_text.json", function(model) {
+   //    self.models.worldofchuck = model;
+   // });
+   ModelLoader.load(this.gl, "assets/models/cube.json", "assets/textures/brick.png", function(model) {
       self.models.cube = model;
    });
-   ModelLoader.load(this.gl, "assets/models/sphere.json", function(model) {
-      self.models.sphere = model;
-   });
-   ModelLoader.load(this.gl, "assets/models/pillar.json", function(model) {
-      self.models.pillar = model;
-   });
+   // ModelLoader.load(this.gl, "assets/models/sphere.json", function(model) {
+   //    self.models.sphere = model;
+   // });
+   // ModelLoader.load(this.gl, "assets/models/pillar.json", function(model) {
+   //    self.models.pillar = model;
+   // });
 }
 

@@ -9,22 +9,12 @@
 
 Portal.prototype.initWorld = function() {
    this.entities = this.placeEntities();
-
-   this.models.terrainHandler.placeTile(-1, 1, true);
-   this.models.terrainHandler.placeTile(0, 1, true);
-   this.models.terrainHandler.placeTile(1, 1, true);
-   this.models.terrainHandler.placeTile(-1, 0, true);
-   this.models.terrainHandler.placeTile(0, 0, true);
-   this.models.terrainHandler.placeTile(1, 0, true);
-   this.models.terrainHandler.placeTile(-1, -1, true);
-   this.models.terrainHandler.placeTile(0, -1, true);
-   this.models.terrainHandler.placeTile(1, -1, true);
 }
 
 Portal.prototype.placeEntities = function() {
    var entities = [1000];
-   entities[0] = new Terrain([0,0,0], 0);
-   entities[1] = new WorldOfChuck([0, 0, -10], 0);
+   // entities[0] = new Terrain([0,0,0], 0);
+   entities[0] = new Cube([0, 0, -10], 0);
    for (var i = 0; i < 200; i++)
       entities.push(new Cube([randRange(-50, 50), randRange(-50, 50), randRange(-50, 50)], 0));
    
@@ -36,63 +26,7 @@ Portal.prototype.updateWorld = function(elapsed) {
 }
 
 Portal.prototype.updateEntities = function(elapsed) {
-   this.updateTerrain(elapsed);
-
-   // this.entities[0].rotation += -.2 * elapsed / 1000.0;
-
-   this.entities[1].rotation += -1.5 * elapsed / 1000.0;
-   for (var i = 1; i < this.entities.length; i++) {
-      if (i % 5 == 0)
-         this.entities[i].rotation += 5 * elapsed / 1000.0;
-      else if (i % 5 == 1)
-         this.entities[i].rotation += -3 * elapsed / 1000.0;
-      else if (i % 5 == 2)
-         this.entities[i].rotation += 8 * elapsed / 1000.0;
-      else if (i % 5 == 3)
-         this.entities[i].rotation += -2 * elapsed / 1000.0;
-      else if (i % 5 == 4)
-         this.entities[i].rotation += 18 * elapsed / 1000.0;
-   }
-}
-
-Portal.prototype.updateTerrain = function(elapsed) {
-   var curX = Math.floor(this.camera.position[0] / this.models.terrainHandler.tileWidth + 0.5);
-   var curZ = Math.floor(this.camera.position[2] / this.models.terrainHandler.tileWidth + 0.5);
-
-   var xKeepF = curX - 2;
-   var xKeepL = curX + 2;
-   var zKeepF = curZ - 2;
-   var zKeepL = curZ + 2;
-
-   var xF = this.models.terrainHandler.tileMap.xFirstNdx;
-   var xL = this.models.terrainHandler.tileMap.xLastNdx;
-   var zF = this.models.terrainHandler.tileMap.yFirstNdx;
-   var zL = this.models.terrainHandler.tileMap.yLastNdx;
-
-   // create tiles
-   for (var x = xKeepF; x <= xKeepL; x++)
-      for (var z = zKeepF; z <= zKeepL; z++)
-         this.models.terrainHandler.placeTile(x, z, true);
-
-   // remove WEST tiles
-   for (var x = xF; x < xKeepF; x++)
-      for (var z = zF; z <= zL; z++)
-         this.models.terrainHandler.setVisible(x, z, false);
-
-   // remove EAST tiles
-   for (var x = xKeepL+1; x <= xL; x++)
-      for (var z = zF; z <= zL; z++)
-            this.models.terrainHandler.setVisible(x, z, false);
-
-   // remove NORTH tiles
-   for (var x = xKeepF; x <= xKeepL; x++)
-      for (var z = zF; z < zKeepF; z++)
-         this.models.terrainHandler.setVisible(x, z, false);
-
-   // remove SOUTH tiles
-   for (var x = xKeepF; x <= xKeepL; x++)
-      for (var z = zKeepL+1; z <= zL; z++)
-         this.models.terrainHandler.setVisible(x, z, false);
-
+   for (var i = 0; i < this.entities.length; i++)
+      this.entities[i].update(elapsed);
 }
 

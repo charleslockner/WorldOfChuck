@@ -1,9 +1,10 @@
-attribute vec3 aVertexPosition;
-attribute vec3 aVertexNormal;
-uniform int uFlags;
 uniform mat4 uModelMatrix;
 uniform mat4 uViewMatrix;
 uniform mat4 uProjectionMatrix;
+
+attribute vec3 aVertexPosition;
+attribute vec3 aVertexNormal;
+
 varying vec3 vWorldNormal;
 
 void main(void) {

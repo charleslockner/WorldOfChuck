@@ -10,7 +10,7 @@
 Portal.prototype.initShaders = function() {
    var self = this;
 
-   this.createShaderProgram("shaders/normal.vert.glsl", "shaders/normal.frag.glsl", function(program) {
+   this.createShaderProgram("shaders/texture.vert.glsl", "shaders/texture.frag.glsl", function(program) {
       self.shaderProgram = program;
       self.setupHandles(self.shaderProgram);
       self.gl.useProgram(self.shaderProgram);
@@ -62,14 +62,18 @@ Portal.prototype.buildShader = function(shaderType, script) {
 }
 
 Portal.prototype.setupHandles = function(program) {
+   // uniforms
+   program.uModelMatrix = this.gl.getUniformLocation(program, "uModelMatrix");
+   program.uViewMatrix = this.gl.getUniformLocation(program, "uViewMatrix");
+   program.uProjectionMatrix = this.gl.getUniformLocation(program, "uProjectionMatrix");
+
+   // attributes
    program.aVertexPosition = this.gl.getAttribLocation(program, "aVertexPosition");
    this.gl.enableVertexAttribArray(program.aVertexPosition);
 
    program.aVertexNormal = this.gl.getAttribLocation(program, "aVertexNormal");
    this.gl.enableVertexAttribArray(program.aVertexNormal);
 
-   program.aFlags = this.gl.getUniformLocation(program, "uFlags");
-   program.uModelMatrix = this.gl.getUniformLocation(program, "uModelMatrix");
-   program.uViewMatrix = this.gl.getUniformLocation(program, "uViewMatrix");
-   program.uProjectionMatrix = this.gl.getUniformLocation(program, "uProjectionMatrix");
+   program.aTextureCoord = this.gl.getAttribLocation(program, "aTextureCoord");
+   this.gl.enableVertexAttribArray(program.aTextureCoord);
 }

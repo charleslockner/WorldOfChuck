@@ -6,7 +6,7 @@
    | this header or simply stating that your work uses some of this code. :D  |
    |__________________________________________________________________________| */
 
-// Super-class
+// ================== Super-class Entity ===================
 var Entity = function(pos, rot) {
    this.position = pos;
    this.rotation = rot;
@@ -20,18 +20,23 @@ Entity.prototype.draw = function(gl, shaderProgram, models) {
 }
 
 Entity.prototype.drawModel = function(gl, shaderProgram, model) {
-   var flags = 1; // flat shade the object
-   gl.uniform1i(shaderProgram.uFlags, flags);
-
    var modelM = this.makeModelMatrix();
    gl.uniformMatrix4fv(shaderProgram.uModelMatrix, false, modelM);
 
    gl.bindBuffer(gl.ARRAY_BUFFER, model.vbo);
    gl.vertexAttribPointer(shaderProgram.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
+
    gl.bindBuffer(gl.ARRAY_BUFFER, model.nbo);
    gl.vertexAttribPointer(shaderProgram.aVertexNormal, 3, gl.FLOAT, false, 0, 0);
-   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.ibo);
 
+   gl.bindBuffer(gl.ARRAY_BUFFER, model.tbo);
+   gl.vertexAttribPointer(shaderProgram.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+
+   gl.activeTexture(gl.TEXTURE0);
+   gl.bindTexture(gl.TEXTURE_2D, model.texture);
+   gl.uniform1i(shaderProgram.samplerUniform, 0);
+
+   gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.ibo);
    gl.drawElements(gl.TRIANGLES, 3 * model.faces, gl.UNSIGNED_SHORT, 0);
 }
 
@@ -45,25 +50,39 @@ Entity.prototype.makeModelMatrix = function() {
    return modelM;
 }
 
+Entity.prototype.update = function(elapsed) {
+   this.rotation += 2 * elapsed / 1000.0;
+}
 
-
-
+// ============================ Subclasses =================================
 
 var WorldOfChuck = function(pos, rot) {
    Entity.call(this, pos, rot);
    this.modelName = "worldofchuck";
 };
 
-// Make WorldOfChuck a subclass of Entity
 WorldOfChuck.prototype = new Entity();
 WorldOfChuck.prototype.constructor = WorldOfChuck;
+
+WorldOfChuck.prototype.update = function(elapsed) {
+   this.rotation += 1 * elapsed / 1000.0;
+}
+
+
+var Monkey = function(pos, rot) {
+   Entity.call(this, pos, rot);
+   this.modelName = "monkey";
+};
+
+Monkey.prototype = new Entity();
+Monkey.prototype.constructor = Monkey;
+
 
 var Cube = function(pos, rot) {
    Entity.call(this, pos, rot);
    this.modelName = "cube";
 };
 
-// Make Cube a subclass of Entity
 Cube.prototype = new Entity();
 Cube.prototype.constructor = Cube;
 
@@ -84,6 +103,20 @@ var Pillar = function(pos, rot) {
 // Make Pillar a subclass of Entity
 Pillar.prototype = new Entity();
 Pillar.prototype.constructor = Pillar;
+
+var Character = function(pos, rot) {
+   Entity.call(this, pos, rot);
+   this.modelName = "character";
+};
+
+// Make Pillar a subclass of Entity
+Character.prototype = new Entity();
+Character.prototype.constructor = Character;
+
+Character.prototype.update = function(elapsed) {
+   // this.rotation += 1 * elapsed / 1000.0;
+}
+
 
 
 // ========================================== TERRAIN ========================================== //
@@ -128,4 +161,44 @@ Terrain.prototype.makeModelMatrix = function() {
    return modelM;
 }
 
+// Terrain.prototype.update = function(elapsed) {
+//    var curX = Math.floor(this.camera.position[0] / this.models.terrainHandler.tileWidth + 0.5);
+//    var curZ = Math.floor(this.camera.position[2] / this.models.terrainHandler.tileWidth + 0.5);
+
+//    var xKeepF = curX - 2;
+//    var xKeepL = curX + 2;
+//    var zKeepF = curZ - 2;
+//    var zKeepL = curZ + 2;
+
+//    var xF = this.models.terrainHandler.tileMap.xFirstNdx;
+//    var xL = this.models.terrainHandler.tileMap.xLastNdx;
+//    var zF = this.models.terrainHandler.tileMap.yFirstNdx;
+//    var zL = this.models.terrainHandler.tileMap.yLastNdx;
+
+//    // create tiles
+//    for (var x = xKeepF; x <= xKeepL; x++)
+//       for (var z = zKeepF; z <= zKeepL; z++)
+//          this.models.terrainHandler.placeTile(x, z, true);
+
+//    // remove WEST tiles
+//    for (var x = xF; x < xKeepF; x++)
+//       for (var z = zF; z <= zL; z++)
+//          this.models.terrainHandler.setVisible(x, z, false);
+
+//    // remove EAST tiles
+//    for (var x = xKeepL+1; x <= xL; x++)
+//       for (var z = zF; z <= zL; z++)
+//             this.models.terrainHandler.setVisible(x, z, false);
+
+//    // remove NORTH tiles
+//    for (var x = xKeepF; x <= xKeepL; x++)
+//       for (var z = zF; z < zKeepF; z++)
+//          this.models.terrainHandler.setVisible(x, z, false);
+
+//    // remove SOUTH tiles
+//    for (var x = xKeepF; x <= xKeepL; x++)
+//       for (var z = zKeepL+1; z <= zL; z++)
+//          this.models.terrainHandler.setVisible(x, z, false);
+
+// }
 

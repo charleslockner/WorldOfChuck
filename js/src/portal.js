@@ -30,26 +30,11 @@ var Portal = function(canvas) {
 }
 
 Portal.prototype.setup = function() {
-
-   // window.setInterval(function() {
-   //    $.ajax({
-   //       type: 'POST',
-   //       url: '/server.js',
-   //       data: "hi",
-   //       // dataType: dataType,
-   //       async: true,
-   //       success: function(result) {
-   //                    if(result.isOk == false)
-   //                        console.log(result.message);
-   //          }
-   //    }); 
-   // }, 1000);
-
    this.initGLProperties();
    this.initModels();   // models.js
-   this.initWorld();    // system.js (initializes the camera and the entities)
+   this.initWorld();    // system.js (initializes the entities)
    this.initControls(); // controls.js
-   this.initCamera();
+   this.initCamera();   // camera.js
    this.initShaders();  // shaders.js
 
    this.loop();         // loop.js (Begin main loop)
