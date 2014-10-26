@@ -138,11 +138,12 @@ module.exports.toString = function() {
 	var str = "_|";
 
 	for (var x = xFirstNdx; x <= xLastNdx; x++)
-		str += x + "_";
+		str += (x > 0) ? x + "|" : "_" + x + "_";
+	
 	str += "\n";
 
 	for (var y = yFirstNdx; y <= yLastNdx; y++) {
-		str += y + "|";
+		str += (y > 0) ? y + "|" : " " + y + "|";
 		for (var x = xFirstNdx; x <= xLastNdx; x++) {
 			var val = exists(x,y) ? "X" : "-";
 			str +=  val + "|";

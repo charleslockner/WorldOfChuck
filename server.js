@@ -10,7 +10,15 @@ var _ = require("underscore");
 // Load the src files
 var config = require("./config.js");
 var terrain = require("./server/terrain_handler.js");
-var tileWidth = 1000, tileHeight = 1800, subdivs = 6;
+
+var terrainConfig = {
+   tileWidth : 1000,
+   tileHeight : 1800,
+   subdivs : 1,
+   maxRoughness : 0.35,
+   minRoughness : 0.02,
+   roughnessDev : 0.12
+}
 
 // Create our HTTP server.
 var server = http.createServer( function( req, res ) {
@@ -23,6 +31,9 @@ var server = http.createServer( function( req, res ) {
 // Start it up!
 server.listen( config.getPort(), config.getAddress() );
 console.log("Serving files at " + config.getAddress() + " (Port " + config.getPort() + ")");
+
+
+
 
 function handleGet(req, res) {
    var filename = req.url;
@@ -39,7 +50,8 @@ function handleGet(req, res) {
          serveFile(localPath, res);
       } else if (isTerrainPath) {
          var coords = filename.split(path.sep).pop().split(".");
-         terrain.createTile(coords[0], coords[1], tileWidth, tileHeight, subdivs, function(JSONTile, nX, nY) {
+
+         terrain.createTile(coords[0], coords[1], terrainConfig, function(JSONTile, nX, nY) {
             console.log("Created tile: [" + nX + "][" + nY + "]");
             serveNewTile(localPath, res, JSONTile);
          });
