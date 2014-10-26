@@ -11,7 +11,7 @@ var tileMap = require("./tile_map.js");
 var fs = require("fs");
 
 module.exports.createTile = function(x, z, config, callback) {
-   tileMap.put(x, z, "halt");
+
    var sideVerts = Math.pow(2, config.subdivs) + 1;
    var preArr = createMapFromSurroundings(x, z, sideVerts);
    var roughness = calculateRoughnessFromSurroundings(x, z, config.minRoughness, config.maxRoughness, config.roughnessDev);
@@ -40,17 +40,17 @@ var createMapFromSurroundings = function(x, z, sideVerts) {
       for (var i = 0; i < sideVerts; i++)
          preArr[sideVerts-1][i] = rightTile.heightMap[0][i];
 
-   // // Set top side
-   // var topTile = tileMap.get(x, z+1);
-   // if (topTile)
-   //    for (var i = 0; i < sideVerts; i++)
-   //       preArr[i][sideVerts-1] = topTile.heightMap[i][0];
+   // Set top side
+   var topTile = tileMap.get(x, z-1);
+   if (topTile)
+      for (var i = 0; i < sideVerts; i++)
+         preArr[i][0] = topTile.heightMap[i][sideVerts-1];
 
-   // // Set bottom side
-   // var bottomTile = tileMap.get(x, z-1);
-   // if (bottomTile)
-   //    for (var i = 0; i < sideVerts; i++)
-   //       preArr[i][0] = bottomTile.heightMap[i][sideVerts-1];
+   // Set bottom side
+   var bottomTile = tileMap.get(x, z+1);
+   if (bottomTile)
+      for (var i = 0; i < sideVerts; i++)
+         preArr[i][sideVerts-1] = bottomTile.heightMap[i][0];
 
    return preArr;
 }
