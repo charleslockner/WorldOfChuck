@@ -7,11 +7,22 @@ varying highp vec2 vTextureCoord;
 
 
 void main(void) {
-   gl_FragColor = texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t));
+   vec3 texColor, diffuse, lightDir, worldNormal;
+
+   lightDir = normalize(vec3(-1.0, -1.0, -1.0));
+   worldNormal = normalize(vWorldNormal);
+
+   texColor = vec3(texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t)));
+
+   diffuse = dot(worldNormal, -lightDir) * texColor;
+
+
+   gl_FragColor = vec4(diffuse, 1.0);
 }
 
 
 
+  // gl_FragColor = vec4((texColor[0] + vWorldNormal[0])/2.0, (texColor[1] + vWorldNormal[1])/2.0, (texColor[2] + vWorldNormal[2])/2.0, 1.0);
 
 
 
@@ -32,7 +43,7 @@ void main(void) {
 // varying vec3 reflection;
 
 // void main() {
-//    vec3 diffuse, specular, ambient, rColor, nNormal, nSunDir, shadeLow, shadeMed, shadeHigh;
+//    vec3 diffuse, specular, ambient, rColor, nNormal, nSunDir;
 //    float specDot, diffDot;
 
 //    nNormal = normalize(vNormal);
@@ -40,20 +51,9 @@ void main(void) {
 
 //    diffuse = dot(nNormal, -nSunDir) * uMat.dColor;
    
-//    shadeLow = vec3(0.2, 0.2, 0.2);
-//    shadeMed = vec3(0.6, 0.6, 0.6);
-//    shadeHigh = vec3(1.0, 1.0, 1.0);
-//    diffDot = max(0.0, dot(nNormal, nSunDir));
-   
-//    if (diffDot < 0.20)
-//       diffuse = uMat.dColor * shadeHigh;
-//    else if (diffDot < 0.80)
-//       diffuse = uMat.dColor * shadeMed;
-//    else
-//       diffuse = uMat.dColor * shadeLow;
-   
 //    specDot = max(dot(view, reflection)/(length(view)*length(reflection)), 0.0);
 //    specular = pow(specDot, uMat.shine) * uMat.sColor;
+
 //    ambient = uMat.aColor;
 
 //    rColor = uLightColor * (diffuse + specular + ambient);

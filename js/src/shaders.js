@@ -10,7 +10,7 @@
 Portal.prototype.initShaders = function() {
    var self = this;
 
-   this.createShaderProgram("shaders/texture.vert.glsl", "shaders/texture.frag.glsl", function(program) {
+   this.createShaderProgram("shaders/forward.vert.glsl", "shaders/forward.frag.glsl", function(program) {
       self.shaderProgram = program;
       self.setupHandles(self.shaderProgram);
       self.gl.useProgram(self.shaderProgram);

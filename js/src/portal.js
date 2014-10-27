@@ -45,5 +45,5 @@ Portal.prototype.initGLProperties = function() {
    this.gl.enable(this.gl.DEPTH_TEST); // Enable depth testing
    this.gl.depthFunc(this.gl.LEQUAL); // Near things obscure far things
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT); // Clear the color as well as the depth buffer.
-   // this.gl.PolygonMode( this.GL_FRONT_AND_BACK, GL_LINE );
+   this.ext = this.gl.getExtension('WEBGL_draw_buffers'); // For deferred shading (drawing multiple buffers from frag shader)
 }
