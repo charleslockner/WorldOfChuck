@@ -43,7 +43,23 @@ Portal.prototype.sendEntityIndependantShaderData = function() {
    var projectionM = this.makeProjectionMatrix();
    this.gl.uniformMatrix4fv(this.shaderProgram.uProjectionMatrix, false, projectionM);
 
-   this.gl.uniform3f(this.shaderProgram.uCameraPosition, this.camera.position[0], this.camera.position[1], this.camera.position[2]);
+   this.gl.uniform3fv(this.shaderProgram.uCameraPosition, this.camera.position);
+
+   var lights = [ -20.0, -10.0, -4.0,
+                  1.0, -0.2, -0.8,
+                  0.8, 0.2, 1.0,
+                  150, 50.0, 15,
+
+                  10,20,35,
+                  -0.8, 0.1, -0.5,
+                  1.0, 0.8, 0.5,
+                  100, 50.0, 15,
+
+                  -15,30,5,
+                  -0.8, 0.1, -0.5,
+                  0.2, 0.9, 0.7,
+                  100, 50.0, 15, ];
+   this.gl.uniform3fv(this.shaderProgram.uLights, lights);
 }
 
 Portal.prototype.makeViewMatrix = function() {
