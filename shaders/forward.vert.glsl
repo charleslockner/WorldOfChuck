@@ -6,17 +6,16 @@ attribute vec3 aVertexPosition;
 attribute vec3 aVertexNormal;
 attribute vec2 aTextureCoord;
 
+varying vec3 vWorldPosition;
 varying vec3 vWorldNormal;
 varying highp vec2 vTextureCoord;
 
 void main(void) {
-   vec4 normal;
-   gl_Position = uProjectionMatrix * uViewMatrix * uModelMatrix * vec4(aVertexPosition, 1.0);
-
-   normal = normalize(vec4(aVertexNormal, 0.0));
-   vWorldNormal = vec3(uModelMatrix * normal);
-
+   vWorldPosition = vec3(uModelMatrix * vec4(aVertexPosition, 1.0));
+   vWorldNormal = vec3(uModelMatrix * normalize(vec4(aVertexNormal, 0.0)));
    vTextureCoord = aTextureCoord;
+
+	gl_Position = uProjectionMatrix * uViewMatrix * vec4(vWorldPosition, 1.0);
 }
 
 

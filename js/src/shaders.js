@@ -66,6 +66,7 @@ Portal.prototype.setupHandles = function(program) {
    program.uModelMatrix = this.gl.getUniformLocation(program, "uModelMatrix");
    program.uViewMatrix = this.gl.getUniformLocation(program, "uViewMatrix");
    program.uProjectionMatrix = this.gl.getUniformLocation(program, "uProjectionMatrix");
+   program.uCameraPosition = this.gl.getUniformLocation(program, "uCameraPosition");
 
    // attributes
    program.aVertexPosition = this.gl.getAttribLocation(program, "aVertexPosition");

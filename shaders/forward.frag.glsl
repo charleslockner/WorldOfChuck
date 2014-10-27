@@ -1,32 +1,5 @@
 precision mediump float;
 
-uniform sampler2D uSampler;
-
-varying vec3 vWorldNormal;
-varying highp vec2 vTextureCoord;
-
-
-void main(void) {
-   vec3 texColor, diffuse, lightDir, worldNormal;
-
-   lightDir = normalize(vec3(-1.0, -1.0, -1.0));
-   worldNormal = normalize(vWorldNormal);
-
-   texColor = vec3(texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t)));
-
-   diffuse = dot(worldNormal, -lightDir) * texColor;
-
-
-   gl_FragColor = vec4(diffuse, 1.0);
-}
-
-
-
-  // gl_FragColor = vec4((texColor[0] + vWorldNormal[0])/2.0, (texColor[1] + vWorldNormal[1])/2.0, (texColor[2] + vWorldNormal[2])/2.0, 1.0);
-
-
-
-
 // struct Material {
 //    vec3 aColor;
 //    vec3 dColor;
@@ -34,29 +7,35 @@ void main(void) {
 //    float shine;
 // };
 
-// uniform Material uMat;
-// uniform vec3 uLightColor;
-// uniform vec3 uSunDir;
+uniform vec3 uCameraPosition;
+uniform sampler2D uSampler;
+// uniform float uMaterial;
 
-// varying vec3 vNormal;
-// varying vec3 view;
-// varying vec3 reflection;
+varying vec3 vWorldPosition;
+varying vec3 vWorldNormal;
+varying highp vec2 vTextureCoord;
 
-// void main() {
-//    vec3 diffuse, specular, ambient, rColor, nNormal, nSunDir;
-//    float specDot, diffDot;
 
-//    nNormal = normalize(vNormal);
-//    nSunDir = normalize(uSunDir);
+void main(void) {
+   vec3 texColor, normal, reflection, view, ambient, diffuse, specular, rColor;
+   float specDot;
 
-//    diffuse = dot(nNormal, -nSunDir) * uMat.dColor;
-   
-//    specDot = max(dot(view, reflection)/(length(view)*length(reflection)), 0.0);
-//    specular = pow(specDot, uMat.shine) * uMat.sColor;
+   vec3 lightColor, lightDirection, lightPosition;
+   float shine;
 
-//    ambient = uMat.aColor;
+   lightColor = vec3(1.0, 1.0, 1.0);
+   lightDirection = normalize(vec3(-0.5, -0.8, -1.0));
+   normal = normalize(vWorldNormal);
+   reflection = normalize(2.0 * normal * dot(normal, lightDirection) - lightDirection);
+   view = normalize(vWorldPosition - uCameraPosition);
+   shine = 1000.0;
 
-//    rColor = uLightColor * (diffuse + specular + ambient);
+   texColor = vec3(texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t)));
 
-//    gl_FragColor = vec4(diffuse, 0.0);
-// }
+   ambient = texColor * 0.85;
+   diffuse = texColor * dot(normal, -lightDirection);
+   specular = texColor * pow(max(0.0, dot(reflection, view)), shine);
+   rColor = lightColor * (diffuse + specular + ambient);
+
+   gl_FragColor = vec4(rColor, 1.0);
+}

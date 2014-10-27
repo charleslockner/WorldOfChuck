@@ -90,7 +90,7 @@ Entity.prototype.makeModelMatrix = function() {
 }
 
 Entity.prototype.update = function(elapsed) {
-   this.rotation += 2 * elapsed / 1000.0;
+   // this.rotation += 2 * elapsed / 1000.0;
 }
 
 // ============================ Subclasses =================================
