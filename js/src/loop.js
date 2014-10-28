@@ -10,6 +10,8 @@ Portal.prototype.loop = function() {
    this.updateState();
    if (this.shaderProgram) // We may not have returned from the glsl load call
       this.drawFrame();
+   // if (this.lightingProgram)
+   //    this.drawFrame();
    window.requestAnimationFrame(this.loop.bind(this));
 }
 
@@ -26,9 +28,9 @@ Portal.prototype.updateState = function() {
 Portal.prototype.drawFrame = function() {
    this.updateViewport();
    this.sendEntityIndependantShaderData();
+   this.drawEntities();
 
-   for (var i = 0; i < this.entities.length; i++)
-      this.entities[i].draw(this.gl, this.shaderProgram, this.models);
+   // this.renderDeferredLighting();
 }
 
 Portal.prototype.updateViewport = function() {
@@ -45,21 +47,26 @@ Portal.prototype.sendEntityIndependantShaderData = function() {
 
    this.gl.uniform3fv(this.shaderProgram.uCameraPosition, this.camera.position);
 
-   var lights = [ -20.0, -10.0, -4.0,
-                  1.0, -0.2, -0.8,
-                  0.8, 0.2, 1.0,
-                  150, 50.0, 15,
+   this.gl.uniform3fv(this.shaderProgram.uLights, this.lights);
+}
 
-                  10,20,35,
-                  -0.8, 0.1, -0.5,
-                  1.0, 0.8, 0.5,
-                  100, 50.0, 15,
+Portal.prototype.drawEntities = function() {
+   for (var i = 0; i < this.entities.length; i++)
+      this.entities[i].draw(this.gl, this.shaderProgram, this.models);
 
-                  -15,30,5,
-                  -0.8, 0.1, -0.5,
-                  0.2, 0.9, 0.7,
-                  100, 50.0, 15, ];
-   this.gl.uniform3fv(this.shaderProgram.uLights, lights);
+   console.log(this.entities.length);
+}
+
+Portal.prototype.renderDeferredLighting = function() {
+   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.lightingVbo);
+   this.gl.enableVertexAttribArray(this.lightingProgram.aVertexPosition);
+   this.gl.vertexAttribPointer(this.lightingProgram.aVertexPosition, 2, this.gl.FLOAT, false, 0, 0);
+
+   this.gl.activeTexture(this.gl.TEXTURE0);
+   this.gl.bindTexture(this.gl.TEXTURE_2D, this.testTexture);
+   this.gl.uniform1i(this.lightingProgram.samplerUniform, 0);
+
+   this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
 }
 
 Portal.prototype.makeViewMatrix = function() {

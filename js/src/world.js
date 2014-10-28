@@ -8,17 +8,37 @@
 
 
 Portal.prototype.initWorld = function() {
-   this.entities = this.placeEntities();
+   this.initEntities();
+   this.initLights();
 }
 
-Portal.prototype.placeEntities = function() {
-   var entities = [1000];
+Portal.prototype.initEntities = function() {
+   var ents = [1000];
    // entities[0] = new Terrain([0,0,0], 0);
-   entities[0] = new Cube([0, 0, -10], 0);
+   ents[0] = new Cube([0, 0, -10], 0);
    for (var i = 0; i < 200; i++)
-      entities.push(new Cube([randRange(-50, 50), randRange(-50, 50), randRange(-50, 50)], 0));
+      ents.push(new Cube([randRange(-50, 50), randRange(-50, 50), randRange(-50, 50)], 0));
    
-   return entities;
+   this.entities = ents;
+}
+
+Portal.prototype.initLights = function() {
+   this.lights = [
+      -20.0, -10.0, -4.0,
+      1.0, -0.2, -0.8,
+      0.8, 0.2, 1.0,
+      150, 50.0, 15,
+
+      10,20,35,
+      -0.8, 0.1, -0.5,
+      1.0, 0.8, 0.5,
+      100, 50.0, 15,
+
+      -15,30,5,
+      -0.8, 0.1, -0.5,
+      0.2, 0.9, 0.7,
+      100, 50.0, 15
+   ];
 }
 
 Portal.prototype.updateWorld = function(elapsed) {
