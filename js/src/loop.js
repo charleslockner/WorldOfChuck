@@ -27,9 +27,7 @@ Portal.prototype.drawFrame = function() {
    this.updateViewport();
 
    // first pass
-   this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.rttFramebuffer);
-
-
+   this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.deferredFB);
 
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
    this.gl.useProgram(this.shaders.geometry.program);
@@ -81,7 +79,15 @@ Portal.prototype.renderDeferredLighting = function() {
 
    this.gl.activeTexture(this.gl.TEXTURE0);
    this.gl.bindTexture(this.gl.TEXTURE_2D, this.renderTextures[0]);
-   this.gl.uniform1i(this.shaders.lighting.program.samplerUniform, 0); // ?????????????
+   this.gl.uniform1i(this.gl.getUniformLocation(this.shaders.lighting.program, "uWorldPosition"), 0);
+
+   this.gl.activeTexture(this.gl.TEXTURE1);
+   this.gl.bindTexture(this.gl.TEXTURE_2D, this.renderTextures[1]);
+   this.gl.uniform1i(this.gl.getUniformLocation(this.shaders.lighting.program, "uWorldNormal"), 1);
+
+   this.gl.activeTexture(this.gl.TEXTURE2);
+   this.gl.bindTexture(this.gl.TEXTURE_2D, this.renderTextures[2]);
+   this.gl.uniform1i(this.gl.getUniformLocation(this.shaders.lighting.program, "uColor"), 2);
 
    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
 }
