@@ -10,14 +10,42 @@
 Portal.prototype.initShaders = function() {
    var self = this;
 
-   this.createShaderProgram("shaders/normal.vert.glsl", "shaders/normal.frag.glsl", function(program) {
-      self.shaderProgram = program;
-      self.setupForwardHandles(self.shaderProgram);
+   this.shaders = {
+      "forward" :  { program : null,
+                     handles : null },
+      "geometry" : { program : null,
+                     handles : null },
+      "lighting" : { program : null,
+                     handles : null,
+                     vbo : null }
+   }
+
+   this.createShaderProgram("shaders/forward.vert.glsl", "shaders/forward.frag.glsl", function(program) {
+      self.shaders.forward.handles = self.setupForwardHandles(program);
+      self.shaders.forward.program = program;
+   });
+
+   this.createShaderProgram("shaders/geometry.vert.glsl", "shaders/geometry.frag.glsl", function(program) {
+      self.shaders.geometry.handles = self.setupGeometryHandles(program);
+      self.shaders.geometry.program = program;
    });
 
    this.createShaderProgram("shaders/lighting.vert.glsl", "shaders/lighting.frag.glsl", function(program) {
-      self.lightingProgram = program;
-      self.setupLightingHandles(self.lightingProgram);
+      self.shaders.lighting.handles = self.setupLightingHandles(program);
+      self.shaders.lighting.program = program;
+
+      var verts = [
+         1,  1,
+        -1,  1,
+        -1, -1,
+         1,  1,
+        -1, -1,
+         1, -1,
+      ];
+
+      self.shaders.lighting.vbo = self.gl.createBuffer();
+      self.gl.bindBuffer(self.gl.ARRAY_BUFFER, self.shaders.lighting.vbo);
+      self.gl.bufferData(self.gl.ARRAY_BUFFER, new Float32Array(verts), self.gl.STATIC_DRAW);
    });
 }
 
@@ -66,44 +94,48 @@ Portal.prototype.buildShader = function(shaderType, script) {
 }
 
 Portal.prototype.setupForwardHandles = function(program) {
-   // uniforms
-   program.uModelMatrix = this.gl.getUniformLocation(program, "uModelMatrix");
-   program.uViewMatrix = this.gl.getUniformLocation(program, "uViewMatrix");
-   program.uProjectionMatrix = this.gl.getUniformLocation(program, "uProjectionMatrix");
-   program.uCameraPosition = this.gl.getUniformLocation(program, "uCameraPosition");
-   program.uLights = this.gl.getUniformLocation(program, "uLights");
-   program.uNumLights = this.gl.getUniformLocation(program, "uNumLights");
+   var handles = {
+      uModelMatrix : this.gl.getUniformLocation(program, "uModelMatrix"),
+      uViewMatrix : this.gl.getUniformLocation(program, "uViewMatrix"),
+      uProjectionMatrix : this.gl.getUniformLocation(program, "uProjectionMatrix"),
+      uCameraPosition : this.gl.getUniformLocation(program, "uCameraPosition"),
+      uLights : this.gl.getUniformLocation(program, "uLights"),
+      uNumLights : this.gl.getUniformLocation(program, "uNumLights"),
 
-   // attributes
-   program.aVertexPosition = this.gl.getAttribLocation(program, "aVertexPosition");
-   this.gl.enableVertexAttribArray(program.aVertexPosition);
+      aVertexPosition : this.gl.getAttribLocation(program, "aVertexPosition"),
+      aVertexNormal : this.gl.getAttribLocation(program, "aVertexNormal"),
+      aTextureCoord : this.gl.getAttribLocation(program, "aTextureCoord")
+   }
 
-   program.aVertexNormal = this.gl.getAttribLocation(program, "aVertexNormal");
-   this.gl.enableVertexAttribArray(program.aVertexNormal);
+   this.gl.enableVertexAttribArray(handles.aVertexPosition);
+   this.gl.enableVertexAttribArray(handles.aVertexNormal);
+   this.gl.enableVertexAttribArray(handles.aTextureCoord);
 
-   program.aTextureCoord = this.gl.getAttribLocation(program, "aTextureCoord");
-   this.gl.enableVertexAttribArray(program.aTextureCoord);
+   return handles;
 }
 
 Portal.prototype.setupGeometryHandles = function(program) {
+   var handles = {
+      uModelMatrix : this.gl.getUniformLocation(program, "uModelMatrix"),
+      uViewMatrix : this.gl.getUniformLocation(program, "uViewMatrix"),
+      uProjectionMatrix : this.gl.getUniformLocation(program, "uProjectionMatrix"),
 
+      aVertexPosition : this.gl.getAttribLocation(program, "aVertexPosition"),
+      aVertexNormal : this.gl.getAttribLocation(program, "aVertexNormal")
+   }
+
+   this.gl.enableVertexAttribArray(handles.aVertexPosition);
+   this.gl.enableVertexAttribArray(handles.aVertexNormal);
+
+   return handles;
 }
 
 Portal.prototype.setupLightingHandles = function(program) {
-   // attributes
-   program.aVertexPosition = this.gl.getAttribLocation(program, "aVertexPosition");
-   this.gl.enableVertexAttribArray(program.aVertexPosition);
+   var handles = {
+      aVertexPosition : this.gl.getAttribLocation(program, "aVertexPosition")
+   }
 
-   var verts = [
-      1,  1,
-     -1,  1,
-     -1, -1,
-      1,  1,
-     -1, -1,
-      1, -1,
-   ];
+   this.gl.enableVertexAttribArray(handles.aVertexPosition);
 
-   this.lightingVbo = this.gl.createBuffer();
-   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.lightingVbo);
-   this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(verts), this.gl.STATIC_DRAW);
+   return handles;
 }

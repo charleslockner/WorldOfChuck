@@ -8,7 +8,7 @@
 
 Portal.prototype.loop = function() {
    this.updateState();
-   if (this.shaderProgram && this.lightingProgram) // We may not have returned from the glsl load call
+   if (this.shaders.forward.program && this.shaders.lighting.program) // We may not have returned from the glsl load call
       this.drawFrame();
    window.requestAnimationFrame(this.loop.bind(this));
 }
@@ -26,47 +26,58 @@ Portal.prototype.updateState = function() {
 Portal.prototype.drawFrame = function() {
    this.updateViewport();
 
-   this.gl.useProgram(this.shaderProgram);
+   // first pass
+   this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.rttFramebuffer);
+   this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+   this.gl.useProgram(this.shaders.forward.program);
+
    this.sendEntityIndependantShaderData();
    this.drawEntities();
 
-   // this.gl.useProgram(this.lightingProgram);
-   // this.renderDeferredLighting(this.testTexture);
+   // second pass
+   this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+   this.gl.useProgram(this.shaders.lighting.program);
+
+   this.renderDeferredLighting(this.testTexture);
 }
 
 Portal.prototype.updateViewport = function() {
    this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
+   // this.gl.viewport(0, 0, 800, 800);
+
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 }
 
 Portal.prototype.sendEntityIndependantShaderData = function() {
    var viewM = this.makeViewMatrix();
-   this.gl.uniformMatrix4fv(this.shaderProgram.uViewMatrix, false, viewM);
+   this.gl.uniformMatrix4fv(this.shaders.forward.handles.uViewMatrix, false, viewM);
 
    var projectionM = this.makeProjectionMatrix();
-   this.gl.uniformMatrix4fv(this.shaderProgram.uProjectionMatrix, false, projectionM);
+   this.gl.uniformMatrix4fv(this.shaders.forward.handles.uProjectionMatrix, false, projectionM);
 
-   this.gl.uniform3fv(this.shaderProgram.uCameraPosition, this.camera.position);
-
-   this.gl.uniform3fv(this.shaderProgram.uLights, this.lights);
+   this.gl.uniform3fv(this.shaders.forward.handles.uCameraPosition, this.camera.position);
+   this.gl.uniform3fv(this.shaders.forward.handles.uLights, this.lights);
 }
 
 Portal.prototype.drawEntities = function() {
    for (var i = 0; i < this.entities.length; i++)
-      this.entities[i].draw(this.gl, this.shaderProgram, this.models);
+      this.entities[i].draw(this.gl, this.shaders.forward, this.models);
 }
 
 Portal.prototype.renderDeferredLighting = function(frameTexture) {
-   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.lightingVbo);
-   this.gl.enableVertexAttribArray(this.lightingProgram.aVertexPosition);
-   this.gl.vertexAttribPointer(this.lightingProgram.aVertexPosition, 2, this.gl.FLOAT, false, 0, 0);
+
+
+   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.shaders.lighting.vbo);
+   this.gl.enableVertexAttribArray(this.shaders.lighting.handles.aVertexPosition);
+   this.gl.vertexAttribPointer(this.shaders.lighting.handles.aVertexPosition, 2, this.gl.FLOAT, false, 0, 0);
 
    this.gl.activeTexture(this.gl.TEXTURE0);
-   this.gl.bindTexture(this.gl.TEXTURE_2D, frameTexture);
-   this.gl.uniform1i(this.lightingProgram.samplerUniform, 0);
+   this.gl.bindTexture(this.gl.TEXTURE_2D, this.rttTexture);
+   this.gl.uniform1i(this.shaders.lighting.program.samplerUniform, 0); // ?????????????
 
    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
 }
+
 
 Portal.prototype.makeViewMatrix = function() {
    var viewM = mat4.create();
