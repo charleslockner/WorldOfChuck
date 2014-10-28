@@ -119,13 +119,18 @@ Portal.prototype.setupGeometryHandles = function(program) {
       uModelMatrix : this.gl.getUniformLocation(program, "uModelMatrix"),
       uViewMatrix : this.gl.getUniformLocation(program, "uViewMatrix"),
       uProjectionMatrix : this.gl.getUniformLocation(program, "uProjectionMatrix"),
+      // uCameraPosition : this.gl.getUniformLocation(program, "uCameraPosition"),
+      // uLights : this.gl.getUniformLocation(program, "uLights"),
+      // uNumLights : this.gl.getUniformLocation(program, "uNumLights"),
 
       aVertexPosition : this.gl.getAttribLocation(program, "aVertexPosition"),
-      aVertexNormal : this.gl.getAttribLocation(program, "aVertexNormal")
+      aVertexNormal : this.gl.getAttribLocation(program, "aVertexNormal"),
+      aTextureCoord : this.gl.getAttribLocation(program, "aTextureCoord")
    }
 
    this.gl.enableVertexAttribArray(handles.aVertexPosition);
    this.gl.enableVertexAttribArray(handles.aVertexNormal);
+   this.gl.enableVertexAttribArray(handles.aTextureCoord);
 
    return handles;
 }

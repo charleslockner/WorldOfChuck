@@ -38,7 +38,6 @@ Entity.prototype.drawModel = function(gl, shader, model) {
 
    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.ibo);
    gl.drawElements(gl.TRIANGLES, 3 * model.faces, gl.UNSIGNED_SHORT, 0);
-
 }
 
 Entity.prototype.makeModelMatrix = function() {
