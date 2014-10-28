@@ -41,16 +41,16 @@ Portal.prototype.setup = function() {
 
    var self = this;
 
-   // ModelLoader.loadImage(this.gl, "assets/textures/brick.png", function(texture) {
-   //    self.testTexture = texture;
-   //    self.loop();
-   // });
+   ModelLoader.loadImage(this.gl, "assets/textures/brick.png", function(texture) {
+      self.testTexture = texture;
+      self.loop();
+   });
 
-   this.loop();         // loop.js (Begin main loop)
+   // this.loop();         // loop.js (Begin main loop)
 }
 
 Portal.prototype.initGLProperties = function() {
-   this.gl.clearColor(0.05, 0.05, 0.2, 1.0);
+   this.gl.clearColor(0, 0, 0, 1.0);
    this.gl.enable(this.gl.DEPTH_TEST); // Enable depth testing
    this.gl.depthFunc(this.gl.LEQUAL); // Near things obscure far things
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT); // Clear the color as well as the depth buffer.

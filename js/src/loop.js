@@ -8,10 +8,8 @@
 
 Portal.prototype.loop = function() {
    this.updateState();
-   if (this.shaderProgram) // We may not have returned from the glsl load call
+   if (this.shaderProgram && this.lightingProgram) // We may not have returned from the glsl load call
       this.drawFrame();
-   // if (this.lightingProgram)
-   //    this.drawFrame();
    window.requestAnimationFrame(this.loop.bind(this));
 }
 
@@ -27,10 +25,13 @@ Portal.prototype.updateState = function() {
 
 Portal.prototype.drawFrame = function() {
    this.updateViewport();
+
+   this.gl.useProgram(this.shaderProgram);
    this.sendEntityIndependantShaderData();
    this.drawEntities();
 
-   // this.renderDeferredLighting();
+   // this.gl.useProgram(this.lightingProgram);
+   // this.renderDeferredLighting(this.testTexture);
 }
 
 Portal.prototype.updateViewport = function() {
@@ -53,17 +54,15 @@ Portal.prototype.sendEntityIndependantShaderData = function() {
 Portal.prototype.drawEntities = function() {
    for (var i = 0; i < this.entities.length; i++)
       this.entities[i].draw(this.gl, this.shaderProgram, this.models);
-
-   console.log(this.entities.length);
 }
 
-Portal.prototype.renderDeferredLighting = function() {
+Portal.prototype.renderDeferredLighting = function(frameTexture) {
    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.lightingVbo);
    this.gl.enableVertexAttribArray(this.lightingProgram.aVertexPosition);
    this.gl.vertexAttribPointer(this.lightingProgram.aVertexPosition, 2, this.gl.FLOAT, false, 0, 0);
 
    this.gl.activeTexture(this.gl.TEXTURE0);
-   this.gl.bindTexture(this.gl.TEXTURE_2D, this.testTexture);
+   this.gl.bindTexture(this.gl.TEXTURE_2D, frameTexture);
    this.gl.uniform1i(this.lightingProgram.samplerUniform, 0);
 
    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);

@@ -10,17 +10,15 @@
 Portal.prototype.initShaders = function() {
    var self = this;
 
-   this.createShaderProgram("shaders/forward.vert.glsl", "shaders/forward.frag.glsl", function(program) {
+   this.createShaderProgram("shaders/normal.vert.glsl", "shaders/normal.frag.glsl", function(program) {
       self.shaderProgram = program;
       self.setupForwardHandles(self.shaderProgram);
-      self.gl.useProgram(self.shaderProgram);
    });
 
-   // this.createShaderProgram("shaders/lighting.vert.glsl", "shaders/lighting.frag.glsl", function(program) {
-   //    self.lightingProgram = program;
-   //    self.setupLightingHandles(self.lightingProgram);
-   //    self.gl.useProgram(self.lightingProgram);
-   // });
+   this.createShaderProgram("shaders/lighting.vert.glsl", "shaders/lighting.frag.glsl", function(program) {
+      self.lightingProgram = program;
+      self.setupLightingHandles(self.lightingProgram);
+   });
 }
 
 Portal.prototype.createShaderProgram = function(vsPath, fsPath, callback) {
@@ -108,5 +106,4 @@ Portal.prototype.setupLightingHandles = function(program) {
    this.lightingVbo = this.gl.createBuffer();
    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.lightingVbo);
    this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(verts), this.gl.STATIC_DRAW);
-   this.gl.useProgram(this.lightingProgram);
 }
