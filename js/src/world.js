@@ -24,7 +24,7 @@ Portal.prototype.initEntities = function() {
 
 Portal.prototype.initLights = function() {
    this.lights = [
-      0.0, 0.0, 0.0,
+      15.0, 15.0, 15.0,
       1.0, -0.2, -0.8,
       1.0, 1.0, 1.0,
       400, 50.0, 15,
