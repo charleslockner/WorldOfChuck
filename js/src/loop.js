@@ -32,8 +32,8 @@ Portal.prototype.drawFrame = function() {
 
 Portal.prototype.deferredGeometryPass = function() {
    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.deferredFB);
-   this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
    this.gl.useProgram(this.shaders.geometry.program);
+   this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
    // attach textures to shader output
    this.ext.drawBuffersWEBGL([
@@ -63,6 +63,7 @@ Portal.prototype.drawEntities = function() {
 Portal.prototype.deferredLightingPass = function() {
    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
    this.gl.useProgram(this.shaders.lighting.program);
+   this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
    this.sendDeferredLightingData();
    this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);

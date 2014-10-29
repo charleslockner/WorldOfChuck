@@ -27,7 +27,7 @@ void main() {
    rColor = vec3(0.0);
 
    // loop through each light
-   for (int i = 1; i < 3; i++) {
+   for (int i = 0; i < 3; i++) {
       lightPosition = uLights[4*i];
       lightDirection = uLights[4*i+1];
       lightColor = uLights[4*i+2];
