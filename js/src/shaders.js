@@ -161,7 +161,6 @@ Portal.prototype.setupForwardHandles = function(program) {
       uProjectionMatrix : this.gl.getUniformLocation(program, "uProjectionMatrix"),
       uCameraPosition : this.gl.getUniformLocation(program, "uCameraPosition"),
       uLights : this.gl.getUniformLocation(program, "uLights"),
-      uNumLights : this.gl.getUniformLocation(program, "uNumLights"),
 
       aVertexPosition : this.gl.getAttribLocation(program, "aVertexPosition"),
       aVertexNormal : this.gl.getAttribLocation(program, "aVertexNormal"),
@@ -180,9 +179,6 @@ Portal.prototype.setupGeometryHandles = function(program) {
       uModelMatrix : this.gl.getUniformLocation(program, "uModelMatrix"),
       uViewMatrix : this.gl.getUniformLocation(program, "uViewMatrix"),
       uProjectionMatrix : this.gl.getUniformLocation(program, "uProjectionMatrix"),
-      // uCameraPosition : this.gl.getUniformLocation(program, "uCameraPosition"),
-      // uLights : this.gl.getUniformLocation(program, "uLights"),
-      // uNumLights : this.gl.getUniformLocation(program, "uNumLights"),
 
       aVertexPosition : this.gl.getAttribLocation(program, "aVertexPosition"),
       aVertexNormal : this.gl.getAttribLocation(program, "aVertexNormal"),
@@ -198,10 +194,16 @@ Portal.prototype.setupGeometryHandles = function(program) {
 
 Portal.prototype.setupLightingHandles = function(program) {
    var handles = {
-      aVertexPosition : this.gl.getAttribLocation(program, "aVertexPosition")
+      uPositionTex : this.gl.getUniformLocation(program, "uPositionTex"),
+      uNormalTex : this.gl.getUniformLocation(program, "uNormalTex"),
+      uColorTex : this.gl.getUniformLocation(program, "uColorTex"),
+      uCameraPosition : this.gl.getUniformLocation(program, "uCameraPosition"),
+      uLights : this.gl.getUniformLocation(program, "uLights"),
+
+      aClipPosition : this.gl.getAttribLocation(program, "aClipPosition")
    }
 
-   this.gl.enableVertexAttribArray(handles.aVertexPosition);
+   this.gl.enableVertexAttribArray(handles.aClipPosition);
 
    return handles;
 }

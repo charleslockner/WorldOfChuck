@@ -8,8 +8,10 @@
 
 Portal.prototype.loop = function() {
    this.updateState();
+
    if (this.shaders.geometry.program && this.shaders.lighting.program) // We may not have returned from the glsl load call
       this.drawFrame();
+
    window.requestAnimationFrame(this.loop.bind(this));
 }
 
@@ -24,14 +26,16 @@ Portal.prototype.updateState = function() {
 }
 
 Portal.prototype.drawFrame = function() {
-   this.updateViewport();
+   this.deferredGeometryPass();
+   this.deferredLightingPass();
+}
 
-   // first pass
+Portal.prototype.deferredGeometryPass = function() {
    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.deferredFB);
-
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
    this.gl.useProgram(this.shaders.geometry.program);
 
+   // attach textures to shader output
    this.ext.drawBuffersWEBGL([
       this.ext.COLOR_ATTACHMENT0_WEBGL,
       this.ext.COLOR_ATTACHMENT1_WEBGL,
@@ -39,32 +43,16 @@ Portal.prototype.drawFrame = function() {
       this.ext.COLOR_ATTACHMENT3_WEBGL
    ]);
 
-   this.sendEntityIndependantShaderData();
+   this.sendIndependentGeometryData();
    this.drawEntities();
-
-   // second pass
-   this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
-   this.gl.useProgram(this.shaders.lighting.program);
-
-   this.renderDeferredLighting();
 }
 
-Portal.prototype.updateViewport = function() {
-   this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
-   // this.gl.viewport(0, 0, 800, 800);
-
-   this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-}
-
-Portal.prototype.sendEntityIndependantShaderData = function() {
+Portal.prototype.sendIndependentGeometryData = function() {
    var viewM = this.makeViewMatrix();
    this.gl.uniformMatrix4fv(this.shaders.geometry.handles.uViewMatrix, false, viewM);
 
    var projectionM = this.makeProjectionMatrix();
    this.gl.uniformMatrix4fv(this.shaders.geometry.handles.uProjectionMatrix, false, projectionM);
-
-   // this.gl.uniform3fv(this.shaders.geometry.handles.uCameraPosition, this.camera.position);
-   // this.gl.uniform3fv(this.shaders.geometry.handles.uLights, this.lights);
 }
 
 Portal.prototype.drawEntities = function() {
@@ -72,24 +60,34 @@ Portal.prototype.drawEntities = function() {
       this.entities[i].draw(this.gl, this.shaders.geometry, this.models);
 }
 
-Portal.prototype.renderDeferredLighting = function() {
+Portal.prototype.deferredLightingPass = function() {
+   this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+   this.gl.useProgram(this.shaders.lighting.program);
+
+   this.sendDeferredLightingData();
+   this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+}
+
+
+Portal.prototype.sendDeferredLightingData = function() {
    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.shaders.lighting.vbo);
-   this.gl.enableVertexAttribArray(this.shaders.lighting.handles.aVertexPosition);
-   this.gl.vertexAttribPointer(this.shaders.lighting.handles.aVertexPosition, 2, this.gl.FLOAT, false, 0, 0);
+   this.gl.enableVertexAttribArray(this.shaders.lighting.handles.aClipPosition);
+   this.gl.vertexAttribPointer(this.shaders.lighting.handles.aClipPosition, 2, this.gl.FLOAT, false, 0, 0);
 
    this.gl.activeTexture(this.gl.TEXTURE0);
    this.gl.bindTexture(this.gl.TEXTURE_2D, this.renderTextures[0]);
-   this.gl.uniform1i(this.gl.getUniformLocation(this.shaders.lighting.program, "uWorldPosition"), 0);
+   this.gl.uniform1i(this.shaders.lighting.handles.uPositionTex, 0);
 
    this.gl.activeTexture(this.gl.TEXTURE1);
    this.gl.bindTexture(this.gl.TEXTURE_2D, this.renderTextures[1]);
-   this.gl.uniform1i(this.gl.getUniformLocation(this.shaders.lighting.program, "uWorldNormal"), 1);
+   this.gl.uniform1i(this.shaders.lighting.handles.uNormalTex, 1);
 
    this.gl.activeTexture(this.gl.TEXTURE2);
    this.gl.bindTexture(this.gl.TEXTURE_2D, this.renderTextures[2]);
-   this.gl.uniform1i(this.gl.getUniformLocation(this.shaders.lighting.program, "uColor"), 2);
+   this.gl.uniform1i(this.shaders.lighting.handles.uColorTex, 2);
 
-   this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+   this.gl.uniform3fv(this.shaders.lighting.handles.uCameraPosition, this.camera.position);
+   this.gl.uniform3fv(this.shaders.lighting.handles.uLights, this.lights);
 }
 
 
