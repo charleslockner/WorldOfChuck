@@ -16,7 +16,7 @@ void main() {
    float specDot, lightStrength, lightAttenuation, lightRadius, lightDistance, illumination;
    float shine;
 
-   position = vec3(texture2D(uPositionTex, vTextureCoord)) * 100.0;
+   position = vec3(texture2D(uPositionTex, vTextureCoord))*100.0;
    normal = normalize(vec3(texture2D(uNormalTex, vTextureCoord)));
    texColor = vec3(texture2D(uColorTex, vTextureCoord));
 

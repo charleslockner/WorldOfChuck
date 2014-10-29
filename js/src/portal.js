@@ -48,7 +48,7 @@ Portal.prototype.setup = function() {
 }
 
 Portal.prototype.initGLProperties = function() {
-   this.gl.clearColor(0.5, 0.5, 0.2, 1.0);
+   this.gl.clearColor(0.1, 0.1, 0.15, 1.0);
    this.gl.enable(this.gl.DEPTH_TEST); // Enable depth testing
    this.gl.depthFunc(this.gl.LEQUAL); // Near things obscure far things
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT); // Clear the color as well as the depth buffer.
