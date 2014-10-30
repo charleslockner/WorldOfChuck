@@ -39,25 +39,25 @@ Portal.prototype.attachExtensions = function() {
    this.dbExt = this.gl.getExtension('WEBGL_draw_buffers');
    if (!this.dbExt) {
       alert("WEBGL_draw_buffers not supported");
-      return null;
+      return false;
    }
 
    this.floatExt = this.gl.getExtension("OES_texture_float");
    if (!this.floatExt) {
       alert("OES_texture_float not supported");
-      return null;
+      return false;
    }
 
    this.halfFloatExt = this.gl.getExtension("OES_texture_half_float");
    if (!this.halfFloatExt) {
       alert("OES_texture_float not supported");
-      return null;
+      return false;
    }
 
    this.depthExt = this.gl.getExtension("WEBGL_depth_texture"); // Or browser-appropriate prefix
    if (!this.depthExt) {
       alert("WEBGL_depth_texture not supported");
-      return null;
+      return false;
    }
 
    return true;

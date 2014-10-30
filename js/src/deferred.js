@@ -9,10 +9,10 @@
 Portal.prototype.initDeferredFramebuffer = function() {
    // create textures to store the render buffers
    this.renderTextures = [
-      this.createFloatTexture(),
-      this.createHalfFloatTexture(),
-      this.createRGBATexture(),
-      this.createDepthTexture()
+      this.createFloatTexture(),       // positions
+      this.createHalfFloatTexture(),   // normals
+      this.createRGBATexture(),        // colors
+      this.createDepthTexture()        // depth
    ]; 
 
    // create a frame buffer
@@ -35,10 +35,8 @@ Portal.prototype.createRGBATexture = function() {
    var tex = this.gl.createTexture();
    this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
    this.setTextureParameters();
-   
    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight,
                       0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, null);
-
    return tex;
 }
 
@@ -46,10 +44,8 @@ Portal.prototype.createFloatTexture = function() {
    var tex = this.gl.createTexture();
    this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
    this.setTextureParameters();
-
    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight,
                       0, this.gl.RGBA, this.gl.FLOAT, null);
-
    return tex;
 }
 
@@ -57,10 +53,8 @@ Portal.prototype.createHalfFloatTexture = function() {
    var tex = this.gl.createTexture();
    this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
    this.setTextureParameters();
-
    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight,
                       0, this.gl.RGBA, this.gl.FLOAT, null); // SHOULD BE HALF_FLOAT, but doesn't work...
-
    return tex;
 }
 
@@ -71,7 +65,6 @@ Portal.prototype.createDepthTexture = function() {
 
    this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.DEPTH_COMPONENT, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight, 
                       0, this.gl.DEPTH_COMPONENT, this.gl.UNSIGNED_SHORT, null);
-
    return tex;
 }
 
