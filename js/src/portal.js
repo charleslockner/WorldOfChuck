@@ -11,13 +11,15 @@ var Portal = function(canvas) {
 
    this.gl = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl");
    if (!this.gl) {
-      alert("WebGL not supported. Please use a desktop Chrome browser.");
+      alert("Your browser/device does not support WebGL. Use desktop Chrome to view this site.");
       return null;
    }
 
    var success = this.attachExtensions();
-   if (!success)
+   if (!success) {
+      alert("Your browser/device does not support a WebGL extension. Use desktop Chrome to view this site.");
       return null;
+   }
 
    // Listing here all the instance variables that belong to Portal
    this.shaders = null;
@@ -38,25 +40,25 @@ var Portal = function(canvas) {
 Portal.prototype.attachExtensions = function() {
    this.dbExt = this.gl.getExtension('WEBGL_draw_buffers');
    if (!this.dbExt) {
-      alert("WEBGL_draw_buffers not supported");
+      console.log("WEBGL_draw_buffers not supported");
       return false;
    }
 
    this.floatExt = this.gl.getExtension("OES_texture_float");
    if (!this.floatExt) {
-      alert("OES_texture_float not supported");
+      console.log("OES_texture_float not supported");
       return false;
    }
 
    this.halfFloatExt = this.gl.getExtension("OES_texture_half_float");
    if (!this.halfFloatExt) {
-      alert("OES_texture_float not supported");
+      console.log("OES_texture_float not supported");
       return false;
    }
 
    this.depthExt = this.gl.getExtension("WEBGL_depth_texture"); // Or browser-appropriate prefix
    if (!this.depthExt) {
-      alert("WEBGL_depth_texture not supported");
+      console.log("WEBGL_depth_texture not supported");
       return false;
    }
 

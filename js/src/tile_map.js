@@ -9,7 +9,6 @@
 var TileMap = function() {
 	this.negArr = new Array();
 	this.posArr = new Array();
-	// this.ndxArr = new Uint32Array();
 
 	this.xFirstNdx = 0;
 	this.xLastNdx = 0;

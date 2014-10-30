@@ -64,26 +64,33 @@ Portal.prototype.moveBackward = function(elapsed) {
 }
 
 Portal.prototype.aimCamera = function() {
-   if (this.controls.cursorXDelta || this.controls.cursorXDelta) {
+   if (this.controls.cursorXDelta || this.controls.cursorYDelta) {
 
       this.camera.pitch -= .01 * this.controls.cursorYDelta;
       this.camera.yaw += .01 * this.controls.cursorXDelta;
 
-      if (this.camera.pitch >= this.camera.PITCH_LIMIT)
-         this.camera.pitch = this.camera.PITCH_LIMIT;
-      if (this.camera.pitch <= -this.camera.PITCH_LIMIT)
-         this.camera.pitch = -this.camera.PITCH_LIMIT;
-      if (this.camera.yaw >= 2.0 * PI)
-         this.camera.yaw -= 2.0 * PI;
-      if (this.camera.yaw < 0)
-         this.camera.yaw += 2.0 * PI;
-
-      var tx = Math.cos(this.camera.pitch) * Math.cos(this.camera.yaw);
-      var ty = Math.sin(this.camera.pitch);
-      var tz = Math.cos(this.camera.pitch) * Math.cos(PI/2 - this.camera.yaw);
-      this.camera.direction = vec3.fromValues(tx, ty, tz);
+      this.sanitizePitchAndYaw();
+      this.camera.direction = this.directionFromPitchAndYaw();
 
       this.controls.cursorXDelta = 0;
       this.controls.cursorYDelta = 0;
    }
+}
+
+Portal.prototype.sanitizePitchAndYaw = function() {
+   if (this.camera.pitch >= this.camera.PITCH_LIMIT)
+      this.camera.pitch = this.camera.PITCH_LIMIT;
+   if (this.camera.pitch <= -this.camera.PITCH_LIMIT)
+      this.camera.pitch = -this.camera.PITCH_LIMIT;
+   if (this.camera.yaw >= 2.0 * PI)
+      this.camera.yaw -= 2.0 * PI;
+   if (this.camera.yaw < 0)
+      this.camera.yaw += 2.0 * PI;
+}
+
+Portal.prototype.directionFromPitchAndYaw = function() {
+   var tx = Math.cos(this.camera.pitch) * Math.cos(this.camera.yaw);
+   var ty = Math.sin(this.camera.pitch);
+   var tz = Math.cos(this.camera.pitch) * Math.cos(PI/2 - this.camera.yaw);
+   return vec3.fromValues(tx, ty, tz);
 }

@@ -33,28 +33,9 @@ Portal.prototype.initShaders = function() {
    this.createShaderProgram("shaders/lighting.vert.glsl", "shaders/lighting.frag.glsl", function(program) {
       self.shaders.lighting.handles = self.setupLightingHandles(program);
       self.shaders.lighting.program = program;
-
-      var verts = [
-         1,  1,
-        -1,  1,
-        -1, -1,
-         1,  1,
-        -1, -1,
-         1, -1,
-      ];
-
-      self.shaders.lighting.vbo = self.gl.createBuffer();
-      self.gl.bindBuffer(self.gl.ARRAY_BUFFER, self.shaders.lighting.vbo);
-      self.gl.bufferData(self.gl.ARRAY_BUFFER, new Float32Array(verts), self.gl.STATIC_DRAW);
+      self.bindLightingVBO();
    });
 }
-
-
-
-
-
-
-
 
 Portal.prototype.createShaderProgram = function(vsPath, fsPath, callback) {
    var self = this;
@@ -152,4 +133,11 @@ Portal.prototype.setupLightingHandles = function(program) {
    this.gl.enableVertexAttribArray(handles.aClipPosition);
 
    return handles;
+}
+
+Portal.prototype.bindLightingVBO = function() {
+   var clipVerts = [1,  1, -1,  1, -1, -1, 1,  1, -1, -1, 1, -1];
+   this.shaders.lighting.vbo = this.gl.createBuffer();
+   this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.shaders.lighting.vbo);
+   this.gl.bufferData(this.gl.ARRAY_BUFFER, new Float32Array(clipVerts), this.gl.STATIC_DRAW);
 }

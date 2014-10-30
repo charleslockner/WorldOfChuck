@@ -19,8 +19,8 @@ Portal.prototype.updateState = function() {
    var timeNow = new Date().getTime();
    var elapsed = timeNow - this.lastUpdateTime;
 
-   this.updateWorld(elapsed);
-   this.updateCamera(elapsed);
+   this.updateWorld(elapsed);    // in world.js
+   this.updateCamera(elapsed);   // in camera.js
 
    this.lastUpdateTime = timeNow;
 }
@@ -31,20 +31,33 @@ Portal.prototype.drawFrame = function() {
 }
 
 Portal.prototype.deferredGeometryPass = function() {
-   this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.deferredFB);
    this.gl.useProgram(this.shaders.geometry.program);
+
+   this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.deferredFB);
+   this.attachTextureOutputs();
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-   // attach textures to shader output
+   this.sendIndependentGeometryData();
+   this.drawEntities();
+}
+
+Portal.prototype.deferredLightingPass = function() {
+   this.gl.useProgram(this.shaders.lighting.program);
+
+   this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
+   this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+
+   this.sendDeferredLightingData();
+   this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
+}
+
+Portal.prototype.attachTextureOutputs = function() {
    this.dbExt.drawBuffersWEBGL([
       this.dbExt.COLOR_ATTACHMENT0_WEBGL,
       this.dbExt.COLOR_ATTACHMENT1_WEBGL,
       this.dbExt.COLOR_ATTACHMENT2_WEBGL,
       this.dbExt.COLOR_ATTACHMENT3_WEBGL
    ]);
-
-   this.sendIndependentGeometryData();
-   this.drawEntities();
 }
 
 Portal.prototype.sendIndependentGeometryData = function() {
@@ -59,16 +72,6 @@ Portal.prototype.drawEntities = function() {
    for (var i = 0; i < this.entities.length; i++)
       this.entities[i].draw(this.gl, this.shaders.geometry, this.models);
 }
-
-Portal.prototype.deferredLightingPass = function() {
-   this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
-   this.gl.useProgram(this.shaders.lighting.program);
-   this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
-
-   this.sendDeferredLightingData();
-   this.gl.drawArrays(this.gl.TRIANGLES, 0, 6);
-}
-
 
 Portal.prototype.sendDeferredLightingData = function() {
    this.gl.bindBuffer(this.gl.ARRAY_BUFFER, this.shaders.lighting.vbo);
@@ -90,7 +93,6 @@ Portal.prototype.sendDeferredLightingData = function() {
    this.gl.uniform3fv(this.shaders.lighting.handles.uCameraPosition, this.camera.position);
    this.gl.uniform3fv(this.shaders.lighting.handles.uLights, this.lights);
 }
-
 
 Portal.prototype.makeViewMatrix = function() {
    var viewM = mat4.create();
