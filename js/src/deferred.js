@@ -27,7 +27,6 @@ Portal.prototype.initDeferredFramebuffer = function() {
 
    // set everything back to defaults
    this.gl.bindTexture(this.gl.TEXTURE_2D, null);
-   this.gl.bindRenderbuffer(this.gl.RENDERBUFFER, null);
    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
 }
 

@@ -13,10 +13,10 @@ Portal.prototype.initWorld = function() {
 }
 
 Portal.prototype.initEntities = function() {
-   var ents = [1000];
+   var ents = [100000];
    // entities[0] = new Terrain([0,0,0], 0);
    ents[0] = new Cube([0, 0, -10], 0);
-   for (var i = 0; i < 200; i++)
+   for (var i = 0; i < 2000; i++)
       ents.push(new Cube([randRange(-50, 50), randRange(-50, 50), randRange(-50, 50)], 0));
    
    this.entities = ents;
