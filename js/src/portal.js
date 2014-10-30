@@ -29,7 +29,7 @@ var Portal = function(canvas) {
    this.controls = null;
    this.camera = null;
    this.shaderProgram = null;
-   this.renderForward = true;
+   this.renderForward = false;
    this.lastUpdateTime = 0;
    this.NEAR_DISTANCE = 0.1;
    this.FAR_DISTANCE = 10000;
@@ -53,7 +53,7 @@ Portal.prototype.attachExtensions = function() {
 
    this.halfFloatExt = this.gl.getExtension("OES_texture_half_float");
    if (!this.halfFloatExt) {
-      console.log("OES_texture_float not supported");
+      console.log("OES_texture_half_float not supported");
       return false;
    }
 
@@ -79,9 +79,10 @@ Portal.prototype.setup = function() {
 }
 
 Portal.prototype.initGLProperties = function() {
-   this.gl.clearColor(0.05, 0.05, 0.10, 1.0);
+   this.gl.clearColor(0.1, 0.1, 0.1, 1.0);
    this.gl.enable(this.gl.DEPTH_TEST); // Enable depth testing
    this.gl.depthFunc(this.gl.LEQUAL); // Near things obscure far things
+   this.gl.enable(this.gl.CULL_FACE)  // Enable backface culling
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT); // Clear the color as well as the depth buffer.
 }
 

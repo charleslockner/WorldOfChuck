@@ -25,10 +25,6 @@ Portal.prototype.initDeferredFramebuffer = function() {
    this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.dbExt.COLOR_ATTACHMENT2_WEBGL, this.gl.TEXTURE_2D, this.renderTextures[2], 0);
    this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.gl.DEPTH_ATTACHMENT, this.gl.TEXTURE_2D, this.renderTextures[3], 0);
 
-   // this.gl.clearColor(0.05, 0.05, 0.10, 1.0);
-   // this.gl.enable(this.gl.DEPTH_TEST); // Enable depth testing
-   // this.gl.depthFunc(this.gl.LEQUAL); // Near things obscure far things
-
    // set everything back to defaults
    this.gl.bindTexture(this.gl.TEXTURE_2D, null);
    this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);

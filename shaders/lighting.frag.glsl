@@ -23,7 +23,7 @@ void main() {
    view = normalize(position - uCameraPosition);
    shine = 500.0;
 
-   ambient = texColor * 0.65;
+   ambient = texColor * 0.25;
    rColor = vec3(0.0);
 
    // loop through each light
@@ -47,7 +47,7 @@ void main() {
       rColor += illumination * lightColor * (specular + diffuse + ambient);
    }
 
-   rColor = clamp(rColor, vec3(0.0,0.0,0.0), vec3(1.0,1.0,1.0)); // is this needed?
+   // rColor = clamp(rColor, vec3(0.0,0.0,0.0), vec3(1.0,1.0,1.0)); // is this needed?
    
    gl_FragColor = vec4(rColor, 1.0);
 }

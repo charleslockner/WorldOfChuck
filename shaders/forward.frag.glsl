@@ -17,8 +17,10 @@ void main(void) {
 
    texColor = vec3(texture2D(uSampler, vec2(vTextureCoord.s, vTextureCoord.t)));
    normal = normalize(vWorldNormal);
+   
    view = normalize(vWorldPosition - uCameraPosition);
    shine = 500.0;
+
    ambient = texColor * 0.25;
    rColor = vec3(0.0);
 
