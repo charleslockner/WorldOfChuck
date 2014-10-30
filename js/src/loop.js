@@ -36,11 +36,11 @@ Portal.prototype.deferredGeometryPass = function() {
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
    // attach textures to shader output
-   this.ext.drawBuffersWEBGL([
-      this.ext.COLOR_ATTACHMENT0_WEBGL,
-      this.ext.COLOR_ATTACHMENT1_WEBGL,
-      this.ext.COLOR_ATTACHMENT2_WEBGL,
-      this.ext.COLOR_ATTACHMENT3_WEBGL
+   this.dbExt.drawBuffersWEBGL([
+      this.dbExt.COLOR_ATTACHMENT0_WEBGL,
+      this.dbExt.COLOR_ATTACHMENT1_WEBGL,
+      this.dbExt.COLOR_ATTACHMENT2_WEBGL,
+      this.dbExt.COLOR_ATTACHMENT3_WEBGL
    ]);
 
    this.sendIndependentGeometryData();

@@ -10,8 +10,6 @@
 Portal.prototype.initShaders = function() {
    var self = this;
 
-   this.initDeferredFramebuffer();
-
    this.shaders = {
       "forward" :  { program : null,
                      handles : null },
@@ -49,58 +47,6 @@ Portal.prototype.initShaders = function() {
       self.gl.bindBuffer(self.gl.ARRAY_BUFFER, self.shaders.lighting.vbo);
       self.gl.bufferData(self.gl.ARRAY_BUFFER, new Float32Array(verts), self.gl.STATIC_DRAW);
    });
-}
-
-
-Portal.prototype.initDeferredFramebuffer = function() {
-   // create frame buffer
-   this.deferredFB = this.gl.createFramebuffer();
-   this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, this.deferredFB); // the next draw calls will operate on this framebuffer
-
-   // create textures to store the render buffers
-   this.renderTextures = [
-      this.createEmptyTexture(),
-      this.createEmptyTexture(),
-      this.createEmptyTexture(),
-      this.createEmptyTexture()
-   ]; 
-
-   // attaching the color storage
-   this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.ext.COLOR_ATTACHMENT0_WEBGL, this.gl.TEXTURE_2D, this.renderTextures[0], 0);
-   this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.ext.COLOR_ATTACHMENT1_WEBGL, this.gl.TEXTURE_2D, this.renderTextures[1], 0);
-   this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.ext.COLOR_ATTACHMENT2_WEBGL, this.gl.TEXTURE_2D, this.renderTextures[2], 0);
-   this.gl.framebufferTexture2D(this.gl.FRAMEBUFFER, this.ext.COLOR_ATTACHMENT3_WEBGL, this.gl.TEXTURE_2D, this.renderTextures[3], 0);
-
-   // create and attach storage for depth information
-   var renderbuffer = this.createRenderbuffer();
-   this.gl.framebufferRenderbuffer(this.gl.FRAMEBUFFER, this.gl.DEPTH_ATTACHMENT, this.gl.RENDERBUFFER, renderbuffer);
-
-   // set everything back to defaults
-   this.gl.bindTexture(this.gl.TEXTURE_2D, null);
-   this.gl.bindRenderbuffer(this.gl.RENDERBUFFER, null);
-   this.gl.bindFramebuffer(this.gl.FRAMEBUFFER, null);
-}
-
-Portal.prototype.createEmptyTexture = function() {
-   var tex = this.gl.createTexture();
-   this.gl.bindTexture(this.gl.TEXTURE_2D, tex);
-   this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MAG_FILTER, this.gl.LINEAR);
-   this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_MIN_FILTER, this.gl.LINEAR);
-   this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_S, this.gl.CLAMP_TO_EDGE);
-   this.gl.texParameteri(this.gl.TEXTURE_2D, this.gl.TEXTURE_WRAP_T, this.gl.CLAMP_TO_EDGE);
-   
-   // allocate space to draw texture to
-   this.gl.texImage2D(this.gl.TEXTURE_2D, 0, this.gl.RGBA, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight,
-                      0, this.gl.RGBA, this.gl.UNSIGNED_BYTE, null);
-
-   return tex;
-}
-
-Portal.prototype.createRenderbuffer = function() {
-   var renderbuffer = this.gl.createRenderbuffer();
-   this.gl.bindRenderbuffer(this.gl.RENDERBUFFER, renderbuffer);
-   this.gl.renderbufferStorage(this.gl.RENDERBUFFER, this.gl.DEPTH_COMPONENT16, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
-   return renderbuffer;
 }
 
 

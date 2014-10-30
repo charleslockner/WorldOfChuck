@@ -8,21 +8,20 @@
 
 var Portal = function(canvas) {
    this.canvas = canvas;
+
    this.gl = this.canvas.getContext("webgl") || this.canvas.getContext("experimental-webgl");
-   this.ext = this.gl.getExtension('WEBGL_draw_buffers');
-
    if (!this.gl) {
-      alert("Please use Chrome, if not that, then Firefox.");
+      alert("WebGL not supported. Please use a desktop Chrome browser.");
       return null;
    }
 
-   if (!this.ext) {
-      alert("WEBGL_draw_buffers not supported");
+   var success = this.attachExtensions();
+   if (!success)
       return null;
-   }
 
    // Listing here all the instance variables that belong to Portal
    this.shaders = null;
+   this.deferredFB = null;
    this.models = null;
    this.entities = null;
    this.controls = null;
@@ -33,16 +32,45 @@ var Portal = function(canvas) {
    this.FAR_DISTANCE = 10000;
 
    // Rev-up this icicle clam!!
-   this.setup()
+   this.setup();
+}
+
+Portal.prototype.attachExtensions = function() {
+   this.dbExt = this.gl.getExtension('WEBGL_draw_buffers');
+   if (!this.dbExt) {
+      alert("WEBGL_draw_buffers not supported");
+      return null;
+   }
+
+   this.floatExt = this.gl.getExtension("OES_texture_float");
+   if (!this.floatExt) {
+      alert("OES_texture_float not supported");
+      return null;
+   }
+
+   this.halfFloatExt = this.gl.getExtension("OES_texture_half_float");
+   if (!this.halfFloatExt) {
+      alert("OES_texture_float not supported");
+      return null;
+   }
+
+   this.depthExt = this.gl.getExtension("WEBGL_depth_texture"); // Or browser-appropriate prefix
+   if (!this.depthExt) {
+      alert("WEBGL_depth_texture not supported");
+      return null;
+   }
+
+   return true;
 }
 
 Portal.prototype.setup = function() {
-   this.initGLProperties();
-   this.initModels();   // models.js
-   this.initWorld();    // world.js (initializes entities & lights)
-   this.initControls(); // controls.js
-   this.initCamera();   // camera.js
-   this.initShaders();  // shaders.js (initializes deferred shading buffers and installs shaders)
+   this.initGLProperties();         // Look down below o.O
+   this.initModels();               // models.js
+   this.initWorld();                // world.js (initializes entities & lights)
+   this.initControls();             // controls.js
+   this.initCamera();               // camera.js
+   this.initDeferredFramebuffer();  // deferred.js (initializes the deferred framebuffer and textures)
+   this.initShaders();              // shaders.js (initializes deferred shading buffers and installs shaders)
 
    this.loop();         // loop.js (Begin main loop)
 }

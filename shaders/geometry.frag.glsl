@@ -9,12 +9,13 @@ varying vec3 vWorldNormal;
 varying highp vec2 vTextureCoord;
 
 void main(void) {
-   vec3 textureColor = vec3(texture2D(uSampler, vTextureCoord));
+   vec3 textureColor;
 
-   gl_FragData[0] = vec4(vWorldPosition/100.0, 1.0);
+   textureColor = vec3(texture2D(uSampler, vTextureCoord));
+
+   gl_FragData[0] = vec4(vWorldPosition, 1.0);
    gl_FragData[1] = vec4(vWorldNormal, 1.0);
    gl_FragData[2] = vec4(textureColor, 1.0);
-   gl_FragData[3] = vec4(vWorldNormal/8.0, 1.0);
 }
 
 

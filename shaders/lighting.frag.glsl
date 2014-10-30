@@ -16,14 +16,14 @@ void main() {
    float specDot, lightStrength, lightAttenuation, lightRadius, lightDistance, illumination;
    float shine;
 
-   position = vec3(texture2D(uPositionTex, vTextureCoord))*100.0;
+   position = vec3(texture2D(uPositionTex, vTextureCoord));
    normal = normalize(vec3(texture2D(uNormalTex, vTextureCoord)));
    texColor = vec3(texture2D(uColorTex, vTextureCoord));
 
    view = normalize(position - uCameraPosition);
    shine = 500.0;
 
-   ambient = texColor * 0.25;
+   ambient = texColor * 0.65;
    rColor = vec3(0.0);
 
    // loop through each light
@@ -46,6 +46,8 @@ void main() {
       specular = texColor * pow(max(0.0, dot(reflection, view)), shine);
       rColor += illumination * lightColor * (specular + diffuse + ambient);
    }
+
+   rColor = clamp(rColor, vec3(0.0,0.0,0.0), vec3(1.0,1.0,1.0)); // is this needed?
    
    gl_FragColor = vec4(rColor, 1.0);
 }
