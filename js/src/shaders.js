@@ -106,6 +106,7 @@ Portal.prototype.setupGeometryHandles = function(program) {
       uModelMatrix : this.gl.getUniformLocation(program, "uModelMatrix"),
       uViewMatrix : this.gl.getUniformLocation(program, "uViewMatrix"),
       uProjectionMatrix : this.gl.getUniformLocation(program, "uProjectionMatrix"),
+      uTexture : this.gl.getUniformLocation(program, "uTexture"),
 
       aVertexPosition : this.gl.getAttribLocation(program, "aVertexPosition"),
       aVertexNormal : this.gl.getAttribLocation(program, "aVertexNormal"),

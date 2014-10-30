@@ -26,6 +26,19 @@ Portal.prototype.updateState = function() {
 }
 
 Portal.prototype.drawFrame = function() {
+   this.renderForward ? this.renderWithForward() : this.renderWithDeferred();
+}
+
+Portal.prototype.renderWithForward = function() {
+   this.gl.useProgram(this.shaders.forward.program);
+   this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
+
+   this.sendMatrices(this.shaders.forward.handles);
+   this.sendLightsAndCamera(this.shaders.forward.handles);
+   this.drawEntities(this.shaders.forward.handles);
+}
+
+Portal.prototype.renderWithDeferred = function() {
    this.deferredGeometryPass();
    this.deferredLightingPass();
 }
@@ -37,8 +50,8 @@ Portal.prototype.deferredGeometryPass = function() {
    this.attachTextureOutputs();
    this.gl.clear(this.gl.COLOR_BUFFER_BIT | this.gl.DEPTH_BUFFER_BIT);
 
-   this.sendIndependentGeometryData();
-   this.drawEntities();
+   this.sendMatrices(this.shaders.geometry.handles);
+   this.drawEntities(this.shaders.geometry.handles);
 }
 
 Portal.prototype.deferredLightingPass = function() {
@@ -60,17 +73,17 @@ Portal.prototype.attachTextureOutputs = function() {
    ]);
 }
 
-Portal.prototype.sendIndependentGeometryData = function() {
+Portal.prototype.sendMatrices = function(shaderHandles) {
    var viewM = this.makeViewMatrix();
-   this.gl.uniformMatrix4fv(this.shaders.geometry.handles.uViewMatrix, false, viewM);
+   this.gl.uniformMatrix4fv(shaderHandles.uViewMatrix, false, viewM);
 
    var projectionM = this.makeProjectionMatrix();
-   this.gl.uniformMatrix4fv(this.shaders.geometry.handles.uProjectionMatrix, false, projectionM);
+   this.gl.uniformMatrix4fv(shaderHandles.uProjectionMatrix, false, projectionM);
 }
 
-Portal.prototype.drawEntities = function() {
+Portal.prototype.drawEntities = function(shaderHandles) {
    for (var i = 0; i < this.entities.length; i++)
-      this.entities[i].draw(this.gl, this.shaders.geometry, this.models);
+      this.entities[i].draw(this.gl, shaderHandles, this.models);
 }
 
 Portal.prototype.sendDeferredLightingData = function() {
@@ -90,8 +103,12 @@ Portal.prototype.sendDeferredLightingData = function() {
    this.gl.bindTexture(this.gl.TEXTURE_2D, this.renderTextures[2]);
    this.gl.uniform1i(this.shaders.lighting.handles.uColorTex, 2);
 
-   this.gl.uniform3fv(this.shaders.lighting.handles.uCameraPosition, this.camera.position);
-   this.gl.uniform3fv(this.shaders.lighting.handles.uLights, this.lights);
+   this.sendLightsAndCamera(this.shaders.lighting.handles);
+}
+
+Portal.prototype.sendLightsAndCamera = function(shaderHandles) {
+   this.gl.uniform3fv(shaderHandles.uCameraPosition, this.camera.position);
+   this.gl.uniform3fv(shaderHandles.uLights, this.lights);
 }
 
 Portal.prototype.makeViewMatrix = function() {

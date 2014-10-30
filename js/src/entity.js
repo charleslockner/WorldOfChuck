@@ -19,22 +19,22 @@ Entity.prototype.draw = function(gl, shader, models) {
    this.drawModel(gl, shader, model);
 }
 
-Entity.prototype.drawModel = function(gl, shader, model) {
+Entity.prototype.drawModel = function(gl, shaderHandles, model) {
    var modelM = this.makeModelMatrix();
-   gl.uniformMatrix4fv(shader.handles.uModelMatrix, false, modelM);
+   gl.uniformMatrix4fv(shaderHandles.uModelMatrix, false, modelM);
 
    gl.bindBuffer(gl.ARRAY_BUFFER, model.vbo);
-   gl.vertexAttribPointer(shader.handles.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
+   gl.vertexAttribPointer(shaderHandles.aVertexPosition, 3, gl.FLOAT, false, 0, 0);
 
    gl.bindBuffer(gl.ARRAY_BUFFER, model.nbo);
-   gl.vertexAttribPointer(shader.handles.aVertexNormal, 3, gl.FLOAT, false, 0, 0);
+   gl.vertexAttribPointer(shaderHandles.aVertexNormal, 3, gl.FLOAT, false, 0, 0);
 
    gl.bindBuffer(gl.ARRAY_BUFFER, model.tbo);
-   gl.vertexAttribPointer(shader.handles.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
+   gl.vertexAttribPointer(shaderHandles.aTextureCoord, 2, gl.FLOAT, false, 0, 0);
 
    gl.activeTexture(gl.TEXTURE0);
    gl.bindTexture(gl.TEXTURE_2D, model.texture);
-   gl.uniform1i(shader.program.samplerUniform, 0);
+   gl.uniform1i(shaderHandles.uTexture, 0);
 
    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, model.ibo);
    gl.drawElements(gl.TRIANGLES, 3 * model.faces, gl.UNSIGNED_SHORT, 0);

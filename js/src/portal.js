@@ -29,6 +29,7 @@ var Portal = function(canvas) {
    this.controls = null;
    this.camera = null;
    this.shaderProgram = null;
+   this.renderForward = true;
    this.lastUpdateTime = 0;
    this.NEAR_DISTANCE = 0.1;
    this.FAR_DISTANCE = 10000;

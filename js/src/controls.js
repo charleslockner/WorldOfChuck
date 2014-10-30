@@ -39,9 +39,9 @@ Portal.prototype.bindEvents = function() {
          case 83: // S
             self.controls.backwardPressed = true;
             break;
-         // case 82: // R
-         //    self.createGroundTile();
-         //    break;
+         case 82: // R
+            self.renderForward = !self.renderForward;
+            break;
       }
    });
 
