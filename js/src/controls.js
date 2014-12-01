@@ -25,11 +25,11 @@ Portal.prototype.bindEvents = function() {
 
    $(window).bind('keydown', function(e) {
       var code = e.keyCode || e.which;
-      
+
       switch (code) {
          case 65: // A
             self.controls.leftPressed = true;
-            break; 
+            break;
          case 68: // D
             self.controls.rightPressed = true;
             break;
@@ -40,18 +40,20 @@ Portal.prototype.bindEvents = function() {
             self.controls.backwardPressed = true;
             break;
          case 82: // R
-            self.renderForward = !self.renderForward;
+            console.log(self.dbExt);
+            if (self.dbExt)
+               self.renderForward = !self.renderForward;
             break;
       }
    });
 
    $(window).bind('keyup', function(e) {
       var code = e.keyCode || e.which;
-      
+
       switch (code) {
          case 65: // A
             self.controls.leftPressed = false;
-            break; 
+            break;
          case 68: // D
             self.controls.rightPressed = false;
             break;
@@ -66,13 +68,14 @@ Portal.prototype.bindEvents = function() {
 
    $(window).bind('click', function () {
       var canvas = self.canvas;
-      canvas.requestPointerLock = canvas.requestPointerLock || 
-                                  canvas.mozRequestPointerLock || 
-                                  canvas.webkitRequestPointerLock || 
+
+      canvas.requestPointerLock = canvas.requestPointerLock ||
+                                  canvas.mozRequestPointerLock ||
+                                  canvas.webkitRequestPointerLock ||
                                   canvas.msRequestPointerLock;
       // canvas.requestFullscreen = canvas.requestFullScreen ||
-      //                            canvas.mozRequestFullScreen || 
-      //                            canvas.webkitRequestFullScreen || 
+      //                            canvas.mozRequestFullScreen ||
+      //                            canvas.webkitRequestFullScreen ||
       //                            canvas.msRequestFullScreen;
       canvas.requestPointerLock();
       launchIntoFullscreen(canvas);

@@ -1,6 +1,6 @@
 precision mediump float;
 
-uniform vec3 uLights[24]; // max 6 lights each with position, direction, color, <strength, atten, radius>
+uniform vec3 uLights[40]; // max 10 lights each with position, direction, color, <strength, atten, radius>
 uniform vec3 uCameraPosition;
 uniform sampler2D uSampler;
 
@@ -25,7 +25,7 @@ void main(void) {
    rColor = vec3(0.0);
 
    // loop through each light
-   for (int i = 0; i < 6; i++) {
+   for (int i = 0; i < 10; i++) {
       lightPosition = uLights[4*i];
       lightDirection = uLights[4*i+1];
       lightColor = uLights[4*i+2];

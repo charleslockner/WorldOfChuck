@@ -4,7 +4,7 @@ uniform sampler2D uPositionTex;
 uniform sampler2D uNormalTex;
 uniform sampler2D uColorTex;
 
-uniform vec3 uLights[24]; // max 3 lights each with position, direction, color, <strength, atten, radius>
+uniform vec3 uLights[40]; // max 3 lights each with position, direction, color, <strength, atten, radius>
 uniform vec3 uCameraPosition;
 
 varying vec2 vTextureCoord;
@@ -27,7 +27,7 @@ void main() {
    rColor = vec3(0.0);
 
    // loop through each light
-   for (int i = 0; i < 6; i++) {
+   for (int i = 0; i < 10; i++) {
       lightPosition = uLights[4*i];
       lightDirection = uLights[4*i+1];
       lightColor = uLights[4*i+2];

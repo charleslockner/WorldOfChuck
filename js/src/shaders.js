@@ -25,16 +25,18 @@ Portal.prototype.initShaders = function() {
       self.shaders.forward.program = program;
    });
 
-   this.createShaderProgram("shaders/geometry.vert.glsl", "shaders/geometry.frag.glsl", function(program) {
-      self.shaders.geometry.handles = self.setupGeometryHandles(program);
-      self.shaders.geometry.program = program;
-   });
+   if (this.dbExt) {
+      this.createShaderProgram("shaders/geometry.vert.glsl", "shaders/geometry.frag.glsl", function(program) {
+         self.shaders.geometry.handles = self.setupGeometryHandles(program);
+         self.shaders.geometry.program = program;
+      });
 
-   this.createShaderProgram("shaders/lighting.vert.glsl", "shaders/lighting.frag.glsl", function(program) {
-      self.shaders.lighting.handles = self.setupLightingHandles(program);
-      self.shaders.lighting.program = program;
-      self.bindLightingVBO();
-   });
+      this.createShaderProgram("shaders/lighting.vert.glsl", "shaders/lighting.frag.glsl", function(program) {
+         self.shaders.lighting.handles = self.setupLightingHandles(program);
+         self.shaders.lighting.program = program;
+         self.bindLightingVBO();
+      });
+   }
 }
 
 Portal.prototype.createShaderProgram = function(vsPath, fsPath, callback) {
