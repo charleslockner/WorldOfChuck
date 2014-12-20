@@ -22,5 +22,9 @@ I will be continually updating this project as I discover more and more features
 
 Go to worldofchuck.com to see this thing in action.
 
+Controls:
+"wasd" => move around
+'r'    => switch between deferred and forward rendering
+
 Email me at charleslockner@gmail.com if you are interested in what I'm doing, and want to learn more.
 No soliciting please.
